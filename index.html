@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ship Tasks</title>
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js"></script>
+    <style>
+        /* ============================================
+           BASE STYLES & RESET
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #2A2118;
+            color: #F0E6D8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* ============================================
+           PANEL STYLES
+           ============================================ */
+        .panel {
+            background: linear-gradient(145deg, #2D2520, #252019);
+            border: 3px solid #4D4038;
+            border-radius: 12px;
+            box-shadow:
+                0 0 20px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            padding: 20px;
+        }
+
+        .panel-header {
+            background: linear-gradient(90deg, #4D4038, #3D3028);
+            margin: -20px -20px 20px -20px;
+            padding: 12px 20px;
+            border-radius: 9px 9px 0 0;
+            border-bottom: 2px solid #5D5048;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #D4763A;
+            text-shadow: 0 0 10px rgba(212, 118, 58, 0.3);
+        }
+
+        /* ============================================
+           TASK CONTAINER
+           ============================================ */
+        #task-container {
+            width: 420px;
+            min-height: 320px;
+        }
+
+        .task-instruction {
+            text-align: center;
+            font-size: 13px;
+            color: #A09080;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn {
+            background: linear-gradient(180deg, #D4763A, #B45A2A);
+            border: 2px solid #E8864A;
+            border-radius: 8px;
+            color: #FFF;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow:
+                0 4px 0 #8A4A1A,
+                0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            background: linear-gradient(180deg, #E8864A, #C46A3A);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow:
+                0 2px 0 #8A4A1A,
+                0 3px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ============================================
+           SUCCESS/FAILURE STATES
+           ============================================ */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(74, 175, 140, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: flashIn 0.3s ease;
+        }
+
+        .success-text {
+            font-size: 48px;
+            font-weight: bold;
+            color: #4CAF8C;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            text-shadow:
+                0 0 20px rgba(74, 175, 140, 0.8),
+                0 0 40px rgba(74, 175, 140, 0.4);
+            animation: pulseIn 0.3s ease;
+        }
+
+        @keyframes flashIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulseIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .error-shake {
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        /* ============================================
+           WIRE ROUTING TASK STYLES
+           ============================================ */
+        .wire-task {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .wire-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wire-node {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            border: 3px solid #4D4038;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .wire-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .wire-node.selected {
+            border-color: #FFF;
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .wire-node.connected {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .wire-node.connected:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .wire-node-inner {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .wire-canvas {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .wire-canvas svg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .wire-line {
+            stroke-width: 4;
+            stroke-linecap: round;
+            fill: none;
+            filter: drop-shadow(0 0 3px currentColor);
+        }
+
+        .wire-line-preview {
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 8, 8;
+            fill: none;
+            opacity: 0.6;
+        }
+
+        /* Wire colors */
+        .wire-red { color: #E85D5D; }
+        .wire-blue { color: #5D8DE8; }
+        .wire-yellow { color: #E8C85D; }
+        .wire-green { color: #5DE87D; }
+        .wire-purple { color: #B85DE8; }
+        .wire-cyan { color: #5DE8E8; }
+
+        /* ============================================
+           LOADING STATE
+           ============================================ */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #4D4038;
+            border-top-color: #D4763A;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============================================
+           ERROR STATE
+           ============================================ */
+        .error-message {
+            text-align: center;
+            color: #C44A4A;
+        }
+
+        .error-message h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="task-container" class="panel">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <div>INITIALIZING SYSTEM...</div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SOUND SYSTEM (Base64 encoded short sounds)
+        // ============================================
+        const Sounds = {
+            // Simple synthesized sounds using AudioContext
+            audioCtx: null,
+
+            init() {
+                this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            },
+
+            play(type) {
+                if (!this.audioCtx) this.init();
+
+                const ctx = this.audioCtx;
+                const now = ctx.currentTime;
+
+                switch(type) {
+                    case 'click':
+                        this._playTone(800, 0.05, 'square', 0.1);
+                        break;
+                    case 'success':
+                        this._playTone(523, 0.1, 'sine', 0.2);
+                        setTimeout(() => this._playTone(659, 0.1, 'sine', 0.2), 100);
+                        setTimeout(() => this._playTone(784, 0.15, 'sine', 0.3), 200);
+                        break;
+                    case 'error':
+                        this._playTone(200, 0.2, 'sawtooth', 0.15);
+                        break;
+                    case 'connect':
+                        this._playTone(600, 0.08, 'sine', 0.15);
+                        break;
+                }
+            },
+
+            _playTone(freq, duration, type, volume) {
+                if (!this.audioCtx) return;
+
+                const oscillator = this.audioCtx.createOscillator();
+                const gainNode = this.audioCtx.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioCtx.destination);
+
+                oscillator.frequency.value = freq;
+                oscillator.type = type;
+                gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + duration);
+
+                oscillator.start(this.audioCtx.currentTime);
+                oscillator.stop(this.audioCtx.currentTime + duration);
+            }
+        };
+
+        // ============================================
+        // PORTALS INTEGRATION
+        // ============================================
+        const Portals = {
+            completeTask(taskNumber) {
+                const message = JSON.stringify({
+                    TaskName: 'Task' + taskNumber,
+                    TaskTargetState: 'SetActiveToCompleted'
+                });
+
+                console.log('Sending to Portals:', message);
+
+                if (typeof PortalsSdk !== 'undefined') {
+                    PortalsSdk.sendMessageToUnity(message);
+                } else {
+                    console.log('PortalsSdk not available - running in dev mode');
+                }
+            }
+        };
+
+        // ============================================
+        // TASK FRAMEWORK
+        // ============================================
+        const TaskFramework = {
+            container: null,
+            currentTask: null,
+            taskNumber: 1,
+
+            init() {
+                this.container = document.getElementById('task-container');
+                this.taskNumber = this.getTaskNumber();
+                this.loadTask(this.taskNumber);
+            },
+
+            getTaskNumber() {
+                const params = new URLSearchParams(window.location.search);
+                const task = parseInt(params.get('task')) || 1;
+                return Math.max(1, Math.min(20, task));
+            },
+
+            loadTask(taskNum) {
+                const taskDef = TASKS[taskNum];
+
+                if (!taskDef) {
+                    this.showError('Task ' + taskNum + ' not found');
+                    return;
+                }
+
+                // Pick random variant
+                const variantIndex = Math.floor(Math.random() * taskDef.variants.length);
+                const variant = taskDef.variants[variantIndex];
+
+                // Render task
+                this.container.innerHTML = `
+                    <div class="panel-header">
+                        <div class="panel-title">${taskDef.name}</div>
+                    </div>
+                    <div class="task-instruction">${taskDef.instruction}</div>
+                    <div id="task-area"></div>
+                `;
+
+                // Initialize task
+                taskDef.init(document.getElementById('task-area'), variant);
+            },
+
+            showSuccess() {
+                Sounds.play('success');
+
+                const overlay = document.createElement('div');
+                overlay.className = 'success-overlay';
+                overlay.innerHTML = '<div class="success-text">Complete</div>';
+                document.body.appendChild(overlay);
+
+                setTimeout(() => {
+                    Portals.completeTask(this.taskNumber);
+                }, 500);
+            },
+
+            showError() {
+                Sounds.play('error');
+                this.container.classList.add('error-shake');
+                setTimeout(() => {
+                    this.container.classList.remove('error-shake');
+                }, 400);
+            },
+
+            showErrorMessage(msg) {
+                this.container.innerHTML = `
+                    <div class="error-message">
+                        <h2>ERROR</h2>
+                        <p>${msg}</p>
+                    </div>
+                `;
+            }
+        };
+
+        // ============================================
+        // TASK 1: WIRE ROUTING
+        // ============================================
+        const WireRoutingTask = {
+            name: 'Wire Routing',
+            instruction: 'Connect matching colored wires',
+
+            variants: [
+                { wires: ['red', 'blue', 'yellow', 'green'], shuffleRight: true },
+                { wires: ['red', 'blue', 'yellow', 'green', 'purple'], shuffleRight: true },
+                { wires: ['cyan', 'purple', 'yellow', 'red'], shuffleRight: true },
+                { wires: ['blue', 'green', 'red', 'cyan', 'yellow'], shuffleRight: true }
+            ],
+
+            state: {
+                selectedNode: null,
+                connections: [],
+                leftNodes: [],
+                rightNodes: [],
+                totalWires: 0
+            },
+
+            init(container, variant) {
+                this.state = {
+                    selectedNode: null,
+                    connections: [],
+                    leftNodes: [],
+                    rightNodes: [],
+                    totalWires: variant.wires.length
+                };
+
+                // Shuffle right side order
+                const rightOrder = [...variant.wires];
+                if (variant.shuffleRight) {
+                    for (let i = rightOrder.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [rightOrder[i], rightOrder[j]] = [rightOrder[j], rightOrder[i]];
+                    }
+                }
+
+                container.innerHTML = `
+                    <div class="wire-task">
+                        <div class="wire-column" id="left-nodes"></div>
+                        <div class="wire-canvas" id="wire-canvas">
+                            <svg id="wire-svg"></svg>
+                        </div>
+                        <div class="wire-column" id="right-nodes"></div>
+                    </div>
+                `;
+
+                const leftContainer = document.getElementById('left-nodes');
+                const rightContainer = document.getElementById('right-nodes');
+
+                // Create left nodes (in order)
+                variant.wires.forEach((color, index) => {
+                    const node = this.createNode(color, 'left', index);
+                    leftContainer.appendChild(node);
+                    this.state.leftNodes.push({ element: node, color, index });
+                });
+
+                // Create right nodes (shuffled)
+                rightOrder.forEach((color, index) => {
+                    const node = this.createNode(color, 'right', index);
+                    rightContainer.appendChild(node);
+                    this.state.rightNodes.push({ element: node, color, index });
+                });
+
+                // Setup mouse/touch tracking for preview line
+                this.setupCanvasTracking();
+            },
+
+            createNode(color, side, index) {
+                const node = document.createElement('div');
+                node.className = `wire-node wire-${color}`;
+                node.dataset.color = color;
+                node.dataset.side = side;
+                node.dataset.index = index;
+                node.innerHTML = '<div class="wire-node-inner"></div>';
+
+                node.addEventListener('click', (e) => this.handleNodeClick(e, node));
+
+                return node;
+            },
+
+            handleNodeClick(e, node) {
+                e.preventDefault();
+
+                // Don't allow clicking connected nodes
+                if (node.classList.contains('connected')) return;
+
+                const side = node.dataset.side;
+                const color = node.dataset.color;
+
+                Sounds.play('click');
+
+                // If nothing selected, select this node (only left side can start)
+                if (!this.state.selectedNode) {
+                    if (side === 'left') {
+                        node.classList.add('selected');
+                        this.state.selectedNode = { node, side, color };
+                    }
+                    return;
+                }
+
+                // If clicking same node, deselect
+                if (this.state.selectedNode.node === node) {
+                    node.classList.remove('selected');
+                    this.state.selectedNode = null;
+                    this.clearPreviewLine();
+                    return;
+                }
+
+                // If clicking same side, switch selection
+                if (this.state.selectedNode.side === side) {
+                    this.state.selectedNode.node.classList.remove('selected');
+                    node.classList.add('selected');
+                    this.state.selectedNode = { node, side, color };
+                    return;
+                }
+
+                // Clicking opposite side - check if colors match
+                if (this.state.selectedNode.color === color) {
+                    // Correct connection!
+                    this.makeConnection(this.state.selectedNode.node, node, color);
+                    this.state.selectedNode.node.classList.remove('selected');
+                    this.state.selectedNode.node.classList.add('connected');
+                    node.classList.add('connected');
+                    this.state.selectedNode = null;
+                    this.clearPreviewLine();
+
+                    Sounds.play('connect');
+
+                    // Check if all wires connected
+                    if (this.state.connections.length === this.state.totalWires) {
+                        setTimeout(() => TaskFramework.showSuccess(), 300);
+                    }
+                } else {
+                    // Wrong connection
+                    TaskFramework.showError();
+                }
+            },
+
+            makeConnection(leftNode, rightNode, color) {
+                const svg = document.getElementById('wire-svg');
+                const canvas = document.getElementById('wire-canvas');
+                const canvasRect = canvas.getBoundingClientRect();
+
+                const leftRect = leftNode.getBoundingClientRect();
+                const rightRect = rightNode.getBoundingClientRect();
+
+                const x1 = leftRect.right - canvasRect.left;
+                const y1 = leftRect.top + leftRect.height / 2 - canvasRect.top;
+                const x2 = rightRect.left - canvasRect.left;
+                const y2 = rightRect.top + rightRect.height / 2 - canvasRect.top;
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const midX = (x1 + x2) / 2;
+                line.setAttribute('d', `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`);
+                line.classList.add('wire-line', `wire-${color}`);
+                line.style.stroke = 'currentColor';
+                svg.appendChild(line);
+
+                this.state.connections.push({ leftNode, rightNode, color, line });
+            },
+
+            setupCanvasTracking() {
+                const canvas = document.getElementById('wire-canvas');
+                const svg = document.getElementById('wire-svg');
+
+                let previewLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                previewLine.classList.add('wire-line-preview');
+                previewLine.style.display = 'none';
+                svg.appendChild(previewLine);
+
+                const updatePreview = (e) => {
+                    if (!this.state.selectedNode) {
+                        previewLine.style.display = 'none';
+                        return;
+                    }
+
+                    const canvasRect = canvas.getBoundingClientRect();
+                    const nodeRect = this.state.selectedNode.node.getBoundingClientRect();
+
+                    const x1 = nodeRect.right - canvasRect.left;
+                    const y1 = nodeRect.top + nodeRect.height / 2 - canvasRect.top;
+
+                    let clientX, clientY;
+                    if (e.touches) {
+                        clientX = e.touches[0].clientX;
+                        clientY = e.touches[0].clientY;
+                    } else {
+                        clientX = e.clientX;
+                        clientY = e.clientY;
+                    }
+
+                    const x2 = clientX - canvasRect.left;
+                    const y2 = clientY - canvasRect.top;
+
+                    const midX = (x1 + x2) / 2;
+                    previewLine.setAttribute('d', `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`);
+                    previewLine.style.stroke = this.state.selectedNode.node.style.color ||
+                        getComputedStyle(this.state.selectedNode.node).color;
+                    previewLine.style.display = 'block';
+                };
+
+                document.addEventListener('mousemove', updatePreview);
+                document.addEventListener('touchmove', updatePreview);
+
+                this.clearPreviewLine = () => {
+                    previewLine.style.display = 'none';
+                };
+            },
+
+            clearPreviewLine() {
+                // Will be overwritten by setupCanvasTracking
+            }
+        };
+
+        // ============================================
+        // TASK REGISTRY
+        // ============================================
+        const TASKS = {
+            1: WireRoutingTask,
+            // Tasks 2-20 will be added here
+        };
+
+        // ============================================
+        // INITIALIZE ON LOAD
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Small delay to ensure everything is loaded
+            setTimeout(() => {
+                TaskFramework.init();
+            }, 100);
+        });
+
+        // Initialize audio on first user interaction
+        document.addEventListener('click', () => {
+            if (!Sounds.audioCtx) Sounds.init();
+        }, { once: true });
+
+        document.addEventListener('touchstart', () => {
+            if (!Sounds.audioCtx) Sounds.init();
+        }, { once: true });
+    </script>
+</body>
+</html>
