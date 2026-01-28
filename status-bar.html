@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Task Status</title>
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: transparent;
+            color: #F0E6D8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 20px;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .status-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #D4763A;
+            text-shadow: 0 0 10px rgba(212, 118, 58, 0.5);
+        }
+
+        .progress-wrapper {
+            position: relative;
+            width: 300px;
+            height: 24px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1D1510, #252019);
+            border: 2px solid #4D4038;
+            border-radius: 12px;
+            box-shadow:
+                inset 0 2px 4px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(180deg, #D4763A, #B45A2A);
+            border-radius: 10px;
+            position: relative;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 15px rgba(212, 118, 58, 0.5);
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), transparent);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .progress-bar-fill.animate-pulse {
+            animation: progressPulse 0.6s ease;
+        }
+
+        @keyframes progressPulse {
+            0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 15px rgba(212, 118, 58, 0.5); }
+            50% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 30px rgba(212, 118, 58, 0.9), 0 0 50px rgba(212, 118, 58, 0.5); }
+            100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 15px rgba(212, 118, 58, 0.5); }
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 11px;
+            font-weight: bold;
+            color: #F0E6D8;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .progress-text.animate-pop {
+            animation: textPop 0.4s ease;
+        }
+
+        @keyframes textPop {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Complete state */
+        .progress-bar-fill.complete {
+            background: linear-gradient(180deg, #4CAF8C, #3A9A7C);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 20px rgba(74, 175, 140, 0.6);
+        }
+
+        .progress-bar-fill.complete.animate-pulse {
+            animation: completePulse 0.8s ease;
+        }
+
+        @keyframes completePulse {
+            0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 20px rgba(74, 175, 140, 0.6); }
+            50% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 40px rgba(74, 175, 140, 1), 0 0 60px rgba(74, 175, 140, 0.6); }
+            100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 20px rgba(74, 175, 140, 0.6); }
+        }
+
+        .status-label.complete {
+            color: #4CAF8C;
+            text-shadow: 0 0 10px rgba(74, 175, 140, 0.5);
+        }
+
+        /* Particle effects container */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #D4763A;
+            opacity: 0;
+        }
+
+        @keyframes particleBurst {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-container">
+        <div class="status-label" id="status-label">Tasks</div>
+        <div class="progress-wrapper">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0%</div>
+            <div class="particles" id="particles"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentCompleted = 0;
+        let currentRequired = 0;
+
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+        const statusLabel = document.getElementById('status-label');
+        const particlesContainer = document.getElementById('particles');
+
+        function updateProgress(completed, required) {
+            const oldCompleted = currentCompleted;
+            currentCompleted = completed;
+            currentRequired = required;
+
+            const percentage = required > 0 ? (completed / required) * 100 : 0;
+            const isComplete = completed >= required && required > 0;
+
+            // Update fill width
+            progressFill.style.width = percentage + '%';
+
+            // Update text
+            progressText.textContent = Math.round(percentage) + '%';
+
+            // Handle complete state
+            if (isComplete) {
+                progressFill.classList.add('complete');
+                statusLabel.classList.add('complete');
+                statusLabel.textContent = 'Complete!';
+            } else {
+                progressFill.classList.remove('complete');
+                statusLabel.classList.remove('complete');
+                statusLabel.textContent = 'Tasks';
+            }
+
+            // Trigger animations if tasks increased
+            if (completed > oldCompleted) {
+                // Pulse animation on fill
+                progressFill.classList.remove('animate-pulse');
+                void progressFill.offsetWidth; // Force reflow
+                progressFill.classList.add('animate-pulse');
+
+                // Pop animation on text
+                progressText.classList.remove('animate-pop');
+                void progressText.offsetWidth;
+                progressText.classList.add('animate-pop');
+
+                // Particle burst
+                createParticleBurst(percentage);
+            }
+        }
+
+        function createParticleBurst(percentage) {
+            const burstX = (percentage / 100) * 300; // Position based on fill
+            const particleCount = 8;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                const angle = (i / particleCount) * Math.PI * 2;
+                const distance = 20 + Math.random() * 30;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                particle.style.left = burstX + 'px';
+                particle.style.top = '12px';
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.background = progressFill.classList.contains('complete') ? '#4CAF8C' : '#D4763A';
+                particle.style.animation = 'particleBurst 0.5s ease-out forwards';
+
+                particlesContainer.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 500);
+            }
+        }
+
+        // Initialize Portals SDK and listen for messages
+        if (window.Portals) {
+            Portals.Portal.ready().then(() => {
+                console.log('Status bar iframe ready');
+
+                // Listen for messages from Portals
+                Portals.Portal.onMessage((message) => {
+                    console.log('Received message:', message);
+
+                    if (message.taskscompleted !== undefined && message.tasksrequired !== undefined) {
+                        updateProgress(
+                            parseInt(message.taskscompleted) || 0,
+                            parseInt(message.tasksrequired) || 0
+                        );
+                    }
+                });
+            });
+        }
+
+        // For testing without Portals
+        // updateProgress(3, 10);
+    </script>
+</body>
+</html>

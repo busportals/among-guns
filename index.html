@@ -664,11 +664,6 @@
             border-radius: 3px;
             transform: translateX(-50%);
             box-shadow: 0 0 10px rgba(212, 118, 58, 0.8);
-            transition: left 0.05s linear;
-        }
-
-        .freq-indicator.stopped {
-            transition: none;
         }
 
         .freq-indicator.success {
@@ -2994,75 +2989,71 @@
             name: 'Pipe Alignment',
             instruction: 'Rotate pipes to complete the flow',
 
-            // Pipe types: 'straight', 'corner', 'tee', 'cross'
-            // Directions: 0=up, 1=right, 2=down, 3=left (rotation * 90deg)
+            // Pipe types: 'straight', 'corner'
+            // Straight: rot 0 = horizontal (left-right), rot 1 = vertical (up-down)
+            // Corner: rot 0 = up-right, rot 1 = right-down, rot 2 = down-left, rot 3 = left-up
             variants: [
+                // Variant 1: Simple horizontal line
                 {
                     cols: 4,
-                    rows: 3,
-                    start: { col: 0, row: 1 },
-                    end: { col: 3, row: 1 },
-                    pipes: [
-                        { type: 'corner', solution: 1 },   // 0,0
-                        { type: 'straight', solution: 0 }, // 1,0
-                        { type: 'straight', solution: 0 }, // 2,0
-                        { type: 'corner', solution: 2 },   // 3,0
-                        { type: 'straight', solution: 1 }, // 0,1 - START
-                        { type: 'corner', solution: 0 },   // 1,1
-                        { type: 'corner', solution: 3 },   // 2,1
-                        { type: 'straight', solution: 1 }, // 3,1 - END
-                        null, null, null, null             // Row 2 empty
-                    ]
-                },
-                {
-                    cols: 4,
-                    rows: 3,
+                    rows: 1,
                     start: { col: 0, row: 0 },
-                    end: { col: 3, row: 2 },
+                    end: { col: 3, row: 0 },
                     pipes: [
-                        { type: 'straight', solution: 1 }, // 0,0 - START
-                        { type: 'corner', solution: 1 },   // 1,0
-                        null,                               // 2,0
-                        null,                               // 3,0
-                        null,                               // 0,1
-                        { type: 'straight', solution: 0 }, // 1,1
-                        null,                               // 2,1
-                        null,                               // 3,1
-                        null,                               // 0,2
-                        { type: 'corner', solution: 0 },   // 1,2
-                        { type: 'straight', solution: 1 }, // 2,2
-                        { type: 'straight', solution: 1 }  // 3,2 - END
+                        { type: 'straight', solution: 0 }, // 0,0 - START (horizontal)
+                        { type: 'straight', solution: 0 }, // 1,0 (horizontal)
+                        { type: 'straight', solution: 0 }, // 2,0 (horizontal)
+                        { type: 'straight', solution: 0 }  // 3,0 - END (horizontal)
                     ]
                 },
+                // Variant 2: L-shape (right then down then right)
+                {
+                    cols: 3,
+                    rows: 2,
+                    start: { col: 0, row: 0 },
+                    end: { col: 2, row: 1 },
+                    pipes: [
+                        { type: 'straight', solution: 0 }, // 0,0 - START (horizontal)
+                        { type: 'corner', solution: 2 },   // 1,0 (down-left: receives from left, sends down)
+                        null,                               // 2,0
+                        null,                               // 0,1
+                        { type: 'corner', solution: 0 },   // 1,1 (up-right: receives from up, sends right)
+                        { type: 'straight', solution: 0 }  // 2,1 - END (horizontal)
+                    ]
+                },
+                // Variant 3: S-shape (down the middle)
                 {
                     cols: 3,
                     rows: 3,
-                    start: { col: 0, row: 1 },
-                    end: { col: 2, row: 1 },
+                    start: { col: 0, row: 0 },
+                    end: { col: 2, row: 2 },
                     pipes: [
-                        null,                               // 0,0
-                        { type: 'corner', solution: 2 },   // 1,0
-                        { type: 'corner', solution: 3 },   // 2,0
-                        { type: 'corner', solution: 1 },   // 0,1 - START
-                        { type: 'corner', solution: 0 },   // 1,1
-                        { type: 'straight', solution: 0 }, // 2,1 - END
-                        null, null, null                   // Row 2 empty
+                        { type: 'straight', solution: 0 }, // 0,0 - START
+                        { type: 'corner', solution: 2 },   // 1,0 (down-left)
+                        null,                               // 2,0
+                        null,                               // 0,1
+                        { type: 'straight', solution: 1 }, // 1,1 (vertical)
+                        null,                               // 2,1
+                        null,                               // 0,2
+                        { type: 'corner', solution: 0 },   // 1,2 (up-right)
+                        { type: 'straight', solution: 0 }  // 2,2 - END
                     ]
                 },
+                // Variant 4: U-shape (longer horizontal then down)
                 {
                     cols: 4,
                     rows: 2,
                     start: { col: 0, row: 0 },
                     end: { col: 3, row: 1 },
                     pipes: [
-                        { type: 'straight', solution: 1 }, // 0,0 - START
-                        { type: 'straight', solution: 1 }, // 1,0
-                        { type: 'corner', solution: 1 },   // 2,0
+                        { type: 'straight', solution: 0 }, // 0,0 - START
+                        { type: 'straight', solution: 0 }, // 1,0
+                        { type: 'corner', solution: 2 },   // 2,0 (down-left)
                         null,                               // 3,0
                         null,                               // 0,1
                         null,                               // 1,1
-                        { type: 'corner', solution: 0 },   // 2,1
-                        { type: 'straight', solution: 1 }  // 3,1 - END
+                        { type: 'corner', solution: 0 },   // 2,1 (up-right)
+                        { type: 'straight', solution: 0 }  // 3,1 - END
                     ]
                 }
             ],
@@ -3681,10 +3672,10 @@
             instruction: 'Stop the indicator in the green zone',
 
             variants: [
-                { speed: 1, targetStart: 60, targetWidth: 20 },    // Easy - big zone, slow
-                { speed: 1.5, targetStart: 40, targetWidth: 15 },  // Medium
-                { speed: 1.75, targetStart: 70, targetWidth: 12 }, // Hard - small zone
-                { speed: 2, targetStart: 30, targetWidth: 18 }     // Fast but medium zone
+                { speed: 0.3, targetStart: 60, targetWidth: 20 },  // Easy - big zone, slow
+                { speed: 0.4, targetStart: 40, targetWidth: 15 },  // Medium
+                { speed: 0.5, targetStart: 70, targetWidth: 12 },  // Hard - small zone
+                { speed: 0.6, targetStart: 30, targetWidth: 18 }   // Fast but medium zone
             ],
 
             state: {
