@@ -268,11 +268,19 @@
             }
         }
 
+        // DEBUG: Show raw message on screen temporarily
+        function showDebug(text) {
+            statusLabel.textContent = text;
+            statusLabel.style.fontSize = '10px';
+        }
+
         // Initialize Portals SDK and listen for messages
         // Using PortalsSdk.setMessageListener as per Portals documentation
         if (window.PortalsSdk) {
+            showDebug('SDK OK');
             PortalsSdk.setMessageListener((message) => {
                 console.log('Received message from Portals:', message);
+                showDebug('GOT: ' + message.substring(0, 30));
 
                 // Message comes as a plain text string, need to parse it
                 // Expected format: { taskscompleted:1, tasksrequired: 10}
@@ -310,6 +318,7 @@
             });
             console.log('Status bar message listener registered');
         } else {
+            showDebug('NO SDK');
             console.log('PortalsSdk not found');
         }
 
