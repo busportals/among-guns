@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Task Status</title>
-    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js"></script>
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=10005456"></script>
     <style>
         * {
             margin: 0;
@@ -269,22 +269,48 @@
         }
 
         // Initialize Portals SDK and listen for messages
-        if (window.Portals) {
-            Portals.Portal.ready().then(() => {
-                console.log('Status bar iframe ready');
+        // Using PortalsSdk.setMessageListener as per Portals documentation
+        if (window.PortalsSdk) {
+            PortalsSdk.setMessageListener((message) => {
+                console.log('Received message from Portals:', message);
 
-                // Listen for messages from Portals
-                Portals.Portal.onMessage((message) => {
-                    console.log('Received message:', message);
+                // Message comes as a plain text string, need to parse it
+                // Expected format: { taskscompleted:1, tasksrequired: 10}
+                try {
+                    // Try to parse as JSON first
+                    let data;
+                    try {
+                        data = JSON.parse(message);
+                    } catch (e) {
+                        // If not valid JSON, try to extract values with regex
+                        // Handles format like: { taskscompleted:1, tasksrequired: 10}
+                        const completedMatch = message.match(/taskscompleted\s*:\s*(\d+)/);
+                        const requiredMatch = message.match(/tasksrequired\s*:\s*(\d+)/);
 
-                    if (message.taskscompleted !== undefined && message.tasksrequired !== undefined) {
-                        updateProgress(
-                            parseInt(message.taskscompleted) || 0,
-                            parseInt(message.tasksrequired) || 0
-                        );
+                        if (completedMatch && requiredMatch) {
+                            data = {
+                                taskscompleted: parseInt(completedMatch[1]),
+                                tasksrequired: parseInt(requiredMatch[1])
+                            };
+                        }
                     }
-                });
+
+                    if (data && data.taskscompleted !== undefined && data.tasksrequired !== undefined) {
+                        console.log('Updating progress:', data.taskscompleted, '/', data.tasksrequired);
+                        updateProgress(
+                            parseInt(data.taskscompleted) || 0,
+                            parseInt(data.tasksrequired) || 0
+                        );
+                    } else {
+                        console.log('Could not parse taskscompleted/tasksrequired from message');
+                    }
+                } catch (err) {
+                    console.error('Error parsing message:', err);
+                }
             });
+            console.log('Status bar message listener registered');
+        } else {
+            console.log('PortalsSdk not found');
         }
 
         // For testing without Portals
