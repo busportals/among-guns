@@ -95,6 +95,7 @@
         #task-container {
             width: 420px;
             min-height: 320px;
+            position: relative;
         }
 
         .task-instruction {
@@ -143,16 +144,17 @@
            SUCCESS/FAILURE STATES
            ============================================ */
         .success-overlay {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(74, 175, 140, 0.2);
+            right: 0;
+            bottom: 0;
+            background: rgba(42, 33, 24, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100;
+            z-index: 10;
+            border-radius: 12px;
             animation: flashIn 0.3s ease;
         }
 
@@ -470,7 +472,7 @@
                 const overlay = document.createElement('div');
                 overlay.className = 'success-overlay';
                 overlay.innerHTML = '<div class="success-text">Complete</div>';
-                document.body.appendChild(overlay);
+                this.container.appendChild(overlay);
 
                 setTimeout(() => {
                     Portals.completeTask(this.taskNumber);
