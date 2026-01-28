@@ -3101,11 +3101,17 @@
                         if (isEnd) cell.classList.add('end-cell');
 
                         if (pipeData) {
-                            // Random initial rotation (different from solution)
-                            let rotation = Math.floor(Math.random() * 4);
-                            // Make sure at least some pipes need rotating
-                            if (Math.random() > 0.3) {
-                                rotation = (pipeData.solution + 1 + Math.floor(Math.random() * 3)) % 4;
+                            let rotation;
+                            // Start and end cells must be at solution rotation (they can't be rotated)
+                            if (isStart || isEnd) {
+                                rotation = pipeData.solution;
+                            } else {
+                                // Random initial rotation (different from solution)
+                                rotation = Math.floor(Math.random() * 4);
+                                // Make sure at least some pipes need rotating
+                                if (Math.random() > 0.3) {
+                                    rotation = (pipeData.solution + 1 + Math.floor(Math.random() * 3)) % 4;
+                                }
                             }
 
                             cell.innerHTML = this.getPipeSVG(pipeData.type, rotation);
@@ -3675,10 +3681,10 @@
             instruction: 'Stop the indicator in the green zone',
 
             variants: [
-                { speed: 2, targetStart: 60, targetWidth: 20 },  // Easy - big zone, slow
-                { speed: 3, targetStart: 40, targetWidth: 15 },  // Medium
-                { speed: 3.5, targetStart: 70, targetWidth: 12 }, // Hard - small zone
-                { speed: 4, targetStart: 30, targetWidth: 18 }   // Fast but medium zone
+                { speed: 1, targetStart: 60, targetWidth: 20 },    // Easy - big zone, slow
+                { speed: 1.5, targetStart: 40, targetWidth: 15 },  // Medium
+                { speed: 1.75, targetStart: 70, targetWidth: 12 }, // Hard - small zone
+                { speed: 2, targetStart: 30, targetWidth: 18 }     // Fast but medium zone
             ],
 
             state: {
