@@ -268,62 +268,21 @@
             }
         }
 
-        // DEBUG: Show raw message on screen temporarily
-        function showDebug(text) {
-            statusLabel.textContent = text;
-            statusLabel.style.fontSize = '10px';
-        }
+        // Listen for messages from Portals (matching working example pattern)
+        PortalsSdk.setMessageListener((message) => {
+            console.log('PORTALS MSG:', message);
 
-        // Initialize Portals SDK and listen for messages
-        // Using PortalsSdk.setMessageListener as per Portals documentation
-        if (window.PortalsSdk) {
-            showDebug('SDK OK');
-            PortalsSdk.setMessageListener((message) => {
-                console.log('Received message from Portals:', message);
-                showDebug('GOT: ' + message.substring(0, 30));
+            // Parse the message to extract taskscompleted and tasksrequired
+            const completedMatch = message.match(/taskscompleted\s*:\s*(\d+)/);
+            const requiredMatch = message.match(/tasksrequired\s*:\s*(\d+)/);
 
-                // Message comes as a plain text string, need to parse it
-                // Expected format: { taskscompleted:1, tasksrequired: 10}
-                try {
-                    // Try to parse as JSON first
-                    let data;
-                    try {
-                        data = JSON.parse(message);
-                    } catch (e) {
-                        // If not valid JSON, try to extract values with regex
-                        // Handles format like: { taskscompleted:1, tasksrequired: 10}
-                        const completedMatch = message.match(/taskscompleted\s*:\s*(\d+)/);
-                        const requiredMatch = message.match(/tasksrequired\s*:\s*(\d+)/);
-
-                        if (completedMatch && requiredMatch) {
-                            data = {
-                                taskscompleted: parseInt(completedMatch[1]),
-                                tasksrequired: parseInt(requiredMatch[1])
-                            };
-                        }
-                    }
-
-                    if (data && data.taskscompleted !== undefined && data.tasksrequired !== undefined) {
-                        console.log('Updating progress:', data.taskscompleted, '/', data.tasksrequired);
-                        updateProgress(
-                            parseInt(data.taskscompleted) || 0,
-                            parseInt(data.tasksrequired) || 0
-                        );
-                    } else {
-                        console.log('Could not parse taskscompleted/tasksrequired from message');
-                    }
-                } catch (err) {
-                    console.error('Error parsing message:', err);
-                }
-            });
-            console.log('Status bar message listener registered');
-        } else {
-            showDebug('NO SDK');
-            console.log('PortalsSdk not found');
-        }
-
-        // For testing without Portals
-        // updateProgress(3, 10);
+            if (completedMatch && requiredMatch) {
+                const completed = parseInt(completedMatch[1]);
+                const required = parseInt(requiredMatch[1]);
+                console.log('Updating progress:', completed, '/', required);
+                updateProgress(completed, required);
+            }
+        });
     </script>
 </body>
 </html>
