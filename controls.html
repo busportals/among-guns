@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Controls</title>
-    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -19,386 +17,141 @@
             color: #F0E6D8;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 12px;
             user-select: none;
         }
 
         .panel {
-            background: linear-gradient(145deg, #2D2520, #252019);
-            border: 3px solid #4D4038;
-            border-radius: 12px;
-            box-shadow:
-                0 0 20px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            width: 380px;
-        }
-
-        .panel-header {
-            background: linear-gradient(90deg, #4D4038, #3D3028);
-            margin: -20px -20px 20px -20px;
-            padding: 12px 20px;
-            border-radius: 9px 9px 0 0;
-            border-bottom: 2px solid #5D5048;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: linear-gradient(145deg, rgba(45, 37, 32, 0.95), rgba(37, 32, 25, 0.95));
+            border: 2px solid #4D4038;
+            border-radius: 8px;
+            padding: 10px 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
         }
 
         .panel-title {
-            font-size: 14px;
+            font-size: 9px;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             color: #D4763A;
-            text-shadow: 0 0 10px rgba(212, 118, 58, 0.3);
-        }
-
-        .close-btn {
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(180deg, #5D5048, #4D4038);
-            border: 2px solid #6D6058;
-            border-radius: 6px;
-            color: #A09080;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s ease;
-            line-height: 1;
-        }
-
-        .close-btn:hover {
-            background: linear-gradient(180deg, #6D6058, #5D5048);
-            color: #F0E6D8;
-            border-color: #7D7068;
-        }
-
-        .close-btn:active {
-            transform: scale(0.95);
+            text-align: center;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #3D3028;
         }
 
         .controls-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 6px;
         }
 
         .control-item {
             display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 12px;
-            background: linear-gradient(145deg, #352D25, #2A2218);
-            border: 2px solid #3D3530;
-            border-radius: 8px;
+            gap: 8px;
         }
 
-        .control-icon {
-            flex-shrink: 0;
-            width: 56px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Keyboard Key Style */
+        /* Compact Key Style */
         .key {
-            width: 48px;
-            height: 48px;
+            min-width: 22px;
+            height: 22px;
             background: linear-gradient(180deg, #4A4038, #3A3028);
-            border: 2px solid #5A5048;
-            border-radius: 8px;
+            border: 1px solid #5A5048;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 11px;
             font-weight: bold;
             color: #D4763A;
-            text-shadow: 0 0 8px rgba(212, 118, 58, 0.4);
-            box-shadow:
-                0 4px 0 #2A2218,
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            position: relative;
+            box-shadow: 0 2px 0 #2A2218;
+            padding: 0 4px;
         }
 
-        .key::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            right: 4px;
-            height: 8px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.08), transparent);
-            border-radius: 4px 4px 0 0;
-        }
-
-        /* Mouse Icon Styles */
+        /* Compact Mouse */
         .mouse {
-            width: 36px;
-            height: 52px;
+            width: 16px;
+            height: 22px;
             background: linear-gradient(180deg, #4A4038, #3A3028);
-            border: 2px solid #5A5048;
-            border-radius: 18px 18px 12px 12px;
+            border: 1px solid #5A5048;
+            border-radius: 8px 8px 5px 5px;
             position: relative;
-            box-shadow:
-                0 4px 0 #2A2218,
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 0 #2A2218;
         }
 
         .mouse::before {
             content: '';
             position: absolute;
-            top: 4px;
+            top: 2px;
             left: 50%;
             transform: translateX(-50%);
-            width: 2px;
-            height: 16px;
+            width: 1px;
+            height: 7px;
             background: #5A5048;
         }
 
         .mouse-left, .mouse-right {
             position: absolute;
-            top: 4px;
-            width: 14px;
-            height: 18px;
-            border-radius: 8px 8px 0 0;
-            transition: all 0.2s ease;
-        }
-
-        .mouse-left {
-            left: 4px;
-            border-right: 1px solid #5A5048;
-        }
-
-        .mouse-right {
-            right: 4px;
-            border-left: 1px solid #5A5048;
-        }
-
-        .mouse.highlight-left .mouse-left {
-            background: linear-gradient(180deg, #D4763A, #B45A2A);
-            box-shadow: 0 0 12px rgba(212, 118, 58, 0.6);
-        }
-
-        .mouse.highlight-right .mouse-right {
-            background: linear-gradient(180deg, #D4763A, #B45A2A);
-            box-shadow: 0 0 12px rgba(212, 118, 58, 0.6);
-        }
-
-        .mouse-wheel {
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 2px;
             width: 6px;
-            height: 10px;
-            background: #5A5048;
-            border-radius: 3px;
+            height: 8px;
+            border-radius: 4px 4px 0 0;
         }
 
-        .control-text {
-            flex: 1;
-        }
+        .mouse-left { left: 2px; }
+        .mouse-right { right: 2px; }
 
-        .control-action {
-            font-size: 15px;
-            font-weight: bold;
-            color: #F0E6D8;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .control-modifier {
-            font-size: 11px;
-            color: #4A9B9B;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Crosshair icon for aim */
-        .crosshair {
-            width: 28px;
-            height: 28px;
-            position: relative;
-        }
-
-        .crosshair::before,
-        .crosshair::after {
-            content: '';
-            position: absolute;
+        .mouse.left .mouse-left {
             background: #D4763A;
         }
 
-        .crosshair::before {
-            width: 100%;
-            height: 3px;
-            top: 50%;
-            transform: translateY(-50%);
+        .mouse.right .mouse-right {
+            background: #D4763A;
         }
 
-        .crosshair::after {
-            width: 3px;
-            height: 100%;
-            left: 50%;
-            transform: translateX(-50%);
+        .control-text {
+            font-size: 10px;
+            color: #A09080;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .crosshair-circle {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 16px;
-            height: 16px;
-            border: 3px solid #D4763A;
-            border-radius: 50%;
-            background: transparent;
+        .control-text strong {
+            color: #F0E6D8;
         }
 
-        /* Map icon */
-        .map-icon {
-            width: 32px;
-            height: 26px;
-            position: relative;
-        }
-
-        .map-icon svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Cursor icon */
-        .cursor-icon {
-            width: 24px;
-            height: 28px;
-        }
-
-        .cursor-icon svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Bullet icon */
-        .bullet-icon {
-            display: flex;
-            gap: 4px;
-        }
-
-        .bullet {
-            width: 6px;
-            height: 14px;
-            background: linear-gradient(180deg, #D4763A, #B45A2A);
-            border-radius: 3px 3px 1px 1px;
-            box-shadow: 0 0 8px rgba(212, 118, 58, 0.5);
-        }
-
-        .bullet:nth-child(2) {
-            transform: translateY(-2px);
-        }
-
-        .bullet:nth-child(3) {
-            transform: translateY(2px);
+        .modifier {
+            font-size: 8px;
+            color: #4A9B9B;
+            margin-left: 2px;
         }
     </style>
 </head>
 <body>
     <div class="panel">
-        <div class="panel-header">
-            <div class="panel-title">Controls</div>
-            <button class="close-btn" onclick="closePanel()">×</button>
-        </div>
-
+        <div class="panel-title">Controls</div>
         <div class="controls-list">
-            <!-- Toggle Cursor Lock -->
             <div class="control-item">
-                <div class="control-icon">
-                    <div class="key">T</div>
-                </div>
-                <div class="control-text">
-                    <div class="control-action">Toggle Cursor Lock</div>
-                    <div class="control-modifier">Press</div>
-                </div>
-                <div class="cursor-icon">
-                    <svg viewBox="0 0 24 28" fill="none">
-                        <path d="M4 2L4 22L9 17L13 26L17 24L13 15L20 15L4 2Z" fill="#D4763A" stroke="#B45A2A" stroke-width="1"/>
-                    </svg>
-                </div>
+                <div class="key">T</div>
+                <div class="control-text"><strong>Cursor Lock</strong></div>
             </div>
-
-            <!-- Map -->
             <div class="control-item">
-                <div class="control-icon">
-                    <div class="key">M</div>
-                </div>
-                <div class="control-text">
-                    <div class="control-action">Open Map</div>
-                    <div class="control-modifier">Hold</div>
-                </div>
-                <div class="map-icon">
-                    <svg viewBox="0 0 32 26" fill="none">
-                        <path d="M2 4L10 2V22L2 24V4Z" fill="#4A9B9B" stroke="#3A8B8B" stroke-width="1"/>
-                        <path d="M10 2L22 6V26L10 22V2Z" fill="#D4763A" stroke="#B45A2A" stroke-width="1"/>
-                        <path d="M22 6L30 4V24L22 26V6Z" fill="#4A9B9B" stroke="#3A8B8B" stroke-width="1"/>
-                        <circle cx="16" cy="14" r="3" fill="#F0E6D8"/>
-                    </svg>
-                </div>
+                <div class="key">M</div>
+                <div class="control-text"><strong>Map</strong><span class="modifier">(hold)</span></div>
             </div>
-
-            <!-- Aim -->
             <div class="control-item">
-                <div class="control-icon">
-                    <div class="mouse highlight-right">
-                        <div class="mouse-left"></div>
-                        <div class="mouse-right"></div>
-                        <div class="mouse-wheel"></div>
-                    </div>
-                </div>
-                <div class="control-text">
-                    <div class="control-action">Aim</div>
-                    <div class="control-modifier">Right Click</div>
-                </div>
-                <div class="crosshair">
-                    <div class="crosshair-circle"></div>
-                </div>
+                <div class="mouse right"><div class="mouse-left"></div><div class="mouse-right"></div></div>
+                <div class="control-text"><strong>Aim</strong></div>
             </div>
-
-            <!-- Shoot -->
             <div class="control-item">
-                <div class="control-icon">
-                    <div class="mouse highlight-left">
-                        <div class="mouse-left"></div>
-                        <div class="mouse-right"></div>
-                        <div class="mouse-wheel"></div>
-                    </div>
-                </div>
-                <div class="control-text">
-                    <div class="control-action">Shoot</div>
-                    <div class="control-modifier">Left Click</div>
-                </div>
-                <div class="bullet-icon">
-                    <div class="bullet"></div>
-                    <div class="bullet"></div>
-                    <div class="bullet"></div>
-                </div>
+                <div class="mouse left"><div class="mouse-left"></div><div class="mouse-right"></div></div>
+                <div class="control-text"><strong>Shoot</strong></div>
             </div>
         </div>
     </div>
-
-    <script>
-        function closePanel() {
-            if (typeof PortalsSdk !== 'undefined' && PortalsSdk.closeIframe) {
-                PortalsSdk.closeIframe();
-            }
-        }
-    </script>
 </body>
 </html>
