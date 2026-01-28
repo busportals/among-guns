@@ -292,6 +292,2278 @@
         .wire-cyan { color: #5DE8E8; }
 
         /* ============================================
+           PIPE ALIGNMENT TASK STYLES
+           ============================================ */
+        .pipe-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pipe-grid {
+            display: grid;
+            gap: 4px;
+            background: #1A1510;
+            padding: 8px;
+            border-radius: 8px;
+            border: 2px solid #4D4038;
+        }
+
+        .pipe-cell {
+            width: 60px;
+            height: 60px;
+            background: #2D2520;
+            border: 2px solid #3D3028;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.15s ease;
+            position: relative;
+        }
+
+        .pipe-cell:hover {
+            background: #3D3028;
+        }
+
+        .pipe-cell:active {
+            transform: scale(0.95);
+        }
+
+        .pipe-cell.start-cell,
+        .pipe-cell.end-cell {
+            cursor: default;
+            background: linear-gradient(145deg, #3D3520, #2D2510);
+        }
+
+        .pipe-cell.start-cell::before {
+            content: 'IN';
+            position: absolute;
+            font-size: 8px;
+            color: #4CAF8C;
+            top: 2px;
+            left: 4px;
+            font-weight: bold;
+        }
+
+        .pipe-cell.end-cell::before {
+            content: 'OUT';
+            position: absolute;
+            font-size: 8px;
+            color: #D4763A;
+            top: 2px;
+            right: 4px;
+            font-weight: bold;
+        }
+
+        .pipe-cell.connected .pipe-svg {
+            filter: drop-shadow(0 0 4px #4CAF8C);
+        }
+
+        .pipe-cell.connected .pipe-svg path,
+        .pipe-cell.connected .pipe-svg line {
+            stroke: #4CAF8C;
+        }
+
+        .pipe-svg {
+            width: 50px;
+            height: 50px;
+            transition: transform 0.2s ease;
+        }
+
+        .pipe-svg path,
+        .pipe-svg line {
+            stroke: #4A9B9B;
+            stroke-width: 8;
+            stroke-linecap: round;
+            fill: none;
+        }
+
+        .flow-indicator {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #1A1510;
+            border-radius: 6px;
+            border: 2px solid #4D4038;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .flow-indicator.connected {
+            color: #4CAF8C;
+            border-color: #4CAF8C;
+        }
+
+        .flow-indicator.disconnected {
+            color: #C44A4A;
+            border-color: #C44A4A;
+        }
+
+        /* ============================================
+           CIRCUIT TRACE TASK STYLES
+           ============================================ */
+        .circuit-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .circuit-board {
+            position: relative;
+            width: 340px;
+            height: 260px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 3px solid #4D4038;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .circuit-board svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .circuit-node {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(145deg, #3D3520, #2D2510);
+            border: 3px solid #5D5048;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 16px;
+            font-weight: bold;
+            color: #A09080;
+            transform: translate(-50%, -50%);
+        }
+
+        .circuit-node:hover {
+            background: linear-gradient(145deg, #4D4530, #3D3520);
+            border-color: #7D7068;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .circuit-node.next {
+            border-color: #D4763A;
+            box-shadow: 0 0 15px rgba(212, 118, 58, 0.5);
+            animation: pulse-node 1s infinite;
+        }
+
+        .circuit-node.completed {
+            background: linear-gradient(145deg, #2A4A3A, #1A3A2A);
+            border-color: #4CAF8C;
+            color: #4CAF8C;
+            cursor: default;
+        }
+
+        .circuit-node.completed:hover {
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes pulse-node {
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 118, 58, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(212, 118, 58, 0.8); }
+        }
+
+        .circuit-line {
+            stroke: #4CAF8C;
+            stroke-width: 3;
+            stroke-linecap: round;
+            fill: none;
+            filter: drop-shadow(0 0 3px #4CAF8C);
+        }
+
+        .circuit-progress {
+            font-size: 14px;
+            color: #A09080;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .circuit-progress span {
+            color: #D4763A;
+            font-weight: bold;
+        }
+
+        /* ============================================
+           DATA LINK TASK STYLES
+           ============================================ */
+        .datalink-task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+            padding: 10px;
+        }
+
+        .datalink-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .datalink-packet {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #3D3520, #2D2510);
+            border: 3px solid #5D5048;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            transition: all 0.15s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .datalink-packet:hover {
+            transform: scale(1.05);
+            border-color: #D4763A;
+            box-shadow: 0 0 15px rgba(212, 118, 58, 0.4);
+        }
+
+        .datalink-packet.dragging {
+            cursor: grabbing;
+            transform: scale(1.1);
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .datalink-packet.placed {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .datalink-port {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 3px dashed #4D4038;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .datalink-port.highlight {
+            border-color: #D4763A;
+            background: linear-gradient(145deg, #2A2018, #1A1510);
+            box-shadow: inset 0 0 20px rgba(212, 118, 58, 0.2);
+        }
+
+        .datalink-port.filled {
+            border-style: solid;
+            border-color: #4CAF8C;
+            background: linear-gradient(145deg, #1A2A20, #152520);
+        }
+
+        .datalink-port.wrong {
+            border-color: #C44A4A;
+            animation: shake 0.3s ease;
+        }
+
+        .datalink-icon {
+            width: 32px;
+            height: 32px;
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .datalink-icon.icon-circle { stroke: #E85D5D; }
+        .datalink-icon.icon-square { stroke: #5D8DE8; }
+        .datalink-icon.icon-triangle { stroke: #E8C85D; }
+        .datalink-icon.icon-diamond { stroke: #5DE87D; }
+        .datalink-icon.icon-star { stroke: #B85DE8; }
+        .datalink-icon.icon-hex { stroke: #5DE8E8; }
+
+        .datalink-port-icon {
+            opacity: 0.4;
+        }
+
+        .datalink-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: #6D6058;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .datalink-arrow {
+            font-size: 24px;
+            color: #4D4038;
+        }
+
+        /* ============================================
+           FREQUENCY TUNE TASK STYLES
+           ============================================ */
+        .freq-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding: 10px;
+        }
+
+        .freq-display {
+            width: 340px;
+            height: 80px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 3px solid #4D4038;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .freq-track {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            right: 20px;
+            height: 20px;
+            transform: translateY(-50%);
+            background: #2D2520;
+            border-radius: 4px;
+        }
+
+        .freq-target {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(76, 175, 140, 0.4), rgba(76, 175, 140, 0.2));
+            border-left: 2px solid #4CAF8C;
+            border-right: 2px solid #4CAF8C;
+        }
+
+        .freq-indicator {
+            position: absolute;
+            top: -10px;
+            width: 6px;
+            height: 40px;
+            background: #D4763A;
+            border-radius: 3px;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(212, 118, 58, 0.8);
+            transition: left 0.05s linear;
+        }
+
+        .freq-indicator.stopped {
+            transition: none;
+        }
+
+        .freq-indicator.success {
+            background: #4CAF8C;
+            box-shadow: 0 0 20px rgba(76, 175, 140, 0.8);
+        }
+
+        .freq-labels {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 8px;
+            left: 20px;
+            right: 20px;
+            font-size: 10px;
+            color: #6D6058;
+        }
+
+        .freq-btn {
+            width: 120px;
+            height: 50px;
+            background: linear-gradient(180deg, #D4763A, #B45A2A);
+            border: 3px solid #E8864A;
+            border-radius: 10px;
+            color: #FFF;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow:
+                0 6px 0 #8A4A1A,
+                0 8px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .freq-btn:hover {
+            background: linear-gradient(180deg, #E8864A, #C46A3A);
+        }
+
+        .freq-btn:active {
+            transform: translateY(4px);
+            box-shadow:
+                0 2px 0 #8A4A1A,
+                0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .freq-btn:disabled {
+            background: linear-gradient(180deg, #5D5048, #4D4038);
+            border-color: #6D6058;
+            box-shadow: 0 4px 0 #3D3028;
+            cursor: default;
+        }
+
+        .freq-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #A09080;
+        }
+
+        .freq-status.success {
+            color: #4CAF8C;
+        }
+
+        .freq-status.fail {
+            color: #C44A4A;
+        }
+
+        /* ============================================
+           PRESSURE BALANCE TASK STYLES
+           ============================================ */
+        .pressure-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .pressure-gauges {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .pressure-gauge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gauge-display {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 3px solid #4D4038;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gauge-display.matched {
+            border-color: #4CAF8C;
+            box-shadow: 0 0 15px rgba(76, 175, 140, 0.4);
+        }
+
+        .gauge-fill {
+            width: 60px;
+            height: 60px;
+            background: conic-gradient(
+                #4A9B9B 0deg,
+                #4A9B9B var(--fill-angle),
+                #2D2520 var(--fill-angle),
+                #2D2520 360deg
+            );
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .gauge-fill::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background: #1A1510;
+            border-radius: 50%;
+        }
+
+        .gauge-target {
+            position: absolute;
+            width: 4px;
+            height: 12px;
+            background: #D4763A;
+            top: 6px;
+            left: 50%;
+            transform-origin: center 34px;
+            border-radius: 2px;
+            box-shadow: 0 0 5px rgba(212, 118, 58, 0.8);
+        }
+
+        .gauge-value {
+            font-size: 12px;
+            color: #A09080;
+            font-weight: bold;
+        }
+
+        .gauge-label {
+            font-size: 10px;
+            color: #6D6058;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pressure-slider-container {
+            width: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pressure-slider {
+            -webkit-appearance: none;
+            width: 80px;
+            height: 8px;
+            background: #2D2520;
+            border-radius: 4px;
+            outline: none;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            margin: 30px 0;
+        }
+
+        .pressure-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(180deg, #D4763A, #B45A2A);
+            border: 2px solid #E8864A;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .pressure-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(180deg, #D4763A, #B45A2A);
+            border: 2px solid #E8864A;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .pressure-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .pressure-status.balanced {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           POWER DISTRIBUTION TASK STYLES
+           ============================================ */
+        .power-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+        }
+
+        .power-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 8px 15px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 2px solid #4D4038;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .power-total {
+            color: #A09080;
+        }
+
+        .power-total span {
+            color: #D4763A;
+            font-weight: bold;
+        }
+
+        .power-remaining {
+            color: #A09080;
+        }
+
+        .power-remaining.over {
+            color: #C44A4A;
+        }
+
+        .power-remaining.ok {
+            color: #4CAF8C;
+        }
+
+        .power-systems {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .power-system {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: linear-gradient(145deg, #2D2520, #252018);
+            border: 2px solid #3D3028;
+            border-radius: 8px;
+        }
+
+        .power-system.matched {
+            border-color: #4CAF8C;
+            background: linear-gradient(145deg, #1A2A20, #152520);
+        }
+
+        .power-system-name {
+            width: 80px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .power-bar-container {
+            flex: 1;
+            height: 20px;
+            background: #1A1510;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .power-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4A9B9B, #5AABAB);
+            transition: width 0.15s ease;
+            border-radius: 4px;
+        }
+
+        .power-bar-target {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #D4763A;
+            box-shadow: 0 0 8px rgba(212, 118, 58, 0.8);
+        }
+
+        .power-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .power-btn {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(180deg, #4D4038, #3D3028);
+            border: 2px solid #5D5048;
+            border-radius: 6px;
+            color: #A09080;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s ease;
+            line-height: 1;
+        }
+
+        .power-btn:hover {
+            background: linear-gradient(180deg, #5D5048, #4D4038);
+            color: #F0E6D8;
+        }
+
+        .power-btn:active {
+            transform: scale(0.95);
+        }
+
+        .power-value {
+            width: 35px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #D4763A;
+        }
+
+        .power-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .power-status.balanced {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           ALIGNMENT GRID TASK STYLES
+           ============================================ */
+        .align-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .align-grid {
+            display: grid;
+            gap: 8px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            padding: 15px;
+            border-radius: 10px;
+            border: 3px solid #4D4038;
+        }
+
+        .align-cell {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(145deg, #2D2520, #252018);
+            border: 2px solid #3D3028;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .align-cell:hover {
+            background: linear-gradient(145deg, #3D3028, #2D2520);
+            border-color: #5D5048;
+        }
+
+        .align-cell:active {
+            transform: scale(0.95);
+        }
+
+        .align-cell.aligned {
+            border-color: #4CAF8C;
+            background: linear-gradient(145deg, #1A2A20, #152520);
+        }
+
+        .align-arrow {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.2s ease;
+        }
+
+        .align-arrow path {
+            fill: #4A9B9B;
+        }
+
+        .align-cell.aligned .align-arrow path {
+            fill: #4CAF8C;
+        }
+
+        .align-target {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #A09080;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .align-target-arrow {
+            width: 24px;
+            height: 24px;
+        }
+
+        .align-target-arrow path {
+            fill: #D4763A;
+        }
+
+        .align-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .align-status.complete {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           KEYPAD CODE TASK STYLES
+           ============================================ */
+        .keypad-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .keypad-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 3px solid #4D4038;
+            border-radius: 10px;
+        }
+
+        .keypad-target {
+            font-size: 11px;
+            color: #6D6058;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .keypad-code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #D4763A;
+            letter-spacing: 8px;
+            text-shadow: 0 0 10px rgba(212, 118, 58, 0.5);
+        }
+
+        .keypad-input-display {
+            display: flex;
+            gap: 8px;
+        }
+
+        .keypad-digit-slot {
+            width: 30px;
+            height: 40px;
+            background: #2D2520;
+            border: 2px solid #3D3028;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #4A9B9B;
+        }
+
+        .keypad-digit-slot.filled {
+            background: #1A2520;
+            border-color: #4CAF8C;
+            color: #4CAF8C;
+        }
+
+        .keypad-digit-slot.current {
+            border-color: #D4763A;
+            animation: blink-cursor 1s infinite;
+        }
+
+        @keyframes blink-cursor {
+            0%, 50% { border-color: #D4763A; }
+            51%, 100% { border-color: #4D4038; }
+        }
+
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .keypad-key {
+            width: 55px;
+            height: 50px;
+            background: linear-gradient(180deg, #3D3520, #2D2510);
+            border: 3px solid #5D5048;
+            border-radius: 8px;
+            color: #F0E6D8;
+            font-family: inherit;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 0 #1A1510;
+        }
+
+        .keypad-key:hover {
+            background: linear-gradient(180deg, #4D4530, #3D3520);
+        }
+
+        .keypad-key:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #1A1510;
+        }
+
+        .keypad-key.clear {
+            font-size: 14px;
+            color: #C44A4A;
+        }
+
+        .keypad-key.zero {
+            grid-column: 2;
+        }
+
+        .keypad-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+            height: 16px;
+        }
+
+        .keypad-status.error {
+            color: #C44A4A;
+        }
+
+        /* ============================================
+           SEQUENCE REPEAT TASK STYLES
+           ============================================ */
+        .sequence-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .sequence-display {
+            padding: 10px 20px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 2px solid #4D4038;
+            border-radius: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sequence-display.watching {
+            color: #D4763A;
+        }
+
+        .sequence-display.playing {
+            color: #4CAF8C;
+        }
+
+        .sequence-display.error {
+            color: #C44A4A;
+        }
+
+        .sequence-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .sequence-btn {
+            width: 90px;
+            height: 90px;
+            border: 4px solid;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            opacity: 0.6;
+        }
+
+        .sequence-btn:hover {
+            opacity: 0.8;
+        }
+
+        .sequence-btn.active,
+        .sequence-btn:active {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .sequence-btn.disabled {
+            cursor: not-allowed;
+            opacity: 0.3;
+        }
+
+        .sequence-btn.red {
+            background: linear-gradient(145deg, #C44A4A, #A43A3A);
+            border-color: #E85D5D;
+            box-shadow: inset 0 -8px 20px rgba(0,0,0,0.3);
+        }
+
+        .sequence-btn.red.active {
+            background: linear-gradient(145deg, #E85D5D, #C44A4A);
+            box-shadow: 0 0 30px rgba(232, 93, 93, 0.6), inset 0 -8px 20px rgba(0,0,0,0.3);
+        }
+
+        .sequence-btn.blue {
+            background: linear-gradient(145deg, #4A6AC4, #3A5AB4);
+            border-color: #5D8DE8;
+            box-shadow: inset 0 -8px 20px rgba(0,0,0,0.3);
+        }
+
+        .sequence-btn.blue.active {
+            background: linear-gradient(145deg, #5D8DE8, #4A6AC4);
+            box-shadow: 0 0 30px rgba(93, 141, 232, 0.6), inset 0 -8px 20px rgba(0,0,0,0.3);
+        }
+
+        .sequence-btn.yellow {
+            background: linear-gradient(145deg, #C4A84A, #B4983A);
+            border-color: #E8C85D;
+            box-shadow: inset 0 -8px 20px rgba(0,0,0,0.3);
+        }
+
+        .sequence-btn.yellow.active {
+            background: linear-gradient(145deg, #E8C85D, #C4A84A);
+            box-shadow: 0 0 30px rgba(232, 200, 93, 0.6), inset 0 -8px 20px rgba(0,0,0,0.3);
+        }
+
+        .sequence-btn.green {
+            background: linear-gradient(145deg, #4AC46A, #3AB45A);
+            border-color: #5DE87D;
+            box-shadow: inset 0 -8px 20px rgba(0,0,0,0.3);
+        }
+
+        .sequence-btn.green.active {
+            background: linear-gradient(145deg, #5DE87D, #4AC46A);
+            box-shadow: 0 0 30px rgba(93, 232, 125, 0.6), inset 0 -8px 20px rgba(0,0,0,0.3);
+        }
+
+        .sequence-progress {
+            display: flex;
+            gap: 6px;
+        }
+
+        .sequence-dot {
+            width: 10px;
+            height: 10px;
+            background: #3D3028;
+            border-radius: 50%;
+        }
+
+        .sequence-dot.filled {
+            background: #4CAF8C;
+        }
+
+        /* ============================================
+           BUTTON COMBO TASK STYLES
+           ============================================ */
+        .combo-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .combo-sequence {
+            display: flex;
+            gap: 8px;
+            padding: 12px 20px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 2px solid #4D4038;
+            border-radius: 8px;
+        }
+
+        .combo-step {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #FFF;
+            opacity: 0.4;
+            transition: all 0.15s ease;
+        }
+
+        .combo-step.current {
+            opacity: 1;
+            transform: scale(1.2);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .combo-step.done {
+            opacity: 0.2;
+        }
+
+        .combo-step.up { background: #5D8DE8; }
+        .combo-step.down { background: #E8C85D; }
+        .combo-step.left { background: #E85D5D; }
+        .combo-step.right { background: #5DE87D; }
+
+        .combo-buttons {
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left center right"
+                ". down .";
+            gap: 8px;
+        }
+
+        .combo-btn {
+            width: 60px;
+            height: 60px;
+            border: 3px solid;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+        }
+
+        .combo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.3);
+        }
+
+        .combo-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+        }
+
+        .combo-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: #FFF;
+        }
+
+        .combo-btn.up {
+            grid-area: up;
+            background: linear-gradient(180deg, #5D8DE8, #4A7AD8);
+            border-color: #7DA0F0;
+        }
+
+        .combo-btn.down {
+            grid-area: down;
+            background: linear-gradient(180deg, #E8C85D, #D8B84D);
+            border-color: #F0D870;
+        }
+
+        .combo-btn.left {
+            grid-area: left;
+            background: linear-gradient(180deg, #E85D5D, #D84A4A);
+            border-color: #F07070;
+        }
+
+        .combo-btn.right {
+            grid-area: right;
+            background: linear-gradient(180deg, #5DE87D, #4AD86A);
+            border-color: #70F090;
+        }
+
+        .combo-center {
+            grid-area: center;
+            width: 60px;
+            height: 60px;
+            background: #2D2520;
+            border: 3px solid #4D4038;
+            border-radius: 10px;
+        }
+
+        /* ============================================
+           SWITCH PANEL TASK STYLES
+           ============================================ */
+        .switch-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding: 10px;
+        }
+
+        .switch-target {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .switch-target-label {
+            font-size: 11px;
+            color: #6D6058;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .switch-target-display {
+            display: flex;
+            gap: 12px;
+            padding: 10px 15px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 2px solid #4D4038;
+            border-radius: 8px;
+        }
+
+        .switch-target-light {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #2D2520;
+            border: 2px solid #3D3028;
+        }
+
+        .switch-target-light.on {
+            background: #4CAF8C;
+            border-color: #5DC09C;
+            box-shadow: 0 0 10px rgba(76, 175, 140, 0.6);
+        }
+
+        .switch-panel {
+            display: flex;
+            gap: 15px;
+            padding: 15px 20px;
+            background: linear-gradient(145deg, #2D2520, #252018);
+            border: 3px solid #4D4038;
+            border-radius: 10px;
+        }
+
+        .switch-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .switch-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3D3028;
+            border: 2px solid #4D4038;
+            transition: all 0.15s ease;
+        }
+
+        .switch-indicator.on {
+            background: #D4763A;
+            border-color: #E8864A;
+            box-shadow: 0 0 10px rgba(212, 118, 58, 0.6);
+        }
+
+        .switch-indicator.matched {
+            background: #4CAF8C;
+            border-color: #5DC09C;
+            box-shadow: 0 0 10px rgba(76, 175, 140, 0.6);
+        }
+
+        .switch-toggle {
+            width: 30px;
+            height: 55px;
+            background: linear-gradient(180deg, #4D4038, #3D3028);
+            border: 2px solid #5D5048;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s ease;
+        }
+
+        .switch-toggle:hover {
+            border-color: #7D7068;
+        }
+
+        .switch-toggle::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            right: 4px;
+            height: 22px;
+            background: linear-gradient(180deg, #6D6058, #5D5048);
+            border-radius: 4px;
+            transition: all 0.15s ease;
+            bottom: 4px;
+        }
+
+        .switch-toggle.on::after {
+            bottom: auto;
+            top: 4px;
+        }
+
+        .switch-label {
+            font-size: 10px;
+            color: #6D6058;
+            text-transform: uppercase;
+        }
+
+        .switch-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .switch-status.complete {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           SAMPLE ANALYSIS TASK STYLES
+           ============================================ */
+        .sample-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .sample-tray {
+            display: flex;
+            gap: 10px;
+            padding: 12px 15px;
+            background: linear-gradient(145deg, #2D2520, #252018);
+            border: 3px solid #4D4038;
+            border-radius: 10px;
+            min-height: 70px;
+            align-items: center;
+        }
+
+        .sample-vial {
+            width: 40px;
+            height: 55px;
+            border-radius: 4px 4px 20px 20px;
+            cursor: grab;
+            transition: all 0.15s ease;
+            position: relative;
+            border: 2px solid;
+        }
+
+        .sample-vial:hover {
+            transform: scale(1.1);
+        }
+
+        .sample-vial.dragging {
+            cursor: grabbing;
+            transform: scale(1.15);
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .sample-vial.placed {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .sample-vial::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: #4D4038;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .sample-vial.red { background: linear-gradient(180deg, #E85D5D, #C44A4A); border-color: #F07070; }
+        .sample-vial.blue { background: linear-gradient(180deg, #5D8DE8, #4A7AD8); border-color: #7DA0F0; }
+        .sample-vial.green { background: linear-gradient(180deg, #5DE87D, #4AD86A); border-color: #70F090; }
+        .sample-vial.yellow { background: linear-gradient(180deg, #E8C85D, #D8B84D); border-color: #F0D870; }
+
+        .sample-bins {
+            display: flex;
+            gap: 15px;
+        }
+
+        .sample-bin {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 3px dashed #4D4038;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .sample-bin.highlight {
+            border-style: solid;
+            box-shadow: inset 0 0 20px rgba(212, 118, 58, 0.3);
+        }
+
+        .sample-bin.filled {
+            border-style: solid;
+            border-color: #4CAF8C;
+        }
+
+        .sample-bin-icon {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        .sample-bin-icon.red { background: #E85D5D; }
+        .sample-bin-icon.blue { background: #5D8DE8; }
+        .sample-bin-icon.green { background: #5DE87D; }
+        .sample-bin-icon.yellow { background: #E8C85D; }
+
+        .sample-bin-label {
+            font-size: 9px;
+            color: #6D6058;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sample-bin-count {
+            font-size: 11px;
+            color: #A09080;
+        }
+
+        .sample-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .sample-status.complete {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           FILE ORGANIZATION TASK STYLES
+           ============================================ */
+        .file-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .file-tray {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 12px 15px;
+            background: linear-gradient(145deg, #2D2520, #252018);
+            border: 3px solid #4D4038;
+            border-radius: 10px;
+            justify-content: center;
+            max-width: 320px;
+        }
+
+        .file-item {
+            width: 50px;
+            height: 60px;
+            background: linear-gradient(145deg, #3D3520, #2D2510);
+            border: 2px solid #5D5048;
+            border-radius: 4px;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.15s ease;
+        }
+
+        .file-item:hover {
+            transform: scale(1.1);
+            border-color: #D4763A;
+        }
+
+        .file-item.dragging {
+            cursor: grabbing;
+            transform: scale(1.15);
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .file-item.placed {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .file-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        .file-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-ext {
+            font-size: 8px;
+            color: #A09080;
+            text-transform: uppercase;
+        }
+
+        .file-folders {
+            display: flex;
+            gap: 12px;
+        }
+
+        .file-folder {
+            width: 75px;
+            height: 70px;
+            background: linear-gradient(180deg, #4D4038 0%, #4D4038 15%, #1A1510 15%, #1A1510 100%);
+            border: 3px solid #5D5048;
+            border-radius: 4px 4px 8px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .file-folder::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 8px;
+            width: 30px;
+            height: 8px;
+            background: #4D4038;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .file-folder.highlight {
+            border-color: #D4763A;
+            box-shadow: inset 0 0 20px rgba(212, 118, 58, 0.3);
+        }
+
+        .file-folder.filled {
+            border-color: #4CAF8C;
+        }
+
+        .file-folder-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.6;
+        }
+
+        .file-folder-label {
+            font-size: 9px;
+            color: #A09080;
+            text-transform: uppercase;
+        }
+
+        .file-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .file-status.complete {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           CARGO MANIFEST TASK STYLES
+           ============================================ */
+        .cargo-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .cargo-crates {
+            display: flex;
+            gap: 10px;
+            padding: 12px 15px;
+            background: linear-gradient(145deg, #2D2520, #252018);
+            border: 3px solid #4D4038;
+            border-radius: 10px;
+        }
+
+        .cargo-crate {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #8B6914, #6B4904);
+            border: 3px solid #AB8924;
+            border-radius: 6px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFF;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .cargo-crate::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 2px;
+        }
+
+        .cargo-crate:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .cargo-crate.dragging {
+            cursor: grabbing;
+            transform: scale(1.15);
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .cargo-crate.placed {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .cargo-slots {
+            display: flex;
+            gap: 12px;
+        }
+
+        .cargo-slot {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 3px dashed #4D4038;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .cargo-slot.highlight {
+            border-color: #D4763A;
+            background: linear-gradient(145deg, #2A2018, #1A1510);
+        }
+
+        .cargo-slot.filled {
+            border-style: solid;
+            border-color: #4CAF8C;
+        }
+
+        .cargo-slot-num {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4D4038;
+        }
+
+        .cargo-slot.filled .cargo-slot-num {
+            color: #4CAF8C;
+        }
+
+        .cargo-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .cargo-status.complete {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           PRIORITY QUEUE TASK STYLES
+           ============================================ */
+        .priority-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .priority-info {
+            font-size: 12px;
+            color: #A09080;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .priority-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(145deg, #2D2520, #252018);
+            border: 3px solid #4D4038;
+            border-radius: 10px;
+            justify-content: center;
+            max-width: 320px;
+        }
+
+        .priority-item {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(145deg, #3D3520, #2D2510);
+            border: 3px solid #5D5048;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #A09080;
+            transition: all 0.15s ease;
+        }
+
+        .priority-item:hover {
+            transform: scale(1.1);
+            border-color: #D4763A;
+            color: #D4763A;
+        }
+
+        .priority-item.next {
+            border-color: #D4763A;
+            box-shadow: 0 0 15px rgba(212, 118, 58, 0.4);
+            animation: pulse-priority 1s infinite;
+        }
+
+        @keyframes pulse-priority {
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 118, 58, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(212, 118, 58, 0.7); }
+        }
+
+        .priority-item.done {
+            background: linear-gradient(145deg, #1A2A20, #152520);
+            border-color: #4CAF8C;
+            color: #4CAF8C;
+            cursor: default;
+            opacity: 0.6;
+        }
+
+        .priority-item.done:hover {
+            transform: none;
+        }
+
+        .priority-progress {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .priority-progress-label {
+            font-size: 12px;
+            color: #A09080;
+            text-transform: uppercase;
+        }
+
+        .priority-progress-bar {
+            width: 150px;
+            height: 8px;
+            background: #2D2520;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .priority-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4A9B9B, #4CAF8C);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* ============================================
+           SCAN COMPLETE TASK STYLES
+           ============================================ */
+        .scan-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding: 20px;
+        }
+
+        .scan-display {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 4px solid #4D4038;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scan-ring {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border-radius: 50%;
+            border: 6px solid #2D2520;
+        }
+
+        .scan-progress-ring {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .scan-progress-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .scan-progress-ring circle {
+            fill: none;
+            stroke: #4CAF8C;
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 502;
+            stroke-dashoffset: 502;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .scan-icon {
+            width: 80px;
+            height: 80px;
+            fill: #4A9B9B;
+            transition: fill 0.3s ease;
+        }
+
+        .scan-icon.active {
+            fill: #4CAF8C;
+            animation: pulse-scan 0.5s infinite;
+        }
+
+        @keyframes pulse-scan {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .scan-btn {
+            width: 140px;
+            height: 60px;
+            background: linear-gradient(180deg, #D4763A, #B45A2A);
+            border: 4px solid #E8864A;
+            border-radius: 30px;
+            color: #FFF;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 6px 0 #8A4A1A;
+            user-select: none;
+        }
+
+        .scan-btn:hover {
+            background: linear-gradient(180deg, #E8864A, #C46A3A);
+        }
+
+        .scan-btn:active,
+        .scan-btn.active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #8A4A1A;
+            background: linear-gradient(180deg, #C46A3A, #A45A2A);
+        }
+
+        .scan-status {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #A09080;
+        }
+
+        .scan-status.scanning {
+            color: #D4763A;
+        }
+
+        .scan-status.complete {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           TARGET LOCK TASK STYLES
+           ============================================ */
+        .target-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+        }
+
+        .target-field {
+            width: 320px;
+            height: 200px;
+            background: linear-gradient(145deg, #1A1510, #151210);
+            border: 3px solid #4D4038;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .target-field::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                linear-gradient(90deg, transparent 49%, #2D2520 49%, #2D2520 51%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, #2D2520 49%, #2D2520 51%, transparent 51%);
+            background-size: 40px 40px;
+            opacity: 0.3;
+        }
+
+        .target {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            transform: translate(-50%, -50%);
+            cursor: crosshair;
+            animation: target-appear 0.2s ease;
+        }
+
+        @keyframes target-appear {
+            from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .target svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .target-outer {
+            fill: none;
+            stroke: #E85D5D;
+            stroke-width: 2;
+        }
+
+        .target-inner {
+            fill: #E85D5D;
+        }
+
+        .target.hit {
+            animation: target-hit 0.2s ease forwards;
+        }
+
+        @keyframes target-hit {
+            to { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+
+        .target-hud {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .target-score {
+            font-size: 14px;
+            color: #A09080;
+        }
+
+        .target-score span {
+            color: #4CAF8C;
+            font-weight: bold;
+        }
+
+        .target-time {
+            font-size: 14px;
+            color: #A09080;
+        }
+
+        .target-time span {
+            color: #D4763A;
+            font-weight: bold;
+        }
+
+        .target-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .target-status.complete {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           LEAK SEAL TASK STYLES
+           ============================================ */
+        .leak-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+        }
+
+        .leak-hull {
+            width: 320px;
+            height: 200px;
+            background: linear-gradient(145deg, #3D3520, #2D2510);
+            border: 4px solid #5D5048;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leak-hull::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .leak-rivet {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #5D5048;
+            border-radius: 50%;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .leak-point {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            animation: leak-bubble 0.5s ease infinite;
+        }
+
+        @keyframes leak-bubble {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .leak-point svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 8px rgba(93, 141, 232, 0.6));
+        }
+
+        .leak-point.sealed {
+            animation: leak-seal 0.3s ease forwards;
+        }
+
+        @keyframes leak-seal {
+            to { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+
+        .leak-water {
+            fill: #5D8DE8;
+            opacity: 0.8;
+        }
+
+        .leak-hud {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .leak-count {
+            font-size: 14px;
+            color: #A09080;
+        }
+
+        .leak-count span {
+            color: #4CAF8C;
+            font-weight: bold;
+        }
+
+        .leak-warning {
+            font-size: 14px;
+            color: #C44A4A;
+            animation: blink-warning 0.5s infinite;
+        }
+
+        @keyframes blink-warning {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .leak-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .leak-status.complete {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
+           SYSTEM REBOOT TASK STYLES
+           ============================================ */
+        .reboot-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .reboot-panel {
+            padding: 20px;
+            background: linear-gradient(145deg, #2D2520, #252018);
+            border: 3px solid #4D4038;
+            border-radius: 12px;
+        }
+
+        .reboot-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .reboot-btn {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #3D3028, #2D2018);
+            border: 3px solid #4D4038;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s ease;
+        }
+
+        .reboot-btn::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            background: #2D2520;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .reboot-btn.lit {
+            border-color: #D4763A;
+            animation: pulse-reboot 0.4s infinite;
+        }
+
+        .reboot-btn.lit::before {
+            background: linear-gradient(145deg, #D4763A, #B45A2A);
+            box-shadow: 0 0 20px rgba(212, 118, 58, 0.6);
+        }
+
+        @keyframes pulse-reboot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .reboot-btn.done {
+            border-color: #4CAF8C;
+            cursor: default;
+        }
+
+        .reboot-btn.done::before {
+            background: linear-gradient(145deg, #3A5A4A, #2A4A3A);
+        }
+
+        .reboot-btn:hover:not(.done):not(.lit) {
+            border-color: #5D5048;
+        }
+
+        .reboot-btn:active:not(.done) {
+            transform: scale(0.95);
+        }
+
+        .reboot-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reboot-progress-label {
+            font-size: 12px;
+            color: #A09080;
+            text-transform: uppercase;
+        }
+
+        .reboot-progress-bar {
+            width: 150px;
+            height: 10px;
+            background: #2D2520;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #4D4038;
+        }
+
+        .reboot-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #D4763A, #4CAF8C);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .reboot-status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #A09080;
+        }
+
+        .reboot-status.booting {
+            color: #D4763A;
+        }
+
+        .reboot-status.complete {
+            color: #4CAF8C;
+        }
+
+        /* ============================================
            LOADING STATE
            ============================================ */
         .loading {
@@ -716,11 +2988,2854 @@
         };
 
         // ============================================
+        // TASK 2: PIPE ALIGNMENT
+        // ============================================
+        const PipeAlignmentTask = {
+            name: 'Pipe Alignment',
+            instruction: 'Rotate pipes to complete the flow',
+
+            // Pipe types: 'straight', 'corner', 'tee', 'cross'
+            // Directions: 0=up, 1=right, 2=down, 3=left (rotation * 90deg)
+            variants: [
+                {
+                    cols: 4,
+                    rows: 3,
+                    start: { col: 0, row: 1 },
+                    end: { col: 3, row: 1 },
+                    pipes: [
+                        { type: 'corner', solution: 1 },   // 0,0
+                        { type: 'straight', solution: 0 }, // 1,0
+                        { type: 'straight', solution: 0 }, // 2,0
+                        { type: 'corner', solution: 2 },   // 3,0
+                        { type: 'straight', solution: 1 }, // 0,1 - START
+                        { type: 'corner', solution: 0 },   // 1,1
+                        { type: 'corner', solution: 3 },   // 2,1
+                        { type: 'straight', solution: 1 }, // 3,1 - END
+                        null, null, null, null             // Row 2 empty
+                    ]
+                },
+                {
+                    cols: 4,
+                    rows: 3,
+                    start: { col: 0, row: 0 },
+                    end: { col: 3, row: 2 },
+                    pipes: [
+                        { type: 'straight', solution: 1 }, // 0,0 - START
+                        { type: 'corner', solution: 1 },   // 1,0
+                        null,                               // 2,0
+                        null,                               // 3,0
+                        null,                               // 0,1
+                        { type: 'straight', solution: 0 }, // 1,1
+                        null,                               // 2,1
+                        null,                               // 3,1
+                        null,                               // 0,2
+                        { type: 'corner', solution: 0 },   // 1,2
+                        { type: 'straight', solution: 1 }, // 2,2
+                        { type: 'straight', solution: 1 }  // 3,2 - END
+                    ]
+                },
+                {
+                    cols: 3,
+                    rows: 3,
+                    start: { col: 0, row: 1 },
+                    end: { col: 2, row: 1 },
+                    pipes: [
+                        null,                               // 0,0
+                        { type: 'corner', solution: 2 },   // 1,0
+                        { type: 'corner', solution: 3 },   // 2,0
+                        { type: 'corner', solution: 1 },   // 0,1 - START
+                        { type: 'corner', solution: 0 },   // 1,1
+                        { type: 'straight', solution: 0 }, // 2,1 - END
+                        null, null, null                   // Row 2 empty
+                    ]
+                },
+                {
+                    cols: 4,
+                    rows: 2,
+                    start: { col: 0, row: 0 },
+                    end: { col: 3, row: 1 },
+                    pipes: [
+                        { type: 'straight', solution: 1 }, // 0,0 - START
+                        { type: 'straight', solution: 1 }, // 1,0
+                        { type: 'corner', solution: 1 },   // 2,0
+                        null,                               // 3,0
+                        null,                               // 0,1
+                        null,                               // 1,1
+                        { type: 'corner', solution: 0 },   // 2,1
+                        { type: 'straight', solution: 1 }  // 3,1 - END
+                    ]
+                }
+            ],
+
+            state: {
+                cells: [],
+                variant: null
+            },
+
+            init(container, variant) {
+                this.state = {
+                    cells: [],
+                    variant: variant
+                };
+
+                container.innerHTML = `
+                    <div class="pipe-task">
+                        <div class="pipe-grid" id="pipe-grid" style="grid-template-columns: repeat(${variant.cols}, 60px);"></div>
+                        <div class="flow-indicator disconnected" id="flow-indicator">Flow: Disconnected</div>
+                    </div>
+                `;
+
+                const grid = document.getElementById('pipe-grid');
+
+                // Create cells
+                for (let row = 0; row < variant.rows; row++) {
+                    for (let col = 0; col < variant.cols; col++) {
+                        const index = row * variant.cols + col;
+                        const pipeData = variant.pipes[index];
+                        const isStart = variant.start.col === col && variant.start.row === row;
+                        const isEnd = variant.end.col === col && variant.end.row === row;
+
+                        const cell = document.createElement('div');
+                        cell.className = 'pipe-cell';
+                        if (isStart) cell.classList.add('start-cell');
+                        if (isEnd) cell.classList.add('end-cell');
+
+                        if (pipeData) {
+                            // Random initial rotation (different from solution)
+                            let rotation = Math.floor(Math.random() * 4);
+                            // Make sure at least some pipes need rotating
+                            if (Math.random() > 0.3) {
+                                rotation = (pipeData.solution + 1 + Math.floor(Math.random() * 3)) % 4;
+                            }
+
+                            cell.innerHTML = this.getPipeSVG(pipeData.type, rotation);
+                            cell.dataset.type = pipeData.type;
+                            cell.dataset.rotation = rotation;
+                            cell.dataset.solution = pipeData.solution;
+                            cell.dataset.col = col;
+                            cell.dataset.row = row;
+
+                            if (!isStart && !isEnd) {
+                                cell.addEventListener('click', (e) => this.handleCellClick(e, cell));
+                            }
+                        } else {
+                            cell.style.visibility = 'hidden';
+                        }
+
+                        grid.appendChild(cell);
+                        this.state.cells.push({ element: cell, pipeData, col, row, isStart, isEnd });
+                    }
+                }
+
+                // Check initial state
+                this.checkFlow();
+            },
+
+            getPipeSVG(type, rotation) {
+                const transforms = [0, 90, 180, 270];
+                const transform = `transform="rotate(${transforms[rotation]}, 25, 25)"`;
+
+                switch (type) {
+                    case 'straight':
+                        return `<svg class="pipe-svg" viewBox="0 0 50 50">
+                            <line x1="0" y1="25" x2="50" y2="25" ${transform}/>
+                        </svg>`;
+                    case 'corner':
+                        return `<svg class="pipe-svg" viewBox="0 0 50 50">
+                            <path d="M 25 0 L 25 25 L 50 25" ${transform}/>
+                        </svg>`;
+                    case 'tee':
+                        return `<svg class="pipe-svg" viewBox="0 0 50 50">
+                            <path d="M 0 25 L 50 25 M 25 25 L 25 50" ${transform}/>
+                        </svg>`;
+                    case 'cross':
+                        return `<svg class="pipe-svg" viewBox="0 0 50 50">
+                            <line x1="0" y1="25" x2="50" y2="25"/>
+                            <line x1="25" y1="0" x2="25" y2="50"/>
+                        </svg>`;
+                    default:
+                        return '';
+                }
+            },
+
+            handleCellClick(e, cell) {
+                e.preventDefault();
+                Sounds.play('click');
+
+                // Rotate 90 degrees
+                let rotation = parseInt(cell.dataset.rotation);
+                rotation = (rotation + 1) % 4;
+                cell.dataset.rotation = rotation;
+
+                // Update SVG
+                const type = cell.dataset.type;
+                cell.innerHTML = this.getPipeSVG(type, rotation);
+
+                // Check flow
+                this.checkFlow();
+            },
+
+            // Get which directions a pipe connects to based on type and rotation
+            getConnections(type, rotation) {
+                // Returns array of directions: 0=up, 1=right, 2=down, 3=left
+                let baseConnections = [];
+
+                switch (type) {
+                    case 'straight':
+                        baseConnections = [1, 3]; // right, left
+                        break;
+                    case 'corner':
+                        baseConnections = [0, 1]; // up, right
+                        break;
+                    case 'tee':
+                        baseConnections = [1, 2, 3]; // right, down, left
+                        break;
+                    case 'cross':
+                        baseConnections = [0, 1, 2, 3]; // all
+                        break;
+                }
+
+                // Rotate connections
+                return baseConnections.map(dir => (dir + rotation) % 4);
+            },
+
+            // Get opposite direction
+            getOpposite(dir) {
+                return (dir + 2) % 4;
+            },
+
+            // Get neighbor in a direction
+            getNeighbor(col, row, dir) {
+                switch (dir) {
+                    case 0: return { col, row: row - 1 }; // up
+                    case 1: return { col: col + 1, row }; // right
+                    case 2: return { col, row: row + 1 }; // down
+                    case 3: return { col: col - 1, row }; // left
+                }
+            },
+
+            checkFlow() {
+                const variant = this.state.variant;
+
+                // Clear connected states
+                this.state.cells.forEach(c => {
+                    if (c.element) c.element.classList.remove('connected');
+                });
+
+                // BFS from start
+                const visited = new Set();
+                const queue = [{ col: variant.start.col, row: variant.start.row }];
+                let reachedEnd = false;
+
+                // Determine entry direction for start cell (comes from outside)
+                const startCell = this.state.cells.find(c => c.col === variant.start.col && c.row === variant.start.row);
+                if (!startCell || !startCell.pipeData) return;
+
+                while (queue.length > 0) {
+                    const current = queue.shift();
+                    const key = `${current.col},${current.row}`;
+
+                    if (visited.has(key)) continue;
+                    visited.add(key);
+
+                    // Find cell data
+                    const cellData = this.state.cells.find(c => c.col === current.col && c.row === current.row);
+                    if (!cellData || !cellData.pipeData) continue;
+
+                    // Mark as connected
+                    cellData.element.classList.add('connected');
+
+                    // Check if reached end
+                    if (current.col === variant.end.col && current.row === variant.end.row) {
+                        reachedEnd = true;
+                    }
+
+                    // Get pipe connections
+                    const rotation = parseInt(cellData.element.dataset.rotation);
+                    const connections = this.getConnections(cellData.pipeData.type, rotation);
+
+                    // Check each connected direction
+                    for (const dir of connections) {
+                        const neighbor = this.getNeighbor(current.col, current.row, dir);
+                        const neighborKey = `${neighbor.col},${neighbor.row}`;
+
+                        if (visited.has(neighborKey)) continue;
+
+                        // Check bounds
+                        if (neighbor.col < 0 || neighbor.col >= variant.cols ||
+                            neighbor.row < 0 || neighbor.row >= variant.rows) continue;
+
+                        // Find neighbor cell
+                        const neighborData = this.state.cells.find(c => c.col === neighbor.col && c.row === neighbor.row);
+                        if (!neighborData || !neighborData.pipeData) continue;
+
+                        // Check if neighbor connects back
+                        const neighborRotation = parseInt(neighborData.element.dataset.rotation);
+                        const neighborConnections = this.getConnections(neighborData.pipeData.type, neighborRotation);
+                        const oppositeDir = this.getOpposite(dir);
+
+                        if (neighborConnections.includes(oppositeDir)) {
+                            queue.push(neighbor);
+                        }
+                    }
+                }
+
+                // Update flow indicator
+                const indicator = document.getElementById('flow-indicator');
+                if (reachedEnd) {
+                    indicator.textContent = 'Flow: Connected';
+                    indicator.classList.remove('disconnected');
+                    indicator.classList.add('connected');
+
+                    // Check if all pipes are correctly aligned
+                    const allCorrect = this.state.cells.every(c => {
+                        if (!c.pipeData) return true;
+                        return parseInt(c.element.dataset.rotation) === c.pipeData.solution;
+                    });
+
+                    if (allCorrect || reachedEnd) {
+                        setTimeout(() => TaskFramework.showSuccess(), 400);
+                    }
+                } else {
+                    indicator.textContent = 'Flow: Disconnected';
+                    indicator.classList.add('disconnected');
+                    indicator.classList.remove('connected');
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 3: CIRCUIT TRACE
+        // ============================================
+        const CircuitTraceTask = {
+            name: 'Circuit Trace',
+            instruction: 'Click the nodes in numerical order',
+
+            variants: [
+                {
+                    nodes: [
+                        { x: 50, y: 50, num: 1 },
+                        { x: 150, y: 40, num: 2 },
+                        { x: 250, y: 70, num: 3 },
+                        { x: 290, y: 160, num: 4 },
+                        { x: 200, y: 200, num: 5 }
+                    ]
+                },
+                {
+                    nodes: [
+                        { x: 170, y: 40, num: 1 },
+                        { x: 280, y: 80, num: 2 },
+                        { x: 280, y: 180, num: 3 },
+                        { x: 170, y: 220, num: 4 },
+                        { x: 60, y: 180, num: 5 },
+                        { x: 60, y: 80, num: 6 }
+                    ]
+                },
+                {
+                    nodes: [
+                        { x: 60, y: 130, num: 1 },
+                        { x: 130, y: 50, num: 2 },
+                        { x: 210, y: 50, num: 3 },
+                        { x: 280, y: 130, num: 4 },
+                        { x: 210, y: 210, num: 5 },
+                        { x: 130, y: 210, num: 6 }
+                    ]
+                },
+                {
+                    nodes: [
+                        { x: 50, y: 210, num: 1 },
+                        { x: 50, y: 130, num: 2 },
+                        { x: 50, y: 50, num: 3 },
+                        { x: 170, y: 50, num: 4 },
+                        { x: 290, y: 50, num: 5 },
+                        { x: 290, y: 130, num: 6 },
+                        { x: 290, y: 210, num: 7 }
+                    ]
+                }
+            ],
+
+            state: {
+                nodes: [],
+                currentIndex: 0,
+                totalNodes: 0
+            },
+
+            init(container, variant) {
+                this.state = {
+                    nodes: [],
+                    currentIndex: 0,
+                    totalNodes: variant.nodes.length
+                };
+
+                container.innerHTML = `
+                    <div class="circuit-task">
+                        <div class="circuit-board" id="circuit-board">
+                            <svg id="circuit-svg"></svg>
+                        </div>
+                        <div class="circuit-progress">Node: <span id="progress-current">1</span> / ${variant.nodes.length}</div>
+                    </div>
+                `;
+
+                const board = document.getElementById('circuit-board');
+
+                // Create nodes
+                variant.nodes.forEach((nodeData, index) => {
+                    const node = document.createElement('div');
+                    node.className = 'circuit-node';
+                    if (index === 0) node.classList.add('next');
+                    node.style.left = nodeData.x + 'px';
+                    node.style.top = nodeData.y + 'px';
+                    node.textContent = nodeData.num;
+                    node.dataset.index = index;
+
+                    node.addEventListener('click', (e) => this.handleNodeClick(e, node, index));
+
+                    board.appendChild(node);
+                    this.state.nodes.push({ element: node, x: nodeData.x, y: nodeData.y, num: nodeData.num });
+                });
+            },
+
+            handleNodeClick(e, node, index) {
+                e.preventDefault();
+
+                // Check if this is the correct next node
+                if (index !== this.state.currentIndex) {
+                    TaskFramework.showError();
+                    return;
+                }
+
+                Sounds.play('connect');
+
+                // Mark as completed
+                node.classList.remove('next');
+                node.classList.add('completed');
+
+                // Draw line from previous node
+                if (index > 0) {
+                    const prevNode = this.state.nodes[index - 1];
+                    const currNode = this.state.nodes[index];
+                    this.drawLine(prevNode.x, prevNode.y, currNode.x, currNode.y);
+                }
+
+                this.state.currentIndex++;
+
+                // Update progress
+                const progressEl = document.getElementById('progress-current');
+                if (this.state.currentIndex < this.state.totalNodes) {
+                    progressEl.textContent = this.state.currentIndex + 1;
+
+                    // Highlight next node
+                    const nextNode = this.state.nodes[this.state.currentIndex];
+                    nextNode.element.classList.add('next');
+                } else {
+                    progressEl.textContent = this.state.totalNodes;
+                    // All nodes completed!
+                    setTimeout(() => TaskFramework.showSuccess(), 300);
+                }
+            },
+
+            drawLine(x1, y1, x2, y2) {
+                const svg = document.getElementById('circuit-svg');
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2);
+                line.setAttribute('y2', y2);
+                line.classList.add('circuit-line');
+                svg.appendChild(line);
+            }
+        };
+
+        // ============================================
+        // TASK 4: DATA LINK
+        // ============================================
+        const DataLinkTask = {
+            name: 'Data Link',
+            instruction: 'Drag packets to matching ports',
+
+            iconTypes: ['circle', 'square', 'triangle', 'diamond', 'star', 'hex'],
+
+            variants: [
+                { icons: ['circle', 'square', 'triangle', 'diamond'] },
+                { icons: ['star', 'hex', 'circle', 'square'] },
+                { icons: ['triangle', 'diamond', 'star', 'hex'] },
+                { icons: ['circle', 'square', 'triangle', 'diamond', 'star'] }
+            ],
+
+            state: {
+                packets: [],
+                ports: [],
+                placedCount: 0,
+                totalCount: 0,
+                draggedPacket: null,
+                dragOffset: { x: 0, y: 0 }
+            },
+
+            getIconSVG(type, className = '') {
+                const cls = `datalink-icon icon-${type} ${className}`;
+                switch (type) {
+                    case 'circle':
+                        return `<svg class="${cls}" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" /></svg>`;
+                    case 'square':
+                        return `<svg class="${cls}" viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="2" /></svg>`;
+                    case 'triangle':
+                        return `<svg class="${cls}" viewBox="0 0 32 32"><path d="M16 4 L28 28 L4 28 Z" /></svg>`;
+                    case 'diamond':
+                        return `<svg class="${cls}" viewBox="0 0 32 32"><path d="M16 2 L30 16 L16 30 L2 16 Z" /></svg>`;
+                    case 'star':
+                        return `<svg class="${cls}" viewBox="0 0 32 32"><path d="M16 2 L19 12 L30 12 L21 19 L24 30 L16 23 L8 30 L11 19 L2 12 L13 12 Z" /></svg>`;
+                    case 'hex':
+                        return `<svg class="${cls}" viewBox="0 0 32 32"><path d="M16 2 L28 9 L28 23 L16 30 L4 23 L4 9 Z" /></svg>`;
+                    default:
+                        return '';
+                }
+            },
+
+            init(container, variant) {
+                this.state = {
+                    packets: [],
+                    ports: [],
+                    placedCount: 0,
+                    totalCount: variant.icons.length,
+                    draggedPacket: null,
+                    dragOffset: { x: 0, y: 0 }
+                };
+
+                // Shuffle port order
+                const portOrder = [...variant.icons];
+                for (let i = portOrder.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [portOrder[i], portOrder[j]] = [portOrder[j], portOrder[i]];
+                }
+
+                container.innerHTML = `
+                    <div class="datalink-task">
+                        <div class="datalink-column" id="packets-column"></div>
+                        <div class="datalink-center">
+                            <div>DATA</div>
+                            <div class="datalink-arrow">→</div>
+                            <div>LINK</div>
+                        </div>
+                        <div class="datalink-column" id="ports-column"></div>
+                    </div>
+                `;
+
+                const packetsCol = document.getElementById('packets-column');
+                const portsCol = document.getElementById('ports-column');
+
+                // Create packets
+                variant.icons.forEach((icon, index) => {
+                    const packet = document.createElement('div');
+                    packet.className = 'datalink-packet';
+                    packet.innerHTML = this.getIconSVG(icon);
+                    packet.dataset.icon = icon;
+                    packet.dataset.index = index;
+
+                    this.setupDrag(packet);
+
+                    packetsCol.appendChild(packet);
+                    this.state.packets.push({ element: packet, icon, placed: false });
+                });
+
+                // Create ports (shuffled order)
+                portOrder.forEach((icon, index) => {
+                    const port = document.createElement('div');
+                    port.className = 'datalink-port';
+                    port.innerHTML = this.getIconSVG(icon, 'datalink-port-icon');
+                    port.dataset.icon = icon;
+                    port.dataset.index = index;
+
+                    portsCol.appendChild(port);
+                    this.state.ports.push({ element: port, icon, filled: false });
+                });
+            },
+
+            setupDrag(packet) {
+                const onStart = (e) => {
+                    if (packet.classList.contains('placed')) return;
+
+                    e.preventDefault();
+                    Sounds.play('click');
+
+                    packet.classList.add('dragging');
+                    this.state.draggedPacket = packet;
+
+                    const rect = packet.getBoundingClientRect();
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                    this.state.dragOffset = {
+                        x: clientX - rect.left - rect.width / 2,
+                        y: clientY - rect.top - rect.height / 2
+                    };
+
+                    // Move to body for free positioning
+                    packet.style.position = 'fixed';
+                    packet.style.left = (clientX - rect.width / 2) + 'px';
+                    packet.style.top = (clientY - rect.height / 2) + 'px';
+                    document.body.appendChild(packet);
+                };
+
+                const onMove = (e) => {
+                    if (!this.state.draggedPacket) return;
+
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                    this.state.draggedPacket.style.left = (clientX - 30) + 'px';
+                    this.state.draggedPacket.style.top = (clientY - 30) + 'px';
+
+                    // Highlight port under cursor
+                    this.state.ports.forEach(p => {
+                        if (p.filled) return;
+                        const rect = p.element.getBoundingClientRect();
+                        const isOver = clientX >= rect.left && clientX <= rect.right &&
+                                       clientY >= rect.top && clientY <= rect.bottom;
+                        p.element.classList.toggle('highlight', isOver);
+                    });
+                };
+
+                const onEnd = (e) => {
+                    if (!this.state.draggedPacket) return;
+
+                    const packet = this.state.draggedPacket;
+                    packet.classList.remove('dragging');
+                    this.state.draggedPacket = null;
+
+                    const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+                    const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+
+                    // Check if dropped on a port
+                    let matched = false;
+                    for (const portData of this.state.ports) {
+                        if (portData.filled) continue;
+
+                        const rect = portData.element.getBoundingClientRect();
+                        const isOver = clientX >= rect.left && clientX <= rect.right &&
+                                       clientY >= rect.top && clientY <= rect.bottom;
+
+                        if (isOver) {
+                            portData.element.classList.remove('highlight');
+
+                            // Check if icons match
+                            if (packet.dataset.icon === portData.icon) {
+                                // Correct match!
+                                Sounds.play('connect');
+                                portData.element.classList.add('filled');
+                                portData.filled = true;
+
+                                // Hide packet
+                                packet.style.position = '';
+                                packet.classList.add('placed');
+                                document.getElementById('packets-column').appendChild(packet);
+
+                                this.state.placedCount++;
+
+                                if (this.state.placedCount === this.state.totalCount) {
+                                    setTimeout(() => TaskFramework.showSuccess(), 300);
+                                }
+
+                                matched = true;
+                            } else {
+                                // Wrong port
+                                Sounds.play('error');
+                                portData.element.classList.add('wrong');
+                                setTimeout(() => portData.element.classList.remove('wrong'), 300);
+                            }
+                            break;
+                        }
+                    }
+
+                    if (!matched && !packet.classList.contains('placed')) {
+                        // Return to original position
+                        packet.style.position = '';
+                        packet.style.left = '';
+                        packet.style.top = '';
+                        document.getElementById('packets-column').appendChild(packet);
+                    }
+
+                    // Clear highlights
+                    this.state.ports.forEach(p => p.element.classList.remove('highlight'));
+                };
+
+                packet.addEventListener('mousedown', onStart);
+                packet.addEventListener('touchstart', onStart);
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('touchmove', onMove);
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchend', onEnd);
+            }
+        };
+
+        // ============================================
+        // TASK 5: FREQUENCY TUNE
+        // ============================================
+        const FrequencyTuneTask = {
+            name: 'Frequency Tune',
+            instruction: 'Stop the indicator in the green zone',
+
+            variants: [
+                { speed: 2, targetStart: 60, targetWidth: 20 },  // Easy - big zone, slow
+                { speed: 3, targetStart: 40, targetWidth: 15 },  // Medium
+                { speed: 3.5, targetStart: 70, targetWidth: 12 }, // Hard - small zone
+                { speed: 4, targetStart: 30, targetWidth: 18 }   // Fast but medium zone
+            ],
+
+            state: {
+                position: 0,
+                direction: 1,
+                speed: 2,
+                targetStart: 0,
+                targetEnd: 0,
+                running: false,
+                animFrame: null
+            },
+
+            init(container, variant) {
+                this.state = {
+                    position: 0,
+                    direction: 1,
+                    speed: variant.speed,
+                    targetStart: variant.targetStart,
+                    targetEnd: variant.targetStart + variant.targetWidth,
+                    running: true,
+                    animFrame: null
+                };
+
+                container.innerHTML = `
+                    <div class="freq-task">
+                        <div class="freq-display">
+                            <div class="freq-track">
+                                <div class="freq-target" id="freq-target" style="left: ${variant.targetStart}%; width: ${variant.targetWidth}%;"></div>
+                                <div class="freq-indicator" id="freq-indicator"></div>
+                            </div>
+                            <div class="freq-labels">
+                                <span>87.5</span>
+                                <span>MHz</span>
+                                <span>108.0</span>
+                            </div>
+                        </div>
+                        <button class="freq-btn" id="freq-btn">LOCK</button>
+                        <div class="freq-status" id="freq-status">Tuning...</div>
+                    </div>
+                `;
+
+                const btn = document.getElementById('freq-btn');
+                btn.addEventListener('click', () => this.handleStop());
+
+                // Start animation
+                this.animate();
+            },
+
+            animate() {
+                if (!this.state.running) return;
+
+                // Move indicator
+                this.state.position += this.state.speed * this.state.direction;
+
+                // Bounce off edges
+                if (this.state.position >= 100) {
+                    this.state.position = 100;
+                    this.state.direction = -1;
+                } else if (this.state.position <= 0) {
+                    this.state.position = 0;
+                    this.state.direction = 1;
+                }
+
+                // Update visual
+                const indicator = document.getElementById('freq-indicator');
+                if (indicator) {
+                    indicator.style.left = this.state.position + '%';
+                }
+
+                this.state.animFrame = requestAnimationFrame(() => this.animate());
+            },
+
+            handleStop() {
+                if (!this.state.running) return;
+
+                Sounds.play('click');
+                this.state.running = false;
+
+                if (this.state.animFrame) {
+                    cancelAnimationFrame(this.state.animFrame);
+                }
+
+                const indicator = document.getElementById('freq-indicator');
+                const btn = document.getElementById('freq-btn');
+                const status = document.getElementById('freq-status');
+
+                indicator.classList.add('stopped');
+                btn.disabled = true;
+
+                // Check if in target zone
+                const pos = this.state.position;
+                if (pos >= this.state.targetStart && pos <= this.state.targetEnd) {
+                    // Success!
+                    indicator.classList.add('success');
+                    status.textContent = 'Frequency Locked!';
+                    status.classList.add('success');
+                    setTimeout(() => TaskFramework.showSuccess(), 500);
+                } else {
+                    // Failed - reset and try again
+                    status.textContent = 'Signal Lost - Retry';
+                    status.classList.add('fail');
+                    Sounds.play('error');
+
+                    setTimeout(() => {
+                        indicator.classList.remove('stopped');
+                        status.textContent = 'Tuning...';
+                        status.classList.remove('fail');
+                        btn.disabled = false;
+                        this.state.running = true;
+                        this.state.position = 0;
+                        this.state.direction = 1;
+                        this.animate();
+                    }, 1000);
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 6: PRESSURE BALANCE
+        // ============================================
+        const PressureBalanceTask = {
+            name: 'Pressure Balance',
+            instruction: 'Adjust sliders to match target pressure',
+
+            variants: [
+                { gauges: [{ target: 70 }, { target: 40 }] },
+                { gauges: [{ target: 30 }, { target: 80 }, { target: 50 }] },
+                { gauges: [{ target: 60 }, { target: 25 }, { target: 75 }] },
+                { gauges: [{ target: 45 }, { target: 90 }, { target: 20 }, { target: 65 }] }
+            ],
+
+            state: {
+                gauges: [],
+                tolerance: 5
+            },
+
+            init(container, variant) {
+                this.state = {
+                    gauges: variant.gauges.map(g => ({ ...g, current: 50 })),
+                    tolerance: 5
+                };
+
+                const labels = ['A', 'B', 'C', 'D'];
+
+                container.innerHTML = `
+                    <div class="pressure-task">
+                        <div class="pressure-gauges" id="pressure-gauges">
+                            ${variant.gauges.map((g, i) => `
+                                <div class="pressure-gauge">
+                                    <div class="gauge-display" id="gauge-display-${i}">
+                                        <div class="gauge-fill" id="gauge-fill-${i}" style="--fill-angle: 180deg;"></div>
+                                        <div class="gauge-target" style="transform: rotate(${g.target * 3.6}deg);"></div>
+                                    </div>
+                                    <div class="gauge-value" id="gauge-value-${i}">50%</div>
+                                    <div class="pressure-slider-container">
+                                        <input type="range" class="pressure-slider" id="slider-${i}" min="0" max="100" value="50" data-index="${i}">
+                                    </div>
+                                    <div class="gauge-label">${labels[i]}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="pressure-status" id="pressure-status">Calibrating...</div>
+                    </div>
+                `;
+
+                // Setup slider events
+                variant.gauges.forEach((g, i) => {
+                    const slider = document.getElementById(`slider-${i}`);
+                    slider.addEventListener('input', (e) => this.handleSliderChange(i, e.target.value));
+                });
+
+                this.checkBalance();
+            },
+
+            handleSliderChange(index, value) {
+                Sounds.play('click');
+                this.state.gauges[index].current = parseInt(value);
+
+                // Update visual
+                const fill = document.getElementById(`gauge-fill-${index}`);
+                const valueEl = document.getElementById(`gauge-value-${index}`);
+                const fillAngle = value * 3.6; // 0-100 -> 0-360
+                fill.style.setProperty('--fill-angle', fillAngle + 'deg');
+                valueEl.textContent = value + '%';
+
+                this.checkBalance();
+            },
+
+            checkBalance() {
+                let allMatched = true;
+
+                this.state.gauges.forEach((gauge, i) => {
+                    const display = document.getElementById(`gauge-display-${i}`);
+                    const diff = Math.abs(gauge.current - gauge.target);
+                    const matched = diff <= this.state.tolerance;
+
+                    display.classList.toggle('matched', matched);
+
+                    if (!matched) allMatched = false;
+                });
+
+                const status = document.getElementById('pressure-status');
+
+                if (allMatched) {
+                    status.textContent = 'Pressure Balanced!';
+                    status.classList.add('balanced');
+                    setTimeout(() => TaskFramework.showSuccess(), 500);
+                } else {
+                    status.textContent = 'Calibrating...';
+                    status.classList.remove('balanced');
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 7: POWER DISTRIBUTION
+        // ============================================
+        const PowerDistributionTask = {
+            name: 'Power Grid',
+            instruction: 'Distribute power to match each target',
+
+            systemNames: ['ENGINES', 'SHIELDS', 'WEAPONS', 'LIFE SUP'],
+
+            variants: [
+                { systems: [{ target: 3 }, { target: 4 }, { target: 3 }], maxPower: 10 },
+                { systems: [{ target: 2 }, { target: 5 }, { target: 3 }], maxPower: 10 },
+                { systems: [{ target: 4 }, { target: 2 }, { target: 2 }, { target: 2 }], maxPower: 10 },
+                { systems: [{ target: 3 }, { target: 3 }, { target: 2 }, { target: 2 }], maxPower: 10 }
+            ],
+
+            state: {
+                systems: [],
+                maxPower: 10,
+                maxPerSystem: 5
+            },
+
+            init(container, variant) {
+                this.state = {
+                    systems: variant.systems.map((s, i) => ({
+                        ...s,
+                        current: 0,
+                        name: this.systemNames[i]
+                    })),
+                    maxPower: variant.maxPower,
+                    maxPerSystem: 5
+                };
+
+                container.innerHTML = `
+                    <div class="power-task">
+                        <div class="power-header">
+                            <div class="power-total">Total Power: <span>${variant.maxPower}</span> units</div>
+                            <div class="power-remaining" id="power-remaining">Available: ${variant.maxPower}</div>
+                        </div>
+                        <div class="power-systems" id="power-systems">
+                            ${this.state.systems.map((s, i) => `
+                                <div class="power-system" id="system-${i}">
+                                    <div class="power-system-name">${s.name}</div>
+                                    <div class="power-bar-container">
+                                        <div class="power-bar-fill" id="bar-${i}" style="width: 0%;"></div>
+                                        <div class="power-bar-target" style="left: ${(s.target / this.state.maxPerSystem) * 100}%;"></div>
+                                    </div>
+                                    <div class="power-value" id="value-${i}">0</div>
+                                    <div class="power-controls">
+                                        <button class="power-btn" data-system="${i}" data-action="minus">−</button>
+                                        <button class="power-btn" data-system="${i}" data-action="plus">+</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="power-status" id="power-status">Distributing power...</div>
+                    </div>
+                `;
+
+                // Setup button events
+                document.querySelectorAll('.power-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const system = parseInt(e.target.dataset.system);
+                        const action = e.target.dataset.action;
+                        this.handlePowerChange(system, action);
+                    });
+                });
+            },
+
+            getTotalUsed() {
+                return this.state.systems.reduce((sum, s) => sum + s.current, 0);
+            },
+
+            handlePowerChange(systemIndex, action) {
+                const system = this.state.systems[systemIndex];
+                const totalUsed = this.getTotalUsed();
+
+                if (action === 'plus') {
+                    if (system.current >= this.state.maxPerSystem) return;
+                    if (totalUsed >= this.state.maxPower) {
+                        Sounds.play('error');
+                        return;
+                    }
+                    system.current++;
+                } else {
+                    if (system.current <= 0) return;
+                    system.current--;
+                }
+
+                Sounds.play('click');
+                this.updateDisplay();
+                this.checkDistribution();
+            },
+
+            updateDisplay() {
+                const totalUsed = this.getTotalUsed();
+                const remaining = this.state.maxPower - totalUsed;
+
+                const remainingEl = document.getElementById('power-remaining');
+                remainingEl.textContent = `Available: ${remaining}`;
+                remainingEl.className = 'power-remaining ' + (remaining < 0 ? 'over' : remaining === 0 ? 'ok' : '');
+
+                this.state.systems.forEach((s, i) => {
+                    const bar = document.getElementById(`bar-${i}`);
+                    const value = document.getElementById(`value-${i}`);
+                    const system = document.getElementById(`system-${i}`);
+
+                    bar.style.width = (s.current / this.state.maxPerSystem) * 100 + '%';
+                    value.textContent = s.current;
+
+                    const matched = s.current === s.target;
+                    system.classList.toggle('matched', matched);
+                });
+            },
+
+            checkDistribution() {
+                const allMatched = this.state.systems.every(s => s.current === s.target);
+
+                const status = document.getElementById('power-status');
+                if (allMatched) {
+                    status.textContent = 'Power Balanced!';
+                    status.classList.add('balanced');
+                    setTimeout(() => TaskFramework.showSuccess(), 500);
+                } else {
+                    status.textContent = 'Distributing power...';
+                    status.classList.remove('balanced');
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 8: ALIGNMENT GRID
+        // ============================================
+        const AlignmentGridTask = {
+            name: 'Alignment Grid',
+            instruction: 'Rotate all arrows to point up',
+
+            variants: [
+                { cols: 3, rows: 2, cells: 6 },
+                { cols: 3, rows: 3, cells: 9 },
+                { cols: 4, rows: 2, cells: 8 },
+                { cols: 4, rows: 3, cells: 12 }
+            ],
+
+            state: {
+                cells: [],
+                targetRotation: 0 // All should point up (0 degrees)
+            },
+
+            getArrowSVG(rotation) {
+                return `<svg class="align-arrow" viewBox="0 0 30 30" style="transform: rotate(${rotation * 90}deg);">
+                    <path d="M15 5 L25 20 L20 20 L20 25 L10 25 L10 20 L5 20 Z"/>
+                </svg>`;
+            },
+
+            init(container, variant) {
+                this.state = {
+                    cells: [],
+                    targetRotation: 0
+                };
+
+                // Generate random initial rotations (not all aligned)
+                const rotations = [];
+                let allSame = true;
+                for (let i = 0; i < variant.cells; i++) {
+                    const rot = Math.floor(Math.random() * 4);
+                    rotations.push(rot);
+                    if (rot !== rotations[0]) allSame = false;
+                }
+
+                // Make sure they're not all aligned initially
+                if (allSame) {
+                    rotations[0] = (rotations[0] + 1) % 4;
+                }
+
+                container.innerHTML = `
+                    <div class="align-task">
+                        <div class="align-target">
+                            <span>Target:</span>
+                            <svg class="align-target-arrow" viewBox="0 0 30 30">
+                                <path d="M15 5 L25 20 L20 20 L20 25 L10 25 L10 20 L5 20 Z"/>
+                            </svg>
+                            <span>(Up)</span>
+                        </div>
+                        <div class="align-grid" id="align-grid" style="grid-template-columns: repeat(${variant.cols}, 55px);"></div>
+                        <div class="align-status" id="align-status">Aligning sensors...</div>
+                    </div>
+                `;
+
+                const grid = document.getElementById('align-grid');
+
+                // Create cells
+                for (let i = 0; i < variant.cells; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'align-cell';
+                    cell.innerHTML = this.getArrowSVG(rotations[i]);
+                    cell.dataset.rotation = rotations[i];
+                    cell.dataset.index = i;
+
+                    cell.addEventListener('click', (e) => this.handleCellClick(cell));
+
+                    grid.appendChild(cell);
+                    this.state.cells.push({ element: cell, rotation: rotations[i] });
+                }
+
+                this.checkAlignment();
+            },
+
+            handleCellClick(cell) {
+                Sounds.play('click');
+
+                let rotation = parseInt(cell.dataset.rotation);
+                rotation = (rotation + 1) % 4;
+                cell.dataset.rotation = rotation;
+
+                const index = parseInt(cell.dataset.index);
+                this.state.cells[index].rotation = rotation;
+
+                cell.innerHTML = this.getArrowSVG(rotation);
+
+                this.checkAlignment();
+            },
+
+            checkAlignment() {
+                let allAligned = true;
+
+                this.state.cells.forEach(cellData => {
+                    const aligned = cellData.rotation === this.state.targetRotation;
+                    cellData.element.classList.toggle('aligned', aligned);
+                    if (!aligned) allAligned = false;
+                });
+
+                const status = document.getElementById('align-status');
+                if (allAligned) {
+                    status.textContent = 'Sensors Aligned!';
+                    status.classList.add('complete');
+                    setTimeout(() => TaskFramework.showSuccess(), 400);
+                } else {
+                    status.textContent = 'Aligning sensors...';
+                    status.classList.remove('complete');
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 9: KEYPAD CODE
+        // ============================================
+        const KeypadCodeTask = {
+            name: 'Keypad Entry',
+            instruction: 'Enter the access code shown above',
+
+            variants: [
+                { length: 4 },
+                { length: 4 },
+                { length: 5 },
+                { length: 5 }
+            ],
+
+            state: {
+                targetCode: '',
+                enteredCode: '',
+                codeLength: 4
+            },
+
+            generateCode(length) {
+                let code = '';
+                for (let i = 0; i < length; i++) {
+                    code += Math.floor(Math.random() * 10);
+                }
+                return code;
+            },
+
+            init(container, variant) {
+                const targetCode = this.generateCode(variant.length);
+
+                this.state = {
+                    targetCode: targetCode,
+                    enteredCode: '',
+                    codeLength: variant.length
+                };
+
+                const slots = Array(variant.length).fill('').map((_, i) =>
+                    `<div class="keypad-digit-slot ${i === 0 ? 'current' : ''}" id="slot-${i}"></div>`
+                ).join('');
+
+                container.innerHTML = `
+                    <div class="keypad-task">
+                        <div class="keypad-display">
+                            <div class="keypad-target">Access Code</div>
+                            <div class="keypad-code">${targetCode}</div>
+                        </div>
+                        <div class="keypad-input-display" id="keypad-input">
+                            ${slots}
+                        </div>
+                        <div class="keypad-grid">
+                            <button class="keypad-key" data-value="1">1</button>
+                            <button class="keypad-key" data-value="2">2</button>
+                            <button class="keypad-key" data-value="3">3</button>
+                            <button class="keypad-key" data-value="4">4</button>
+                            <button class="keypad-key" data-value="5">5</button>
+                            <button class="keypad-key" data-value="6">6</button>
+                            <button class="keypad-key" data-value="7">7</button>
+                            <button class="keypad-key" data-value="8">8</button>
+                            <button class="keypad-key" data-value="9">9</button>
+                            <button class="keypad-key clear" data-value="clear">CLR</button>
+                            <button class="keypad-key zero" data-value="0">0</button>
+                        </div>
+                        <div class="keypad-status" id="keypad-status"></div>
+                    </div>
+                `;
+
+                // Setup button events
+                document.querySelectorAll('.keypad-key').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const value = e.target.dataset.value;
+                        if (value === 'clear') {
+                            this.handleClear();
+                        } else {
+                            this.handleDigit(value);
+                        }
+                    });
+                });
+            },
+
+            handleDigit(digit) {
+                if (this.state.enteredCode.length >= this.state.codeLength) return;
+
+                Sounds.play('click');
+                this.state.enteredCode += digit;
+
+                // Update display
+                const index = this.state.enteredCode.length - 1;
+                const slot = document.getElementById(`slot-${index}`);
+                slot.textContent = digit;
+                slot.classList.add('filled');
+                slot.classList.remove('current');
+
+                // Move cursor to next slot
+                if (index + 1 < this.state.codeLength) {
+                    document.getElementById(`slot-${index + 1}`).classList.add('current');
+                }
+
+                // Check if code is complete
+                if (this.state.enteredCode.length === this.state.codeLength) {
+                    this.checkCode();
+                }
+            },
+
+            handleClear() {
+                Sounds.play('click');
+                this.state.enteredCode = '';
+
+                // Clear all slots
+                for (let i = 0; i < this.state.codeLength; i++) {
+                    const slot = document.getElementById(`slot-${i}`);
+                    slot.textContent = '';
+                    slot.classList.remove('filled', 'current');
+                }
+                document.getElementById('slot-0').classList.add('current');
+
+                document.getElementById('keypad-status').textContent = '';
+                document.getElementById('keypad-status').classList.remove('error');
+            },
+
+            checkCode() {
+                const status = document.getElementById('keypad-status');
+
+                if (this.state.enteredCode === this.state.targetCode) {
+                    status.textContent = 'Access Granted';
+                    status.classList.remove('error');
+                    status.style.color = '#4CAF8C';
+                    setTimeout(() => TaskFramework.showSuccess(), 400);
+                } else {
+                    status.textContent = 'Invalid Code';
+                    status.classList.add('error');
+                    Sounds.play('error');
+
+                    // Reset after delay
+                    setTimeout(() => this.handleClear(), 800);
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 10: SEQUENCE REPEAT
+        // ============================================
+        const SequenceRepeatTask = {
+            name: 'Memory Sequence',
+            instruction: 'Watch the pattern, then repeat it',
+
+            colors: ['red', 'blue', 'yellow', 'green'],
+
+            variants: [
+                { length: 4 },
+                { length: 4 },
+                { length: 5 },
+                { length: 5 }
+            ],
+
+            state: {
+                sequence: [],
+                playerIndex: 0,
+                isPlaying: false,
+                isWatching: true
+            },
+
+            init(container, variant) {
+                // Generate random sequence
+                const sequence = [];
+                for (let i = 0; i < variant.length; i++) {
+                    sequence.push(Math.floor(Math.random() * 4));
+                }
+
+                this.state = {
+                    sequence: sequence,
+                    playerIndex: 0,
+                    isPlaying: false,
+                    isWatching: true
+                };
+
+                const dots = Array(variant.length).fill('').map(() =>
+                    '<div class="sequence-dot"></div>'
+                ).join('');
+
+                container.innerHTML = `
+                    <div class="sequence-task">
+                        <div class="sequence-display watching" id="sequence-display">Watch...</div>
+                        <div class="sequence-buttons">
+                            <div class="sequence-btn red disabled" data-color="0"></div>
+                            <div class="sequence-btn blue disabled" data-color="1"></div>
+                            <div class="sequence-btn yellow disabled" data-color="2"></div>
+                            <div class="sequence-btn green disabled" data-color="3"></div>
+                        </div>
+                        <div class="sequence-progress" id="sequence-progress">${dots}</div>
+                    </div>
+                `;
+
+                // Setup button events
+                document.querySelectorAll('.sequence-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        if (!this.state.isPlaying) return;
+                        const color = parseInt(btn.dataset.color);
+                        this.handleButtonPress(color);
+                    });
+                });
+
+                // Play sequence after short delay
+                setTimeout(() => this.playSequence(), 500);
+            },
+
+            async playSequence() {
+                const buttons = document.querySelectorAll('.sequence-btn');
+
+                for (let i = 0; i < this.state.sequence.length; i++) {
+                    await this.delay(400);
+                    const colorIndex = this.state.sequence[i];
+                    this.flashButton(buttons[colorIndex]);
+                    await this.delay(300);
+                }
+
+                // Enable player input
+                await this.delay(300);
+                this.state.isWatching = false;
+                this.state.isPlaying = true;
+
+                const display = document.getElementById('sequence-display');
+                display.textContent = 'Your Turn';
+                display.classList.remove('watching');
+                display.classList.add('playing');
+
+                buttons.forEach(btn => btn.classList.remove('disabled'));
+            },
+
+            flashButton(btn) {
+                btn.classList.add('active');
+                Sounds.play('click');
+                setTimeout(() => btn.classList.remove('active'), 250);
+            },
+
+            handleButtonPress(colorIndex) {
+                const buttons = document.querySelectorAll('.sequence-btn');
+                const expectedColor = this.state.sequence[this.state.playerIndex];
+
+                this.flashButton(buttons[colorIndex]);
+
+                if (colorIndex === expectedColor) {
+                    // Correct!
+                    const dots = document.querySelectorAll('.sequence-dot');
+                    dots[this.state.playerIndex].classList.add('filled');
+
+                    this.state.playerIndex++;
+
+                    if (this.state.playerIndex >= this.state.sequence.length) {
+                        // Completed!
+                        this.state.isPlaying = false;
+                        const display = document.getElementById('sequence-display');
+                        display.textContent = 'Correct!';
+                        setTimeout(() => TaskFramework.showSuccess(), 400);
+                    }
+                } else {
+                    // Wrong!
+                    this.state.isPlaying = false;
+                    Sounds.play('error');
+
+                    const display = document.getElementById('sequence-display');
+                    display.textContent = 'Wrong - Watch Again';
+                    display.classList.remove('playing');
+                    display.classList.add('error');
+
+                    buttons.forEach(btn => btn.classList.add('disabled'));
+
+                    // Reset and replay
+                    setTimeout(() => {
+                        this.state.playerIndex = 0;
+                        this.state.isWatching = true;
+
+                        // Clear progress dots
+                        document.querySelectorAll('.sequence-dot').forEach(dot =>
+                            dot.classList.remove('filled')
+                        );
+
+                        display.textContent = 'Watch...';
+                        display.classList.remove('error');
+                        display.classList.add('watching');
+
+                        this.playSequence();
+                    }, 1000);
+                }
+            },
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        };
+
+        // ============================================
+        // TASK 11: BUTTON COMBO
+        // ============================================
+        const ButtonComboTask = {
+            name: 'Button Combo',
+            instruction: 'Press buttons in the order shown',
+
+            directions: ['up', 'down', 'left', 'right'],
+            arrows: {
+                up: '<svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>',
+                down: '<svg viewBox="0 0 24 24"><path d="M12 20l8-8h-5v-8h-6v8h-5z"/></svg>',
+                left: '<svg viewBox="0 0 24 24"><path d="M4 12l8-8v5h8v6h-8v5z"/></svg>',
+                right: '<svg viewBox="0 0 24 24"><path d="M20 12l-8 8v-5h-8v-6h8v-5z"/></svg>'
+            },
+
+            variants: [
+                { length: 5 },
+                { length: 5 },
+                { length: 6 },
+                { length: 7 }
+            ],
+
+            state: {
+                sequence: [],
+                currentIndex: 0
+            },
+
+            init(container, variant) {
+                // Generate random sequence
+                const sequence = [];
+                for (let i = 0; i < variant.length; i++) {
+                    sequence.push(this.directions[Math.floor(Math.random() * 4)]);
+                }
+
+                this.state = {
+                    sequence: sequence,
+                    currentIndex: 0
+                };
+
+                const steps = sequence.map((dir, i) =>
+                    `<div class="combo-step ${dir} ${i === 0 ? 'current' : ''}" data-index="${i}">${this.arrows[dir]}</div>`
+                ).join('');
+
+                container.innerHTML = `
+                    <div class="combo-task">
+                        <div class="combo-sequence" id="combo-sequence">${steps}</div>
+                        <div class="combo-buttons">
+                            <div class="combo-btn up" data-dir="up">${this.arrows.up}</div>
+                            <div class="combo-btn left" data-dir="left">${this.arrows.left}</div>
+                            <div class="combo-center"></div>
+                            <div class="combo-btn right" data-dir="right">${this.arrows.right}</div>
+                            <div class="combo-btn down" data-dir="down">${this.arrows.down}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Setup button events
+                document.querySelectorAll('.combo-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const dir = btn.dataset.dir;
+                        this.handleButtonPress(dir);
+                    });
+                });
+            },
+
+            handleButtonPress(dir) {
+                const expected = this.state.sequence[this.state.currentIndex];
+
+                Sounds.play('click');
+
+                if (dir === expected) {
+                    // Correct!
+                    const steps = document.querySelectorAll('.combo-step');
+                    steps[this.state.currentIndex].classList.remove('current');
+                    steps[this.state.currentIndex].classList.add('done');
+
+                    this.state.currentIndex++;
+
+                    if (this.state.currentIndex >= this.state.sequence.length) {
+                        // Completed!
+                        setTimeout(() => TaskFramework.showSuccess(), 300);
+                    } else {
+                        steps[this.state.currentIndex].classList.add('current');
+                    }
+                } else {
+                    // Wrong!
+                    Sounds.play('error');
+                    TaskFramework.showError();
+
+                    // Reset
+                    this.state.currentIndex = 0;
+                    document.querySelectorAll('.combo-step').forEach((step, i) => {
+                        step.classList.remove('done', 'current');
+                        if (i === 0) step.classList.add('current');
+                    });
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 12: SWITCH PANEL
+        // ============================================
+        const SwitchPanelTask = {
+            name: 'Switch Panel',
+            instruction: 'Flip switches to match the target pattern',
+
+            variants: [
+                { count: 4 },
+                { count: 5 },
+                { count: 6 },
+                { count: 6 }
+            ],
+
+            state: {
+                target: [],
+                current: [],
+                count: 0
+            },
+
+            init(container, variant) {
+                // Generate random target pattern
+                const target = [];
+                for (let i = 0; i < variant.count; i++) {
+                    target.push(Math.random() > 0.5);
+                }
+
+                // Start all switches off
+                const current = Array(variant.count).fill(false);
+
+                // Make sure target isn't all off
+                if (target.every(t => !t)) {
+                    target[Math.floor(Math.random() * variant.count)] = true;
+                }
+
+                this.state = {
+                    target: target,
+                    current: current,
+                    count: variant.count
+                };
+
+                const labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+                const targetLights = target.map(on =>
+                    `<div class="switch-target-light ${on ? 'on' : ''}"></div>`
+                ).join('');
+
+                const switches = target.map((_, i) =>
+                    `<div class="switch-unit">
+                        <div class="switch-indicator" id="indicator-${i}"></div>
+                        <div class="switch-toggle" id="switch-${i}" data-index="${i}"></div>
+                        <div class="switch-label">${labels[i]}</div>
+                    </div>`
+                ).join('');
+
+                container.innerHTML = `
+                    <div class="switch-task">
+                        <div class="switch-target">
+                            <div class="switch-target-label">Target Pattern</div>
+                            <div class="switch-target-display">${targetLights}</div>
+                        </div>
+                        <div class="switch-panel" id="switch-panel">${switches}</div>
+                        <div class="switch-status" id="switch-status">Configuring...</div>
+                    </div>
+                `;
+
+                // Setup switch events
+                document.querySelectorAll('.switch-toggle').forEach(toggle => {
+                    toggle.addEventListener('click', () => {
+                        const index = parseInt(toggle.dataset.index);
+                        this.handleSwitchToggle(index);
+                    });
+                });
+            },
+
+            handleSwitchToggle(index) {
+                Sounds.play('click');
+
+                // Toggle state
+                this.state.current[index] = !this.state.current[index];
+                const isOn = this.state.current[index];
+
+                // Update visual
+                const toggle = document.getElementById(`switch-${index}`);
+                const indicator = document.getElementById(`indicator-${index}`);
+
+                toggle.classList.toggle('on', isOn);
+                indicator.classList.toggle('on', isOn);
+
+                // Check if matches target
+                const matches = this.state.current[index] === this.state.target[index];
+                indicator.classList.toggle('matched', matches);
+
+                this.checkCompletion();
+            },
+
+            checkCompletion() {
+                const allMatched = this.state.current.every((val, i) => val === this.state.target[i]);
+
+                const status = document.getElementById('switch-status');
+                if (allMatched) {
+                    status.textContent = 'Configuration Complete!';
+                    status.classList.add('complete');
+                    setTimeout(() => TaskFramework.showSuccess(), 400);
+                } else {
+                    status.textContent = 'Configuring...';
+                    status.classList.remove('complete');
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 13: SAMPLE ANALYSIS
+        // ============================================
+        const SampleAnalysisTask = {
+            name: 'Sample Analysis',
+            instruction: 'Drag samples to matching colored bins',
+
+            colors: ['red', 'blue', 'green', 'yellow'],
+
+            variants: [
+                { samples: ['red', 'red', 'blue', 'blue', 'green', 'green'] },
+                { samples: ['red', 'blue', 'green', 'yellow', 'red', 'blue'] },
+                { samples: ['red', 'red', 'blue', 'blue', 'green', 'green', 'yellow', 'yellow'] },
+                { samples: ['red', 'blue', 'green', 'yellow', 'red', 'yellow'] }
+            ],
+
+            state: {
+                samples: [],
+                bins: {},
+                placedCount: 0,
+                totalCount: 0,
+                draggedSample: null
+            },
+
+            init(container, variant) {
+                // Count samples per color
+                const binCounts = {};
+                this.colors.forEach(c => binCounts[c] = { target: 0, current: 0 });
+                variant.samples.forEach(c => binCounts[c].target++);
+
+                // Shuffle samples
+                const shuffled = [...variant.samples];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+
+                this.state = {
+                    samples: shuffled.map((color, i) => ({ color, index: i, placed: false })),
+                    bins: binCounts,
+                    placedCount: 0,
+                    totalCount: variant.samples.length,
+                    draggedSample: null
+                };
+
+                const usedColors = this.colors.filter(c => binCounts[c].target > 0);
+
+                container.innerHTML = `
+                    <div class="sample-task">
+                        <div class="sample-tray" id="sample-tray">
+                            ${shuffled.map((color, i) =>
+                                `<div class="sample-vial ${color}" data-color="${color}" data-index="${i}"></div>`
+                            ).join('')}
+                        </div>
+                        <div class="sample-bins" id="sample-bins">
+                            ${usedColors.map(color =>
+                                `<div class="sample-bin" data-color="${color}">
+                                    <div class="sample-bin-icon ${color}"></div>
+                                    <div class="sample-bin-count" id="bin-count-${color}">0/${binCounts[color].target}</div>
+                                </div>`
+                            ).join('')}
+                        </div>
+                        <div class="sample-status" id="sample-status">Sorting samples...</div>
+                    </div>
+                `;
+
+                // Setup drag events
+                document.querySelectorAll('.sample-vial').forEach(vial => {
+                    this.setupDrag(vial);
+                });
+            },
+
+            setupDrag(vial) {
+                const onStart = (e) => {
+                    if (vial.classList.contains('placed')) return;
+                    e.preventDefault();
+                    Sounds.play('click');
+
+                    vial.classList.add('dragging');
+                    this.state.draggedSample = vial;
+
+                    const rect = vial.getBoundingClientRect();
+                    vial.style.position = 'fixed';
+                    vial.style.left = (rect.left) + 'px';
+                    vial.style.top = (rect.top) + 'px';
+                    vial.style.zIndex = '100';
+                    document.body.appendChild(vial);
+                };
+
+                const onMove = (e) => {
+                    if (!this.state.draggedSample) return;
+
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                    this.state.draggedSample.style.left = (clientX - 20) + 'px';
+                    this.state.draggedSample.style.top = (clientY - 27) + 'px';
+
+                    // Highlight bins
+                    document.querySelectorAll('.sample-bin').forEach(bin => {
+                        const rect = bin.getBoundingClientRect();
+                        const isOver = clientX >= rect.left && clientX <= rect.right &&
+                                       clientY >= rect.top && clientY <= rect.bottom;
+                        bin.classList.toggle('highlight', isOver);
+                    });
+                };
+
+                const onEnd = (e) => {
+                    if (!this.state.draggedSample) return;
+
+                    const sample = this.state.draggedSample;
+                    sample.classList.remove('dragging');
+                    this.state.draggedSample = null;
+
+                    const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+                    const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+
+                    let matched = false;
+                    document.querySelectorAll('.sample-bin').forEach(bin => {
+                        bin.classList.remove('highlight');
+                        const rect = bin.getBoundingClientRect();
+                        const isOver = clientX >= rect.left && clientX <= rect.right &&
+                                       clientY >= rect.top && clientY <= rect.bottom;
+
+                        if (isOver) {
+                            const binColor = bin.dataset.color;
+                            const sampleColor = sample.dataset.color;
+
+                            if (binColor === sampleColor) {
+                                // Correct!
+                                Sounds.play('connect');
+                                sample.classList.add('placed');
+                                sample.style.position = '';
+                                sample.style.zIndex = '';
+                                document.getElementById('sample-tray').appendChild(sample);
+
+                                this.state.bins[binColor].current++;
+                                document.getElementById(`bin-count-${binColor}`).textContent =
+                                    `${this.state.bins[binColor].current}/${this.state.bins[binColor].target}`;
+
+                                if (this.state.bins[binColor].current === this.state.bins[binColor].target) {
+                                    bin.classList.add('filled');
+                                }
+
+                                this.state.placedCount++;
+                                matched = true;
+
+                                if (this.state.placedCount === this.state.totalCount) {
+                                    document.getElementById('sample-status').textContent = 'Analysis Complete!';
+                                    document.getElementById('sample-status').classList.add('complete');
+                                    setTimeout(() => TaskFramework.showSuccess(), 400);
+                                }
+                            } else {
+                                Sounds.play('error');
+                            }
+                        }
+                    });
+
+                    if (!matched && !sample.classList.contains('placed')) {
+                        sample.style.position = '';
+                        sample.style.left = '';
+                        sample.style.top = '';
+                        sample.style.zIndex = '';
+                        document.getElementById('sample-tray').appendChild(sample);
+                    }
+                };
+
+                vial.addEventListener('mousedown', onStart);
+                vial.addEventListener('touchstart', onStart);
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('touchmove', onMove);
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchend', onEnd);
+            }
+        };
+
+        // ============================================
+        // TASK 14: FILE ORGANIZATION
+        // ============================================
+        const FileOrganizationTask = {
+            name: 'File Sorter',
+            instruction: 'Drag files to the correct folder',
+
+            fileTypes: {
+                doc: {
+                    icon: '<svg viewBox="0 0 24 24" fill="#5D8DE8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v7h7v9H6z"/><path d="M8 12h8v2H8zm0 4h8v2H8z"/></svg>',
+                    label: 'DOCS',
+                    exts: ['txt', 'doc', 'pdf']
+                },
+                img: {
+                    icon: '<svg viewBox="0 0 24 24" fill="#5DE87D"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>',
+                    label: 'IMG',
+                    exts: ['png', 'jpg', 'gif']
+                },
+                code: {
+                    icon: '<svg viewBox="0 0 24 24" fill="#E8C85D"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>',
+                    label: 'CODE',
+                    exts: ['js', 'py', 'cpp']
+                },
+                data: {
+                    icon: '<svg viewBox="0 0 24 24" fill="#E85D5D"><path d="M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm0 2c3.87 0 6 1.5 6 2s-2.13 2-6 2-6-1.5-6-2 2.13-2 6-2zm6 12c0 .5-2.13 2-6 2s-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V17zm0-5c0 .5-2.13 2-6 2s-6-1.5-6-2V9.77c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V12z"/></svg>',
+                    label: 'DATA',
+                    exts: ['csv', 'sql', 'xml']
+                }
+            },
+
+            variants: [
+                { files: ['doc', 'doc', 'img', 'img', 'code', 'data'] },
+                { files: ['doc', 'img', 'code', 'data', 'code', 'img'] },
+                { files: ['doc', 'doc', 'img', 'code', 'code', 'data', 'data'] },
+                { files: ['img', 'img', 'code', 'code', 'data', 'data'] }
+            ],
+
+            state: {
+                files: [],
+                folders: {},
+                placedCount: 0,
+                totalCount: 0,
+                draggedFile: null
+            },
+
+            init(container, variant) {
+                // Count files per type
+                const folderCounts = {};
+                Object.keys(this.fileTypes).forEach(t => folderCounts[t] = { target: 0, current: 0 });
+                variant.files.forEach(t => folderCounts[t].target++);
+
+                // Shuffle files
+                const shuffled = [...variant.files];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+
+                this.state = {
+                    files: shuffled.map((type, i) => ({ type, index: i, placed: false })),
+                    folders: folderCounts,
+                    placedCount: 0,
+                    totalCount: variant.files.length,
+                    draggedFile: null
+                };
+
+                const usedTypes = Object.keys(this.fileTypes).filter(t => folderCounts[t].target > 0);
+
+                const filesHTML = shuffled.map((type, i) => {
+                    const ft = this.fileTypes[type];
+                    const ext = ft.exts[Math.floor(Math.random() * ft.exts.length)];
+                    return `<div class="file-item" data-type="${type}" data-index="${i}">
+                        <div class="file-icon">${ft.icon}</div>
+                        <div class="file-ext">.${ext}</div>
+                    </div>`;
+                }).join('');
+
+                const foldersHTML = usedTypes.map(type =>
+                    `<div class="file-folder" data-type="${type}">
+                        <div class="file-folder-icon">${this.fileTypes[type].icon}</div>
+                        <div class="file-folder-label">${this.fileTypes[type].label}</div>
+                    </div>`
+                ).join('');
+
+                container.innerHTML = `
+                    <div class="file-task">
+                        <div class="file-tray" id="file-tray">${filesHTML}</div>
+                        <div class="file-folders" id="file-folders">${foldersHTML}</div>
+                        <div class="file-status" id="file-status">Organizing files...</div>
+                    </div>
+                `;
+
+                // Setup drag events
+                document.querySelectorAll('.file-item').forEach(file => {
+                    this.setupDrag(file);
+                });
+            },
+
+            setupDrag(file) {
+                const onStart = (e) => {
+                    if (file.classList.contains('placed')) return;
+                    e.preventDefault();
+                    Sounds.play('click');
+
+                    file.classList.add('dragging');
+                    this.state.draggedFile = file;
+
+                    const rect = file.getBoundingClientRect();
+                    file.style.position = 'fixed';
+                    file.style.left = rect.left + 'px';
+                    file.style.top = rect.top + 'px';
+                    file.style.zIndex = '100';
+                    document.body.appendChild(file);
+                };
+
+                const onMove = (e) => {
+                    if (!this.state.draggedFile) return;
+
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                    this.state.draggedFile.style.left = (clientX - 25) + 'px';
+                    this.state.draggedFile.style.top = (clientY - 30) + 'px';
+
+                    document.querySelectorAll('.file-folder').forEach(folder => {
+                        const rect = folder.getBoundingClientRect();
+                        const isOver = clientX >= rect.left && clientX <= rect.right &&
+                                       clientY >= rect.top && clientY <= rect.bottom;
+                        folder.classList.toggle('highlight', isOver);
+                    });
+                };
+
+                const onEnd = (e) => {
+                    if (!this.state.draggedFile) return;
+
+                    const fileEl = this.state.draggedFile;
+                    fileEl.classList.remove('dragging');
+                    this.state.draggedFile = null;
+
+                    const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+                    const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+
+                    let matched = false;
+                    document.querySelectorAll('.file-folder').forEach(folder => {
+                        folder.classList.remove('highlight');
+                        const rect = folder.getBoundingClientRect();
+                        const isOver = clientX >= rect.left && clientX <= rect.right &&
+                                       clientY >= rect.top && clientY <= rect.bottom;
+
+                        if (isOver) {
+                            const folderType = folder.dataset.type;
+                            const fileType = fileEl.dataset.type;
+
+                            if (folderType === fileType) {
+                                Sounds.play('connect');
+                                fileEl.classList.add('placed');
+                                fileEl.style.position = '';
+                                fileEl.style.zIndex = '';
+                                document.getElementById('file-tray').appendChild(fileEl);
+
+                                this.state.folders[folderType].current++;
+                                if (this.state.folders[folderType].current === this.state.folders[folderType].target) {
+                                    folder.classList.add('filled');
+                                }
+
+                                this.state.placedCount++;
+                                matched = true;
+
+                                if (this.state.placedCount === this.state.totalCount) {
+                                    document.getElementById('file-status').textContent = 'Files Organized!';
+                                    document.getElementById('file-status').classList.add('complete');
+                                    setTimeout(() => TaskFramework.showSuccess(), 400);
+                                }
+                            } else {
+                                Sounds.play('error');
+                            }
+                        }
+                    });
+
+                    if (!matched && !fileEl.classList.contains('placed')) {
+                        fileEl.style.position = '';
+                        fileEl.style.left = '';
+                        fileEl.style.top = '';
+                        fileEl.style.zIndex = '';
+                        document.getElementById('file-tray').appendChild(fileEl);
+                    }
+                };
+
+                file.addEventListener('mousedown', onStart);
+                file.addEventListener('touchstart', onStart);
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('touchmove', onMove);
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchend', onEnd);
+            }
+        };
+
+        // ============================================
+        // TASK 15: CARGO MANIFEST
+        // ============================================
+        const CargoManifestTask = {
+            name: 'Cargo Manifest',
+            instruction: 'Place crates in matching numbered slots',
+
+            variants: [
+                { count: 4 },
+                { count: 4 },
+                { count: 5 },
+                { count: 5 }
+            ],
+
+            state: {
+                crates: [],
+                slots: [],
+                placedCount: 0,
+                totalCount: 0,
+                draggedCrate: null
+            },
+
+            init(container, variant) {
+                const numbers = Array.from({ length: variant.count }, (_, i) => i + 1);
+
+                // Shuffle crates
+                const shuffledCrates = [...numbers];
+                for (let i = shuffledCrates.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffledCrates[i], shuffledCrates[j]] = [shuffledCrates[j], shuffledCrates[i]];
+                }
+
+                this.state = {
+                    crates: shuffledCrates.map((num, i) => ({ num, index: i, placed: false })),
+                    slots: numbers.map(num => ({ num, filled: false })),
+                    placedCount: 0,
+                    totalCount: variant.count,
+                    draggedCrate: null
+                };
+
+                const cratesHTML = shuffledCrates.map((num, i) =>
+                    `<div class="cargo-crate" data-num="${num}" data-index="${i}">${num}</div>`
+                ).join('');
+
+                const slotsHTML = numbers.map(num =>
+                    `<div class="cargo-slot" data-num="${num}">
+                        <div class="cargo-slot-num">${num}</div>
+                    </div>`
+                ).join('');
+
+                container.innerHTML = `
+                    <div class="cargo-task">
+                        <div class="cargo-crates" id="cargo-crates">${cratesHTML}</div>
+                        <div class="cargo-slots" id="cargo-slots">${slotsHTML}</div>
+                        <div class="cargo-status" id="cargo-status">Loading cargo...</div>
+                    </div>
+                `;
+
+                document.querySelectorAll('.cargo-crate').forEach(crate => {
+                    this.setupDrag(crate);
+                });
+            },
+
+            setupDrag(crate) {
+                const onStart = (e) => {
+                    if (crate.classList.contains('placed')) return;
+                    e.preventDefault();
+                    Sounds.play('click');
+
+                    crate.classList.add('dragging');
+                    this.state.draggedCrate = crate;
+
+                    const rect = crate.getBoundingClientRect();
+                    crate.style.position = 'fixed';
+                    crate.style.left = rect.left + 'px';
+                    crate.style.top = rect.top + 'px';
+                    crate.style.zIndex = '100';
+                    document.body.appendChild(crate);
+                };
+
+                const onMove = (e) => {
+                    if (!this.state.draggedCrate) return;
+
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                    this.state.draggedCrate.style.left = (clientX - 25) + 'px';
+                    this.state.draggedCrate.style.top = (clientY - 25) + 'px';
+
+                    document.querySelectorAll('.cargo-slot').forEach(slot => {
+                        if (slot.classList.contains('filled')) return;
+                        const rect = slot.getBoundingClientRect();
+                        const isOver = clientX >= rect.left && clientX <= rect.right &&
+                                       clientY >= rect.top && clientY <= rect.bottom;
+                        slot.classList.toggle('highlight', isOver);
+                    });
+                };
+
+                const onEnd = (e) => {
+                    if (!this.state.draggedCrate) return;
+
+                    const crateEl = this.state.draggedCrate;
+                    crateEl.classList.remove('dragging');
+                    this.state.draggedCrate = null;
+
+                    const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+                    const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+
+                    let matched = false;
+                    document.querySelectorAll('.cargo-slot').forEach(slot => {
+                        slot.classList.remove('highlight');
+                        if (slot.classList.contains('filled')) return;
+
+                        const rect = slot.getBoundingClientRect();
+                        const isOver = clientX >= rect.left && clientX <= rect.right &&
+                                       clientY >= rect.top && clientY <= rect.bottom;
+
+                        if (isOver) {
+                            const slotNum = parseInt(slot.dataset.num);
+                            const crateNum = parseInt(crateEl.dataset.num);
+
+                            if (slotNum === crateNum) {
+                                Sounds.play('connect');
+                                crateEl.classList.add('placed');
+                                crateEl.style.position = '';
+                                crateEl.style.zIndex = '';
+                                document.getElementById('cargo-crates').appendChild(crateEl);
+
+                                slot.classList.add('filled');
+                                this.state.placedCount++;
+                                matched = true;
+
+                                if (this.state.placedCount === this.state.totalCount) {
+                                    document.getElementById('cargo-status').textContent = 'Cargo Loaded!';
+                                    document.getElementById('cargo-status').classList.add('complete');
+                                    setTimeout(() => TaskFramework.showSuccess(), 400);
+                                }
+                            } else {
+                                Sounds.play('error');
+                            }
+                        }
+                    });
+
+                    if (!matched && !crateEl.classList.contains('placed')) {
+                        crateEl.style.position = '';
+                        crateEl.style.left = '';
+                        crateEl.style.top = '';
+                        crateEl.style.zIndex = '';
+                        document.getElementById('cargo-crates').appendChild(crateEl);
+                    }
+                };
+
+                crate.addEventListener('mousedown', onStart);
+                crate.addEventListener('touchstart', onStart);
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('touchmove', onMove);
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchend', onEnd);
+            }
+        };
+
+        // ============================================
+        // TASK 16: PRIORITY QUEUE
+        // ============================================
+        const PriorityQueueTask = {
+            name: 'Priority Queue',
+            instruction: 'Click items in order (1, 2, 3...)',
+
+            variants: [
+                { count: 5 },
+                { count: 6 },
+                { count: 6 },
+                { count: 7 }
+            ],
+
+            state: {
+                items: [],
+                currentTarget: 1,
+                totalCount: 0
+            },
+
+            init(container, variant) {
+                // Create and shuffle numbers
+                const numbers = Array.from({ length: variant.count }, (_, i) => i + 1);
+                const shuffled = [...numbers];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+
+                this.state = {
+                    items: shuffled,
+                    currentTarget: 1,
+                    totalCount: variant.count
+                };
+
+                const itemsHTML = shuffled.map((num, i) =>
+                    `<div class="priority-item ${num === 1 ? 'next' : ''}" data-num="${num}" data-index="${i}">${num}</div>`
+                ).join('');
+
+                container.innerHTML = `
+                    <div class="priority-task">
+                        <div class="priority-info">Click items from lowest to highest</div>
+                        <div class="priority-items" id="priority-items">${itemsHTML}</div>
+                        <div class="priority-progress">
+                            <span class="priority-progress-label">Progress:</span>
+                            <div class="priority-progress-bar">
+                                <div class="priority-progress-fill" id="priority-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.querySelectorAll('.priority-item').forEach(item => {
+                    item.addEventListener('click', () => this.handleItemClick(item));
+                });
+            },
+
+            handleItemClick(item) {
+                if (item.classList.contains('done')) return;
+
+                const num = parseInt(item.dataset.num);
+
+                if (num === this.state.currentTarget) {
+                    // Correct!
+                    Sounds.play('connect');
+                    item.classList.remove('next');
+                    item.classList.add('done');
+
+                    this.state.currentTarget++;
+
+                    // Update progress
+                    const progress = ((this.state.currentTarget - 1) / this.state.totalCount) * 100;
+                    document.getElementById('priority-fill').style.width = progress + '%';
+
+                    if (this.state.currentTarget > this.state.totalCount) {
+                        // Complete!
+                        setTimeout(() => TaskFramework.showSuccess(), 400);
+                    } else {
+                        // Highlight next target
+                        document.querySelectorAll('.priority-item').forEach(i => {
+                            if (parseInt(i.dataset.num) === this.state.currentTarget) {
+                                i.classList.add('next');
+                            }
+                        });
+                    }
+                } else {
+                    // Wrong!
+                    Sounds.play('error');
+                    TaskFramework.showError();
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 17: SCAN COMPLETE
+        // ============================================
+        const ScanCompleteTask = {
+            name: 'Biometric Scan',
+            instruction: 'Hold the button to complete the scan',
+
+            variants: [
+                { duration: 2000 },
+                { duration: 2500 },
+                { duration: 3000 },
+                { duration: 2000 }
+            ],
+
+            state: {
+                progress: 0,
+                duration: 2000,
+                isHolding: false,
+                animFrame: null,
+                startTime: 0
+            },
+
+            init(container, variant) {
+                this.state = {
+                    progress: 0,
+                    duration: variant.duration,
+                    isHolding: false,
+                    animFrame: null,
+                    startTime: 0
+                };
+
+                container.innerHTML = `
+                    <div class="scan-task">
+                        <div class="scan-display">
+                            <div class="scan-ring"></div>
+                            <div class="scan-progress-ring" id="scan-progress">
+                                <svg viewBox="0 0 160 160">
+                                    <circle cx="80" cy="80" r="80" id="progress-circle"/>
+                                </svg>
+                            </div>
+                            <svg class="scan-icon" id="scan-icon" viewBox="0 0 24 24">
+                                <path d="M12 1a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2 2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 14a2 2 0 0 1 2 2v4a2 2 0 0 1-4 0v-4a2 2 0 0 1 2-2zm10-5a2 2 0 0 1 0 4h-4a2 2 0 0 1 0-4h4zM7 12a2 2 0 0 1-2 2H1a2 2 0 0 1 0-4h4a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <button class="scan-btn" id="scan-btn">HOLD</button>
+                        <div class="scan-status" id="scan-status">Ready to scan</div>
+                    </div>
+                `;
+
+                const btn = document.getElementById('scan-btn');
+
+                const startHold = (e) => {
+                    e.preventDefault();
+                    this.startScan();
+                };
+
+                const endHold = () => {
+                    this.stopScan();
+                };
+
+                btn.addEventListener('mousedown', startHold);
+                btn.addEventListener('touchstart', startHold);
+                btn.addEventListener('mouseup', endHold);
+                btn.addEventListener('mouseleave', endHold);
+                btn.addEventListener('touchend', endHold);
+                btn.addEventListener('touchcancel', endHold);
+            },
+
+            startScan() {
+                if (this.state.isHolding) return;
+
+                this.state.isHolding = true;
+                this.state.startTime = Date.now() - (this.state.progress * this.state.duration);
+
+                document.getElementById('scan-btn').classList.add('active');
+                document.getElementById('scan-icon').classList.add('active');
+                document.getElementById('scan-status').textContent = 'Scanning...';
+                document.getElementById('scan-status').classList.add('scanning');
+
+                Sounds.play('click');
+
+                this.animate();
+            },
+
+            stopScan() {
+                if (!this.state.isHolding) return;
+
+                this.state.isHolding = false;
+
+                if (this.state.animFrame) {
+                    cancelAnimationFrame(this.state.animFrame);
+                }
+
+                document.getElementById('scan-btn').classList.remove('active');
+                document.getElementById('scan-icon').classList.remove('active');
+
+                if (this.state.progress < 1) {
+                    document.getElementById('scan-status').textContent = 'Scan interrupted';
+                    document.getElementById('scan-status').classList.remove('scanning');
+                    Sounds.play('error');
+
+                    // Reset after a moment
+                    setTimeout(() => {
+                        if (!this.state.isHolding) {
+                            this.state.progress = 0;
+                            this.updateProgress(0);
+                            document.getElementById('scan-status').textContent = 'Ready to scan';
+                        }
+                    }, 500);
+                }
+            },
+
+            animate() {
+                if (!this.state.isHolding) return;
+
+                const elapsed = Date.now() - this.state.startTime;
+                this.state.progress = Math.min(1, elapsed / this.state.duration);
+
+                this.updateProgress(this.state.progress);
+
+                if (this.state.progress >= 1) {
+                    // Complete!
+                    this.state.isHolding = false;
+                    document.getElementById('scan-btn').classList.remove('active');
+                    document.getElementById('scan-status').textContent = 'Scan Complete!';
+                    document.getElementById('scan-status').classList.remove('scanning');
+                    document.getElementById('scan-status').classList.add('complete');
+                    setTimeout(() => TaskFramework.showSuccess(), 400);
+                } else {
+                    this.state.animFrame = requestAnimationFrame(() => this.animate());
+                }
+            },
+
+            updateProgress(progress) {
+                const circle = document.getElementById('progress-circle');
+                const circumference = 2 * Math.PI * 80;
+                const offset = circumference * (1 - progress);
+                circle.style.strokeDashoffset = offset;
+            }
+        };
+
+        // ============================================
+        // TASK 18: TARGET LOCK
+        // ============================================
+        const TargetLockTask = {
+            name: 'Target Lock',
+            instruction: 'Click targets as they appear',
+
+            variants: [
+                { required: 5, lifetime: 1500 },
+                { required: 6, lifetime: 1300 },
+                { required: 7, lifetime: 1200 },
+                { required: 6, lifetime: 1000 }
+            ],
+
+            state: {
+                hits: 0,
+                required: 5,
+                lifetime: 1500,
+                currentTarget: null,
+                timeoutId: null,
+                isComplete: false
+            },
+
+            init(container, variant) {
+                this.state = {
+                    hits: 0,
+                    required: variant.required,
+                    lifetime: variant.lifetime,
+                    currentTarget: null,
+                    timeoutId: null,
+                    isComplete: false
+                };
+
+                container.innerHTML = `
+                    <div class="target-task">
+                        <div class="target-hud">
+                            <div class="target-score">Hits: <span id="target-hits">0</span> / ${variant.required}</div>
+                        </div>
+                        <div class="target-field" id="target-field"></div>
+                        <div class="target-status" id="target-status">Acquiring targets...</div>
+                    </div>
+                `;
+
+                // Start spawning targets
+                setTimeout(() => this.spawnTarget(), 500);
+            },
+
+            spawnTarget() {
+                if (this.state.isComplete) return;
+
+                const field = document.getElementById('target-field');
+                if (!field) return;
+
+                // Remove old target if exists
+                if (this.state.currentTarget) {
+                    this.state.currentTarget.remove();
+                }
+
+                // Clear old timeout
+                if (this.state.timeoutId) {
+                    clearTimeout(this.state.timeoutId);
+                }
+
+                // Random position (with padding)
+                const x = 40 + Math.random() * 240;
+                const y = 40 + Math.random() * 120;
+
+                const target = document.createElement('div');
+                target.className = 'target';
+                target.style.left = x + 'px';
+                target.style.top = y + 'px';
+                target.innerHTML = `
+                    <svg viewBox="0 0 50 50">
+                        <circle class="target-outer" cx="25" cy="25" r="22"/>
+                        <circle class="target-outer" cx="25" cy="25" r="14"/>
+                        <circle class="target-inner" cx="25" cy="25" r="6"/>
+                    </svg>
+                `;
+
+                target.addEventListener('click', (e) => this.handleTargetHit(e, target));
+
+                field.appendChild(target);
+                this.state.currentTarget = target;
+
+                // Auto-disappear after lifetime
+                this.state.timeoutId = setTimeout(() => {
+                    if (!this.state.isComplete && target.parentNode) {
+                        target.remove();
+                        this.spawnTarget();
+                    }
+                }, this.state.lifetime);
+            },
+
+            handleTargetHit(e, target) {
+                e.stopPropagation();
+
+                if (this.state.isComplete) return;
+
+                Sounds.play('connect');
+
+                target.classList.add('hit');
+                this.state.hits++;
+
+                document.getElementById('target-hits').textContent = this.state.hits;
+
+                if (this.state.timeoutId) {
+                    clearTimeout(this.state.timeoutId);
+                }
+
+                if (this.state.hits >= this.state.required) {
+                    this.state.isComplete = true;
+                    document.getElementById('target-status').textContent = 'Targets Locked!';
+                    document.getElementById('target-status').classList.add('complete');
+                    setTimeout(() => TaskFramework.showSuccess(), 400);
+                } else {
+                    setTimeout(() => {
+                        target.remove();
+                        this.spawnTarget();
+                    }, 200);
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 19: LEAK SEAL
+        // ============================================
+        const LeakSealTask = {
+            name: 'Hull Repair',
+            instruction: 'Click to seal the leaks',
+
+            variants: [
+                { totalLeaks: 6, maxActive: 2, spawnInterval: 800 },
+                { totalLeaks: 7, maxActive: 2, spawnInterval: 700 },
+                { totalLeaks: 8, maxActive: 3, spawnInterval: 600 },
+                { totalLeaks: 8, maxActive: 3, spawnInterval: 500 }
+            ],
+
+            state: {
+                sealed: 0,
+                totalLeaks: 6,
+                activeLeaks: [],
+                maxActive: 2,
+                spawnInterval: 800,
+                isComplete: false,
+                spawnTimeout: null
+            },
+
+            init(container, variant) {
+                this.state = {
+                    sealed: 0,
+                    totalLeaks: variant.totalLeaks,
+                    activeLeaks: [],
+                    maxActive: variant.maxActive,
+                    spawnInterval: variant.spawnInterval,
+                    isComplete: false,
+                    spawnTimeout: null
+                };
+
+                // Generate rivet positions
+                const rivets = [];
+                for (let i = 0; i < 12; i++) {
+                    rivets.push({
+                        x: 15 + (i % 4) * 100,
+                        y: 15 + Math.floor(i / 4) * 85
+                    });
+                }
+
+                container.innerHTML = `
+                    <div class="leak-task">
+                        <div class="leak-hud">
+                            <div class="leak-count">Sealed: <span id="leak-sealed">0</span> / ${variant.totalLeaks}</div>
+                            <div class="leak-warning" id="leak-warning" style="display: none;">BREACH DETECTED</div>
+                        </div>
+                        <div class="leak-hull" id="leak-hull">
+                            ${rivets.map(r => `<div class="leak-rivet" style="left: ${r.x}px; top: ${r.y}px;"></div>`).join('')}
+                        </div>
+                        <div class="leak-status" id="leak-status">Monitoring hull...</div>
+                    </div>
+                `;
+
+                // Start spawning leaks
+                this.scheduleNextLeak();
+            },
+
+            scheduleNextLeak() {
+                if (this.state.isComplete) return;
+                if (this.state.sealed >= this.state.totalLeaks) return;
+
+                this.state.spawnTimeout = setTimeout(() => {
+                    this.spawnLeak();
+                    this.scheduleNextLeak();
+                }, this.state.spawnInterval);
+            },
+
+            spawnLeak() {
+                if (this.state.isComplete) return;
+                if (this.state.activeLeaks.length >= this.state.maxActive) return;
+                if (this.state.sealed + this.state.activeLeaks.length >= this.state.totalLeaks) return;
+
+                const hull = document.getElementById('leak-hull');
+                if (!hull) return;
+
+                // Find position not too close to existing leaks
+                let x, y, attempts = 0;
+                do {
+                    x = 40 + Math.random() * 240;
+                    y = 40 + Math.random() * 120;
+                    attempts++;
+                } while (this.isTooClose(x, y) && attempts < 10);
+
+                const leak = document.createElement('div');
+                leak.className = 'leak-point';
+                leak.style.left = x + 'px';
+                leak.style.top = y + 'px';
+                leak.innerHTML = `
+                    <svg viewBox="0 0 40 40">
+                        <circle class="leak-water" cx="20" cy="20" r="18"/>
+                        <circle class="leak-water" cx="20" cy="20" r="12"/>
+                        <circle class="leak-water" cx="20" cy="20" r="6"/>
+                    </svg>
+                `;
+
+                leak.addEventListener('click', (e) => this.handleLeakClick(e, leak));
+
+                hull.appendChild(leak);
+                this.state.activeLeaks.push({ element: leak, x, y });
+
+                // Show warning
+                document.getElementById('leak-warning').style.display = 'block';
+            },
+
+            isTooClose(x, y) {
+                const minDist = 60;
+                return this.state.activeLeaks.some(leak => {
+                    const dx = leak.x - x;
+                    const dy = leak.y - y;
+                    return Math.sqrt(dx * dx + dy * dy) < minDist;
+                });
+            },
+
+            handleLeakClick(e, leak) {
+                e.stopPropagation();
+                if (this.state.isComplete) return;
+
+                Sounds.play('connect');
+                leak.classList.add('sealed');
+
+                // Remove from active leaks
+                this.state.activeLeaks = this.state.activeLeaks.filter(l => l.element !== leak);
+                this.state.sealed++;
+
+                document.getElementById('leak-sealed').textContent = this.state.sealed;
+
+                // Hide warning if no active leaks
+                if (this.state.activeLeaks.length === 0) {
+                    document.getElementById('leak-warning').style.display = 'none';
+                }
+
+                setTimeout(() => leak.remove(), 300);
+
+                // Check completion
+                if (this.state.sealed >= this.state.totalLeaks) {
+                    this.state.isComplete = true;
+                    if (this.state.spawnTimeout) {
+                        clearTimeout(this.state.spawnTimeout);
+                    }
+                    document.getElementById('leak-status').textContent = 'Hull Sealed!';
+                    document.getElementById('leak-status').classList.add('complete');
+                    document.getElementById('leak-warning').style.display = 'none';
+                    setTimeout(() => TaskFramework.showSuccess(), 400);
+                }
+            }
+        };
+
+        // ============================================
+        // TASK 20: SYSTEM REBOOT
+        // ============================================
+        const SystemRebootTask = {
+            name: 'System Reboot',
+            instruction: 'Press buttons as they light up',
+
+            variants: [
+                { cols: 3, rows: 2, count: 6, delay: 800 },
+                { cols: 3, rows: 2, count: 6, delay: 700 },
+                { cols: 4, rows: 2, count: 8, delay: 600 },
+                { cols: 3, rows: 3, count: 9, delay: 550 }
+            ],
+
+            state: {
+                buttons: [],
+                sequence: [],
+                currentIndex: 0,
+                pressed: 0,
+                total: 0,
+                delay: 800,
+                timeoutId: null,
+                isComplete: false
+            },
+
+            init(container, variant) {
+                // Generate random sequence
+                const indices = Array.from({ length: variant.count }, (_, i) => i);
+                for (let i = indices.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [indices[i], indices[j]] = [indices[j], indices[i]];
+                }
+
+                this.state = {
+                    buttons: [],
+                    sequence: indices,
+                    currentIndex: 0,
+                    pressed: 0,
+                    total: variant.count,
+                    delay: variant.delay,
+                    timeoutId: null,
+                    isComplete: false
+                };
+
+                const buttonsHTML = Array(variant.count).fill('').map((_, i) =>
+                    `<div class="reboot-btn" data-index="${i}"></div>`
+                ).join('');
+
+                container.innerHTML = `
+                    <div class="reboot-task">
+                        <div class="reboot-panel">
+                            <div class="reboot-grid" style="grid-template-columns: repeat(${variant.cols}, 60px);">
+                                ${buttonsHTML}
+                            </div>
+                        </div>
+                        <div class="reboot-progress">
+                            <span class="reboot-progress-label">Boot:</span>
+                            <div class="reboot-progress-bar">
+                                <div class="reboot-progress-fill" id="reboot-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="reboot-status" id="reboot-status">Initializing...</div>
+                    </div>
+                `;
+
+                // Store button references
+                document.querySelectorAll('.reboot-btn').forEach((btn, i) => {
+                    this.state.buttons.push(btn);
+                    btn.addEventListener('click', () => this.handleButtonClick(i));
+                });
+
+                // Start sequence after delay
+                setTimeout(() => {
+                    document.getElementById('reboot-status').textContent = 'Rebooting...';
+                    document.getElementById('reboot-status').classList.add('booting');
+                    this.lightNextButton();
+                }, 500);
+            },
+
+            lightNextButton() {
+                if (this.state.isComplete) return;
+                if (this.state.currentIndex >= this.state.total) return;
+
+                const buttonIndex = this.state.sequence[this.state.currentIndex];
+                const btn = this.state.buttons[buttonIndex];
+
+                // Clear any previously lit buttons
+                this.state.buttons.forEach(b => b.classList.remove('lit'));
+
+                btn.classList.add('lit');
+            },
+
+            handleButtonClick(index) {
+                if (this.state.isComplete) return;
+
+                const btn = this.state.buttons[index];
+                if (btn.classList.contains('done')) return;
+
+                const expectedIndex = this.state.sequence[this.state.currentIndex];
+
+                if (index === expectedIndex) {
+                    // Correct!
+                    Sounds.play('connect');
+                    btn.classList.remove('lit');
+                    btn.classList.add('done');
+
+                    this.state.currentIndex++;
+                    this.state.pressed++;
+
+                    // Update progress
+                    const progress = (this.state.pressed / this.state.total) * 100;
+                    document.getElementById('reboot-fill').style.width = progress + '%';
+
+                    if (this.state.pressed >= this.state.total) {
+                        // Complete!
+                        this.state.isComplete = true;
+                        document.getElementById('reboot-status').textContent = 'System Online!';
+                        document.getElementById('reboot-status').classList.remove('booting');
+                        document.getElementById('reboot-status').classList.add('complete');
+                        setTimeout(() => TaskFramework.showSuccess(), 400);
+                    } else {
+                        // Light next button after delay
+                        setTimeout(() => this.lightNextButton(), this.state.delay);
+                    }
+                } else {
+                    // Wrong button
+                    Sounds.play('error');
+                    TaskFramework.showError();
+                }
+            }
+        };
+
+        // ============================================
         // TASK REGISTRY
         // ============================================
         const TASKS = {
             1: WireRoutingTask,
-            // Tasks 2-20 will be added here
+            2: PipeAlignmentTask,
+            3: CircuitTraceTask,
+            4: DataLinkTask,
+            5: FrequencyTuneTask,
+            6: PressureBalanceTask,
+            7: PowerDistributionTask,
+            8: AlignmentGridTask,
+            9: KeypadCodeTask,
+            10: SequenceRepeatTask,
+            11: ButtonComboTask,
+            12: SwitchPanelTask,
+            13: SampleAnalysisTask,
+            14: FileOrganizationTask,
+            15: CargoManifestTask,
+            16: PriorityQueueTask,
+            17: ScanCompleteTask,
+            18: TargetLockTask,
+            19: LeakSealTask,
+            20: SystemRebootTask
         };
 
         // ============================================
