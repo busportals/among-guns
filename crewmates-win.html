@@ -38,37 +38,43 @@
             position: relative;
         }
 
-        .close-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(180deg, #2A4A3A, #1A3A2A);
-            border: 2px solid #4CAF8C;
-            border-radius: 6px;
-            color: #4CAF8C;
-            font-size: 20px;
+        .lobby-btn {
+            margin-top: 2rem;
+            padding: 14px 40px;
+            background: linear-gradient(180deg, #3A6A5A, #2A5A4A);
+            border: 3px solid #4CAF8C;
+            border-radius: 8px;
+            color: #F0E6D8;
+            font-size: 1rem;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s ease;
-            line-height: 1;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            z-index: 100;
+            transition: all 0.2s ease;
+            box-shadow:
+                0 4px 8px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(74, 175, 140, 0.4),
+                inset 0 1px 0 rgba(108, 223, 184, 0.2);
+            font-family: 'Courier New', Courier, monospace;
         }
 
-        .close-btn:hover {
-            background: linear-gradient(180deg, #3A5A4A, #2A4A3A);
-            color: #6CDFB8;
+        .lobby-btn:hover {
+            background: linear-gradient(180deg, #4A7A6A, #3A6A5A);
+            color: #FFFFFF;
             border-color: #6CDFB8;
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(74, 175, 140, 0.6),
+                inset 0 1px 0 rgba(108, 223, 184, 0.3);
         }
 
-        .close-btn:active {
-            transform: scale(0.95);
+        .lobby-btn:active {
+            transform: translateY(0);
+            box-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(74, 175, 140, 0.4),
+                inset 0 1px 0 rgba(108, 223, 184, 0.2);
         }
 
         h1 {
@@ -92,6 +98,7 @@
             color: #A09080;
             text-shadow: 0 0 10px rgba(74, 175, 140, 0.4);
             animation: shine 3s ease-in-out infinite;
+            margin-bottom: 0.5rem;
         }
 
         /* Confetti particles */
@@ -186,19 +193,24 @@
             .container {
                 padding: 30px 40px;
             }
+            .lobby-btn {
+                font-size: 0.9rem;
+                letter-spacing: 2px;
+                padding: 12px 30px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="close-btn" id="close-btn">×</button>
         <h1>CREWMATES WIN</h1>
         <div class="subtitle">Victory Through Teamwork!</div>
+        <button class="lobby-btn" id="lobby-btn">Return to Lobby</button>
     </div>
 
     <script>
-        // Close button handler
-        document.getElementById('close-btn').addEventListener('click', function() {
+        // Lobby button handler
+        document.getElementById('lobby-btn').addEventListener('click', function() {
             PortalsSdk.closeIframe();
         });
     </script>
