@@ -2679,6 +2679,8 @@
 
             closeIframe() {
                 console.log('Closing iframe');
+                // Clean up any stranded drag elements from body
+                document.querySelectorAll('body > .datalink-packet').forEach(el => el.remove());
                 if (typeof PortalsSdk !== 'undefined') {
                     PortalsSdk.closeIframe();
                 } else {
@@ -2708,6 +2710,9 @@
             },
 
             loadTask(taskNum) {
+                // Clean up any stranded drag elements from body
+                document.querySelectorAll('body > .datalink-packet').forEach(el => el.remove());
+
                 const taskDef = TASKS[taskNum];
 
                 if (!taskDef) {
