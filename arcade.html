@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Space Defense</title>
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=38472916"></script>
     <style>
         * {
             margin: 0;
@@ -53,11 +54,44 @@
             text-shadow: 0 0 10px rgba(212, 118, 58, 0.3);
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .score-display {
             font-size: 11px;
             font-weight: bold;
             color: #4CAF8C;
             text-shadow: 0 0 8px rgba(74, 175, 140, 0.5);
+        }
+
+        .close-btn {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(180deg, #5D5048, #4D4038);
+            border: 2px solid #6D6058;
+            border-radius: 6px;
+            color: #A09080;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            background: linear-gradient(180deg, #6D6058, #5D5048);
+            color: #F0E6D8;
+            border-color: #7D7068;
+        }
+
+        .close-btn:active {
+            transform: scale(0.95);
         }
 
         .game-screen {
@@ -211,7 +245,10 @@
     <div class="arcade-cabinet">
         <div class="arcade-header">
             <div class="arcade-title">Space Defense</div>
-            <div class="score-display">Score: <span id="score">0</span></div>
+            <div class="header-right">
+                <div class="score-display">Score: <span id="score">0</span></div>
+                <button class="close-btn" id="close-btn">&times;</button>
+            </div>
         </div>
         <div class="game-screen">
             <canvas id="game" width="280" height="320"></canvas>
@@ -239,6 +276,36 @@
         const startOverlay = document.getElementById('start-overlay');
         const startBtn = document.getElementById('start-btn');
         const restartBtn = document.getElementById('restart-btn');
+        const closeBtn = document.getElementById('close-btn');
+
+        // Portals integration
+        const Portals = {
+            completeTask(taskName) {
+                const message = JSON.stringify({
+                    TaskName: taskName,
+                    TaskTargetState: 'SetActiveToCompleted'
+                });
+
+                console.log('Sending to Portals:', message);
+
+                if (typeof PortalsSdk !== 'undefined') {
+                    PortalsSdk.sendMessageToUnity(message);
+                } else {
+                    console.log('PortalsSdk not available - running in dev mode');
+                }
+            },
+
+            closeIframe() {
+                console.log('Closing iframe');
+                if (typeof PortalsSdk !== 'undefined') {
+                    PortalsSdk.closeIframe();
+                } else {
+                    console.log('PortalsSdk not available - running in dev mode');
+                }
+            }
+        };
+
+        let gameCompleted = false;
 
         // Colors matching the theme
         const COLORS = {
@@ -476,6 +543,12 @@
                         createExplosion(alien.x, alien.y);
                         score += 10;
                         scoreDisplay.textContent = score;
+
+                        // Complete task when score reaches 100
+                        if (score >= 100 && !gameCompleted) {
+                            gameCompleted = true;
+                            Portals.completeTask('gamecomplete');
+                        }
                         return false;
                     }
                     return true;
@@ -560,6 +633,7 @@
 
         startBtn.addEventListener('click', startGame);
         restartBtn.addEventListener('click', startGame);
+        closeBtn.addEventListener('click', () => Portals.closeIframe());
 
         // Initialize
         initStars();
