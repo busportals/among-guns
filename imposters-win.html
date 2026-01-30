@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imposters Win!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #0A0000 0%, #1D0505 50%, #0A0000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            background: linear-gradient(145deg, rgba(45, 5, 5, 0.9), rgba(25, 5, 5, 0.9));
+            border: 3px solid #8B0000;
+            border-radius: 12px;
+            box-shadow:
+                0 0 30px rgba(139, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 50, 50, 0.1);
+            padding: 40px 60px;
+            animation: fadeInScale 1.5s ease-out;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            color: #FF3030;
+            text-shadow:
+                0 0 20px rgba(255, 48, 48, 0.8),
+                0 0 40px rgba(139, 0, 0, 0.6),
+                0 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #A09080;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
+            animation: flicker 3s ease-in-out infinite;
+        }
+
+        /* Background particles */
+        .particle {
+            position: absolute;
+            background: #8B0000;
+            border-radius: 50%;
+            opacity: 0.4;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.6);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow:
+                    0 0 20px rgba(255, 48, 48, 0.8),
+                    0 0 40px rgba(139, 0, 0, 0.6),
+                    0 2px 4px rgba(0, 0, 0, 0.8);
+            }
+            50% {
+                transform: scale(1.05);
+                text-shadow:
+                    0 0 30px rgba(255, 48, 48, 1),
+                    0 0 60px rgba(139, 0, 0, 0.8),
+                    0 2px 4px rgba(0, 0, 0, 0.8);
+            }
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            33% {
+                transform: translateY(-100px) translateX(50px);
+            }
+            66% {
+                transform: translateY(-50px) translateX(-50px);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+            .subtitle {
+                font-size: 1rem;
+                letter-spacing: 2px;
+            }
+            .container {
+                padding: 30px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IMPOSTERS WIN</h1>
+        <div class="subtitle">Deception Prevails</div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 10 + 5 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = Math.random() * 5 + 8 + 's';
+            document.body.appendChild(particle);
+        }
+
+        // Generate particles
+        for (let i = 0; i < 30; i++) {
+            createParticle();
+        }
+    </script>
+</body>
+</html>
