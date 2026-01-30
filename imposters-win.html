@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imposters Win!</title>
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=38472920"></script>
     <style>
         * {
             margin: 0;
@@ -34,6 +35,40 @@
                 inset 0 1px 0 rgba(255, 50, 50, 0.1);
             padding: 40px 60px;
             animation: fadeInScale 1.5s ease-out;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(180deg, #4A2020, #3A1818);
+            border: 2px solid #8B0000;
+            border-radius: 6px;
+            color: #FF3030;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            line-height: 1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .close-btn:hover {
+            background: linear-gradient(180deg, #5A2828, #4A2020);
+            color: #FF5050;
+            border-color: #A00000;
+            transform: scale(1.05);
+        }
+
+        .close-btn:active {
+            transform: scale(0.95);
         }
 
         h1 {
@@ -136,10 +171,17 @@
 </head>
 <body>
     <div class="container">
+        <button class="close-btn" id="close-btn">×</button>
         <h1>IMPOSTERS WIN</h1>
         <div class="subtitle">Deception Prevails</div>
     </div>
 
+    <script>
+        // Close button handler
+        document.getElementById('close-btn').addEventListener('click', function() {
+            PortalsSdk.closeIframe();
+        });
+    </script>
     <script>
         // Create floating particles
         function createParticle() {
