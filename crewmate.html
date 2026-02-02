@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crewmate</title>
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=38472920"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #0A1A0A 0%, #0D2818 50%, #0A1A0A 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            background: linear-gradient(145deg, rgba(20, 60, 40, 0.95), rgba(10, 40, 25, 0.95));
+            border: 4px solid #00FF88;
+            border-radius: 16px;
+            box-shadow:
+                0 0 50px rgba(0, 255, 136, 0.5),
+                0 0 100px rgba(0, 255, 136, 0.2),
+                inset 0 2px 0 rgba(0, 255, 136, 0.2);
+            padding: 50px 80px;
+            animation: containerReveal 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 18px;
+            background: linear-gradient(45deg, #00FF88, #00FFCC, #00FF88, #88FF00);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: borderGlow 3s ease infinite;
+            opacity: 0.5;
+        }
+
+        .role-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: iconPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.8));
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 12px;
+            color: #00FF88;
+            text-shadow:
+                0 0 30px rgba(0, 255, 136, 1),
+                0 0 60px rgba(0, 255, 136, 0.8),
+                0 0 90px rgba(0, 255, 136, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.9);
+            margin-bottom: 1.5rem;
+            animation: titleReveal 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            color: #88FFBB;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            animation: subtitleFade 1s ease 0.8s both;
+            margin-bottom: 0.5rem;
+        }
+
+        .mission-text {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            color: #66AA88;
+            margin-top: 1.5rem;
+            animation: missionFade 1s ease 1.1s both;
+        }
+
+        .ready-btn {
+            margin-top: 2.5rem;
+            padding: 16px 50px;
+            background: linear-gradient(180deg, #1A5A3A, #0A4A2A);
+            border: 3px solid #00FF88;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(0, 255, 136, 0.4),
+                inset 0 1px 0 rgba(0, 255, 136, 0.3);
+            font-family: 'Courier New', Courier, monospace;
+            animation: buttonFade 1s ease 1.4s both;
+        }
+
+        .ready-btn:hover {
+            background: linear-gradient(180deg, #2A7A5A, #1A6A4A);
+            border-color: #00FFAA;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.6),
+                0 0 50px rgba(0, 255, 136, 0.6),
+                inset 0 1px 0 rgba(0, 255, 136, 0.4);
+        }
+
+        .ready-btn:active {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Scanning line effect */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #00FF88, transparent);
+            animation: scanLine 2s linear infinite;
+            opacity: 0.7;
+        }
+
+        /* Corner decorations */
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: #00FF88;
+            border-style: solid;
+            animation: cornerPulse 2s ease-in-out infinite;
+        }
+
+        .corner-tl { top: 10px; left: 10px; border-width: 3px 0 0 3px; }
+        .corner-tr { top: 10px; right: 10px; border-width: 3px 3px 0 0; }
+        .corner-bl { bottom: 10px; left: 10px; border-width: 0 0 3px 3px; }
+        .corner-br { bottom: 10px; right: 10px; border-width: 0 3px 3px 0; }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: #00FF88;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 4s ease-in-out infinite;
+        }
+
+        /* Grid background */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes containerReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) rotateX(20deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotateX(0);
+            }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes iconPop {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-180deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0);
+            }
+        }
+
+        @keyframes titleReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.8);
+                letter-spacing: 30px;
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                letter-spacing: 12px;
+            }
+        }
+
+        @keyframes subtitleFade {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes missionFade {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes buttonFade {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scanLine {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        @keyframes cornerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(1);
+            }
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .role-icon {
+                font-size: 3rem;
+            }
+            h1 {
+                font-size: 3rem;
+                letter-spacing: 6px;
+            }
+            .subtitle {
+                font-size: 1rem;
+                letter-spacing: 3px;
+            }
+            .mission-text {
+                font-size: 0.85rem;
+            }
+            .container {
+                padding: 35px 45px;
+                margin: 20px;
+            }
+            .ready-btn {
+                font-size: 0.95rem;
+                letter-spacing: 2px;
+                padding: 14px 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <div class="container">
+        <div class="scan-line"></div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+
+        <div class="role-icon">&#9733;</div>
+        <h1>CREWMATE</h1>
+        <div class="subtitle">You Are One Of The Good Guys</div>
+        <div class="mission-text">Complete tasks. Find the impostor. Stay alive.</div>
+        <button class="ready-btn" id="ready-btn">Got It!</button>
+    </div>
+
+    <script>
+        // Ready button handler
+        document.getElementById('ready-btn').addEventListener('click', function() {
+            PortalsSdk.closeIframe();
+        });
+
+        // Create floating particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 6 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 4 + 's';
+            particle.style.animationDuration = Math.random() * 3 + 4 + 's';
+            document.body.appendChild(particle);
+        }
+
+        // Generate particles
+        for (let i = 0; i < 25; i++) {
+            createParticle();
+        }
+    </script>
+</body>
+</html>
