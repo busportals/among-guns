@@ -524,11 +524,11 @@
             // Reset strikethrough animations for next show
             resetStrikethroughs();
 
-            // If closing iframe, wait for exit animation to complete before closing
+            // If closing iframe, wait for most of exit animation before closing
             if (closeIframe) {
                 setTimeout(() => {
                     closePortalsIframe();
-                }, 500); // Match the 0.5s transition duration
+                }, 350); // Close slightly before animation ends for snappier feel
             }
         }
 
