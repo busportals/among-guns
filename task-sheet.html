@@ -99,37 +99,13 @@
         /* Logo */
         .logo {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            position: relative;
+            justify-content: center;
         }
 
-        .logo-spiral {
-            width: 107px;
-            height: 111px;
-            transform: rotate(93.44deg);
-            margin-bottom: -20px;
-        }
-
-        .logo-text {
-            font-family: 'Bungee Spice', cursive;
-            text-align: center;
-            width: 195px;
-        }
-
-        .logo-text .dead {
-            font-size: 70.5px;
-            line-height: 0.76;
-            letter-spacing: -1.9px;
-            color: #d8d7cb;
-        }
-
-        .logo-text .signal {
-            display: block;
-            font-size: 31.8px;
-            line-height: 0.911;
-            letter-spacing: 10.8px;
-            color: #d8d7cb;
+        .logo img {
+            height: auto;
+            max-width: 186px;
         }
 
         /* Task sections */
@@ -231,12 +207,8 @@
                 font-size: 24px;
                 letter-spacing: 4px;
             }
-            .logo-text .dead {
-                font-size: 50px;
-            }
-            .logo-text .signal {
-                font-size: 22px;
-                letter-spacing: 6px;
+            .logo img {
+                max-width: 150px;
             }
             .section-title,
             .section-status {
@@ -301,16 +273,8 @@
                 font-size: 14px;
                 letter-spacing: 2px;
             }
-            .logo-spiral {
-                width: 60px;
-                height: 62px;
-            }
-            .logo-text .dead {
-                font-size: 36px;
-            }
-            .logo-text .signal {
-                font-size: 16px;
-                letter-spacing: 4px;
+            .logo img {
+                max-width: 120px;
             }
             .section-icon {
                 width: 48px;
@@ -347,11 +311,7 @@
                 <p class="progress">45% COMPLETE</p>
             </div>
             <div class="logo">
-                <img class="logo-spiral" src="assets/logo-spiral.svg" alt="Dead Signal Logo">
-                <div class="logo-text">
-                    <span class="dead">DEAD </span>
-                    <span class="signal">SIGNAL</span>
-                </div>
+                <img src="assets/logo-dead-signal.svg" alt="Dead Signal" width="186" height="156">
             </div>
         </div>
 
