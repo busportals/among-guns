@@ -9,9 +9,16 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Spice&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
 
     <style>
+        @font-face {
+            font-family: 'PP Supply Mono';
+            src: local('PP Supply Mono Medium'), local('PPSupplyMono-Medium');
+            font-weight: 500;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -19,380 +26,529 @@
         }
 
         body {
-            font-family: 'Courier Prime', monospace;
-            background: transparent;
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            background: #0f1519;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
             position: relative;
             user-select: none;
         }
 
+        /* Background blur effect */
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-blur {
+            position: absolute;
+            width: 1640px;
+            height: 1225px;
+            left: 50%;
+            top: -40px;
+            transform: translateX(-50%);
+            filter: blur(60px);
+            opacity: 0.37;
+            background: radial-gradient(ellipse at center,
+                rgba(157, 252, 179, 0.3) 0%,
+                rgba(119, 205, 166, 0.2) 20%,
+                rgba(56, 105, 94, 0.15) 40%,
+                transparent 70%);
+        }
+
+        /* Click overlay for closing */
+        .click-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 5;
+            cursor: pointer;
+        }
+
         /* Main container */
         .task-sheet {
-            position: relative;
-            z-index: 1;
-            max-width: 1468px;
-            margin: 20px auto;
-            background: #aaa89b;
-            border: 1px solid #282d2f;
-            border-radius: 39px;
-            padding: 64px 74px;
-            overflow: hidden;
+            position: fixed;
+            z-index: 10;
+            width: 406px;
+            min-width: 390px;
+            right: calc(50% - 332px);
+            top: 117px;
+            bottom: -247px;
+            background: #10171d;
+            border-radius: 26px;
+            padding: 19px 43px;
+            display: flex;
+            flex-direction: column;
+            gap: 24.822px;
+            align-items: flex-end;
+            transform: translateY(120%);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .task-sheet.visible {
+            transform: translateY(0);
+        }
+
+        .task-sheet::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .task-sheet::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .task-sheet::-webkit-scrollbar-thumb {
+            background: rgba(114, 127, 134, 0.3);
+            border-radius: 3px;
         }
 
         /* Header section */
         .header {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: flex-end;
-            margin-bottom: 44px;
+            gap: 12px;
+            padding: 15px 0;
+            width: 100%;
         }
 
-        .header-text {
+        .logo {
+            width: 74px;
+            height: 61.781px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .logo img {
+            position: absolute;
+            width: 150%;
+            height: auto;
+            left: -25%;
+            top: -35%;
+        }
+
+        .title-section {
             display: flex;
             flex-direction: column;
-            gap: 17px;
-            color: #4c4c46;
+            gap: 9.59px;
         }
 
         .title {
             font-family: 'Bungee', cursive;
-            font-size: 92px;
+            font-size: 36.333px;
             line-height: 0.911;
-            letter-spacing: -3.68px;
+            letter-spacing: -1.4533px;
+            color: #d3e8eb;
         }
 
         .progress {
-            font-family: 'Courier Prime', monospace;
-            font-size: 36px;
-            line-height: 35px;
-            letter-spacing: 8.25px;
+            font-family: 'PP Supply Mono', 'Courier New', monospace;
+            font-weight: 500;
+            font-size: 13px;
+            line-height: 14.599px;
+            letter-spacing: 2.99px;
+            color: #9dfcb3;
         }
 
-        /* Logo */
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo img {
-            height: auto;
-            max-width: 186px;
-        }
-
-        /* Task sections */
-        .tasks-container {
+        /* Task categories container */
+        .task-categories {
             display: flex;
             flex-direction: column;
-            gap: 13px;
+            gap: 7.334px;
+            width: 100%;
+            padding-bottom: 40px;
         }
 
+        /* Task section card */
         .task-section {
-            background: rgba(11, 11, 11, 0.04);
-            border-radius: 36px;
-            padding: 34px 52px 51px;
+            border: 1px solid #19232a;
+            border-radius: 20.309px;
+            padding: 19.18px 29.335px 28.771px;
+            display: flex;
+            flex-direction: column;
+            gap: 16.924px;
         }
 
+        .task-section.completed-section {
+            background: rgba(133, 253, 225, 0.02);
+            border-color: #38695e;
+        }
+
+        /* Section header */
         .section-header {
             display: flex;
+            flex-wrap: wrap;
+            gap: 16.924px;
             align-items: center;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .section-header.with-status {
             justify-content: space-between;
+            width: 100%;
         }
 
         .section-header-left {
             display: flex;
+            gap: 16.924px;
             align-items: center;
-            gap: 30px;
         }
 
         .section-icon {
-            width: 68px;
-            height: 68px;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
-        .section-icon img {
+        .section-icon img,
+        .section-icon svg {
             max-width: 100%;
             max-height: 100%;
         }
 
         .section-title {
             font-family: 'Bungee', cursive;
-            font-size: 42px;
+            font-size: 21px;
             line-height: 0.911;
-            letter-spacing: 3.36px;
-            color: #4c4c46;
+            letter-spacing: 1.68px;
+            color: #727f86;
+        }
+
+        .section-title.active {
+            color: #77cda6;
         }
 
         .section-status {
             font-family: 'Bungee', cursive;
-            font-size: 42px;
+            font-size: 14px;
             line-height: 0.911;
-            letter-spacing: 3.36px;
-            color: #bec0a3;
+            letter-spacing: 1.12px;
+            color: #9dfcb3;
         }
 
         /* Task items */
         .task-list {
             display: flex;
             flex-direction: column;
-            gap: 23px;
+            gap: 12.975px;
         }
 
         .task-item {
-            font-family: 'Courier Prime', monospace;
-            font-weight: 700;
-            font-size: 26.45px;
-            line-height: 25.88px;
-            letter-spacing: 6.08px;
-        }
-
-        .task-item.active {
-            color: #d8d7cb;
+            font-family: 'PP Supply Mono', 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 14.599px;
+            letter-spacing: 3.22px;
+            color: #b5cbce;
+            position: relative;
+            text-decoration: none;
         }
 
         .task-item.completed {
-            color: #4c4c46;
-            text-decoration: line-through;
+            color: #3d5458;
+        }
+
+        /* Strikethrough animation */
+        .task-item.completed .strike-line {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            height: 1px;
+            background: #3d5458;
+            width: 0;
+            transition: width 0.4s ease-out;
+        }
+
+        .task-item.completed.animate-strike .strike-line {
+            width: 100%;
+        }
+
+        /* Hide tasks button */
+        .hide-tasks-btn {
+            position: fixed;
+            bottom: 41px;
+            left: 47px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: 27px;
+            padding: 15px 21px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .hide-tasks-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .hide-tasks-btn:active {
+            transform: scale(0.98);
+        }
+
+        .hide-tasks-btn span {
+            font-family: 'Bungee', cursive;
+            font-size: 15.926px;
+            line-height: 0.911;
+            letter-spacing: 1.2741px;
+            color: #727f86;
         }
 
         /* Responsive */
-        @media (max-width: 1500px) {
-            .task-sheet {
-                margin: 80px 40px;
-                max-width: calc(100% - 80px);
-            }
-        }
-
-        @media (max-width: 1200px) {
-            .title {
-                font-size: 64px;
-            }
-            .progress {
-                font-size: 24px;
-                letter-spacing: 4px;
-            }
-            .logo img {
-                max-width: 150px;
-            }
-            .section-title,
-            .section-status {
-                font-size: 32px;
-            }
-            .task-item {
-                font-size: 20px;
-                letter-spacing: 4px;
-            }
-        }
-
         @media (max-width: 900px) {
             .task-sheet {
-                padding: 40px 30px;
-                margin: 40px 20px;
-                border-radius: 24px;
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+                top: 100px;
             }
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 30px;
-            }
-            .title {
-                font-size: 48px;
-            }
-            .progress {
-                font-size: 18px;
-                letter-spacing: 3px;
-            }
-            .logo {
-                align-self: flex-end;
-            }
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            .section-header.with-status {
-                flex-direction: column;
-            }
-            .section-title,
-            .section-status {
-                font-size: 24px;
-                letter-spacing: 2px;
-            }
-            .task-item {
-                font-size: 16px;
-                letter-spacing: 3px;
-            }
-            .task-section {
-                padding: 24px 30px 35px;
-                border-radius: 24px;
+
+            .hide-tasks-btn {
+                left: 20px;
+                bottom: 30px;
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 500px) {
+            .task-sheet {
+                padding: 15px 25px;
+            }
+
             .title {
-                font-size: 32px;
-                letter-spacing: -1.5px;
+                font-size: 28px;
             }
-            .progress {
-                font-size: 14px;
-                letter-spacing: 2px;
-            }
-            .logo img {
-                max-width: 120px;
-            }
-            .section-icon {
-                width: 48px;
-                height: 48px;
-            }
-            .section-title,
-            .section-status {
+
+            .section-title {
                 font-size: 18px;
-                letter-spacing: 1px;
             }
+
             .task-item {
                 font-size: 12px;
                 letter-spacing: 2px;
-                line-height: 20px;
-            }
-            .task-list {
-                gap: 16px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Background -->
+    <div class="background-overlay">
+        <div class="bg-blur"></div>
+    </div>
+
+    <!-- Click overlay for closing task sheet -->
+    <div class="click-overlay" id="clickOverlay"></div>
+
     <!-- Main Task Sheet -->
-    <div class="task-sheet">
+    <div class="task-sheet" id="taskSheet">
         <!-- Header -->
         <div class="header">
-            <div class="header-text">
+            <div class="logo">
+                <img src="assets/logo-dead-signal.svg" alt="Dead Signal">
+            </div>
+            <div class="title-section">
                 <h1 class="title">TASK SHEET</h1>
                 <p class="progress">45% COMPLETE</p>
             </div>
-            <div class="logo">
-                <img src="assets/logo-dead-signal.svg" alt="Dead Signal" width="186" height="156">
-            </div>
         </div>
 
-        <!-- Task Sections -->
-        <div class="tasks-container">
-            <!-- BOTANICS -->
-            <div class="task-section">
+        <!-- Task Categories -->
+        <div class="task-categories">
+            <!-- MEDBAY - Completed Section -->
+            <div class="task-section completed-section">
                 <div class="section-header">
-                    <div class="section-icon">
-                        <img src="assets/icon-botanics.svg" alt="Botanics">
-                    </div>
-                    <h2 class="section-title">BOTANICS</h2>
-                </div>
-                <div class="task-list">
-                    <p class="task-item active">SORT SAMPLES</p>
-                    <p class="task-item completed">LABEL BOXES</p>
-                </div>
-            </div>
-
-            <!-- MEDBAY -->
-            <div class="task-section">
-                <div class="section-header with-status">
                     <div class="section-header-left">
                         <div class="section-icon">
                             <img src="assets/icon-medbay.svg" alt="Medbay">
                         </div>
-                        <h2 class="section-title">MEDBAY</h2>
+                        <h2 class="section-title active">MEDBAY</h2>
                     </div>
                     <span class="section-status">COMPLETED</span>
                 </div>
                 <div class="task-list">
-                    <p class="task-item completed">APPROVE MEDICAL I.D</p>
-                    <p class="task-item completed">POWER UP MEDBAYS</p>
-                    <p class="task-item completed">DISPENSE MEDICATION</p>
+                    <p class="task-item completed">APPROVE MEDICAL I.D<span class="strike-line"></span></p>
+                    <p class="task-item completed">POWER UP MEDBAYS<span class="strike-line"></span></p>
+                    <p class="task-item completed">DISPENSE MEDICATION<span class="strike-line"></span></p>
+                </div>
+            </div>
+
+            <!-- BOTANICS -->
+            <div class="task-section">
+                <div class="section-header">
+                    <div class="section-header-left">
+                        <div class="section-icon">
+                            <img src="assets/icon-botanics.svg" alt="Botanics">
+                        </div>
+                        <h2 class="section-title">BOTANICS</h2>
+                    </div>
+                </div>
+                <div class="task-list">
+                    <p class="task-item completed">SORT SAMPLES<span class="strike-line"></span></p>
+                    <p class="task-item">LABEL BOXES</p>
                 </div>
             </div>
 
             <!-- OFFICES -->
             <div class="task-section">
                 <div class="section-header">
-                    <div class="section-icon">
-                        <img src="assets/icon-offices-2.svg" alt="Offices">
+                    <div class="section-header-left">
+                        <div class="section-icon">
+                            <img src="assets/icon-offices-2.svg" alt="Offices">
+                        </div>
+                        <h2 class="section-title">OFFICES</h2>
                     </div>
-                    <h2 class="section-title">OFFICES</h2>
                 </div>
                 <div class="task-list">
-                    <p class="task-item active">SORT SAMPLES</p>
-                    <p class="task-item completed">LABEL BOXES</p>
+                    <p class="task-item">SORT SAMPLES</p>
+                    <p class="task-item completed">LABEL BOXES<span class="strike-line"></span></p>
                 </div>
             </div>
 
             <!-- STORAGE -->
             <div class="task-section">
                 <div class="section-header">
-                    <div class="section-icon">
-                        <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- 3D box icon -->
-                            <path d="M34 8L8 20L34 32L60 20L34 8Z" fill="#4C4C46"/>
-                            <path d="M8 20V48L34 60V32L8 20Z" fill="#4C4C46"/>
-                            <path d="M60 20V48L34 60V32L60 20Z" fill="#5A5A4E"/>
-                        </svg>
+                    <div class="section-header-left">
+                        <div class="section-icon">
+                            <img src="assets/icon-storage.svg" alt="Storage">
+                        </div>
+                        <h2 class="section-title">STORAGE</h2>
                     </div>
-                    <h2 class="section-title">STORAGE</h2>
                 </div>
                 <div class="task-list">
-                    <p class="task-item active">OPEN BAY DOOR</p>
-                    <p class="task-item completed">SOMETHING ELSE</p>
-                    <p class="task-item completed">DISPENSE MEDICATION</p>
+                    <p class="task-item completed">OPEN BAY DOOR<span class="strike-line"></span></p>
+                    <p class="task-item completed">SOMETHING ELSE<span class="strike-line"></span></p>
+                    <p class="task-item">DISPENSE MEDICATION</p>
                 </div>
             </div>
 
             <!-- POWER -->
             <div class="task-section">
                 <div class="section-header">
-                    <div class="section-icon">
-                        <img src="assets/icon-power.svg" alt="Power">
+                    <div class="section-header-left">
+                        <div class="section-icon">
+                            <img src="assets/icon-power.svg" alt="Power">
+                        </div>
+                        <h2 class="section-title">POWER</h2>
                     </div>
-                    <h2 class="section-title">POWER</h2>
                 </div>
                 <div class="task-list">
-                    <p class="task-item active">REPAIR BROKEN LEVER</p>
-                    <p class="task-item completed">RESTART GENERATOR</p>
-                    <p class="task-item completed">SWITCH ON ALL POWER LEVELS</p>
+                    <p class="task-item completed">REPAIR BROKEN LEVER<span class="strike-line"></span></p>
+                    <p class="task-item completed">RESTART GENERATOR<span class="strike-line"></span></p>
+                    <p class="task-item completed">SWITCH ON ALL POWER LEVELS<span class="strike-line"></span></p>
                 </div>
             </div>
 
             <!-- VENTS -->
             <div class="task-section">
                 <div class="section-header">
-                    <div class="section-icon">
-                        <img src="assets/icon-vents.svg" alt="Vents">
+                    <div class="section-header-left">
+                        <div class="section-icon">
+                            <img src="assets/icon-vents.svg" alt="Vents">
+                        </div>
+                        <h2 class="section-title">VENTS</h2>
                     </div>
-                    <h2 class="section-title">VENTS</h2>
                 </div>
                 <div class="task-list">
-                    <p class="task-item active">CLEAN VENTS</p>
-                    <p class="task-item completed">REPAIR BROKEN VENTS</p>
+                    <p class="task-item completed">REPAIR BROKEN LEVER<span class="strike-line"></span></p>
+                    <p class="task-item">RESTART GENERATOR</p>
+                    <p class="task-item">SWITCH ON ALL POWER LEVELS</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Portals SDK integration for dynamic task updates
-        // This can be extended to receive task state from the game
+    <!-- Hide Tasks Button -->
+    <button class="hide-tasks-btn" id="hideTasksBtn">
+        <span>HIDE TASKS</span>
+    </button>
 
+    <script>
+        // State
+        let isTaskSheetVisible = false;
+
+        // Elements
+        const taskSheet = document.getElementById('taskSheet');
+        const hideTasksBtn = document.getElementById('hideTasksBtn');
+        const clickOverlay = document.getElementById('clickOverlay');
+
+        // Show task sheet with animations
+        function showTaskSheet() {
+            isTaskSheetVisible = true;
+            taskSheet.classList.add('visible');
+            hideTasksBtn.querySelector('span').textContent = 'HIDE TASKS';
+
+            // After slide-in animation completes, trigger strikethrough animations
+            setTimeout(() => {
+                animateStrikethroughs();
+            }, 500);
+        }
+
+        // Hide task sheet
+        function hideTaskSheet() {
+            isTaskSheetVisible = false;
+            taskSheet.classList.remove('visible');
+            hideTasksBtn.querySelector('span').textContent = 'SHOW TASKS';
+
+            // Reset strikethrough animations for next show
+            resetStrikethroughs();
+        }
+
+        // Toggle task sheet
+        function toggleTaskSheet() {
+            if (isTaskSheetVisible) {
+                hideTaskSheet();
+            } else {
+                showTaskSheet();
+            }
+        }
+
+        // Animate strikethroughs with staggered delay
+        function animateStrikethroughs() {
+            const completedTasks = document.querySelectorAll('.task-item.completed');
+            completedTasks.forEach((task, index) => {
+                setTimeout(() => {
+                    task.classList.add('animate-strike');
+                }, index * 80); // 80ms stagger between each
+            });
+        }
+
+        // Reset strikethrough animations
+        function resetStrikethroughs() {
+            const completedTasks = document.querySelectorAll('.task-item.completed');
+            completedTasks.forEach(task => {
+                task.classList.remove('animate-strike');
+            });
+        }
+
+        // Event listeners
+        hideTasksBtn.addEventListener('click', toggleTaskSheet);
+
+        // Click outside to close
+        clickOverlay.addEventListener('click', (e) => {
+            if (isTaskSheetVisible) {
+                hideTaskSheet();
+            }
+        });
+
+        // Prevent clicks inside task sheet from closing it
+        taskSheet.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Initialize - show task sheet on load with slight delay
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Task Sheet loaded');
 
-            // Example: Listen for messages from Portals
+            // Show task sheet after a brief delay
+            setTimeout(() => {
+                showTaskSheet();
+            }, 300);
+
+            // Portals SDK integration
             window.addEventListener('message', function(event) {
                 if (event.data && event.data.type === 'updateTasks') {
-                    // Handle task updates from the game
                     console.log('Received task update:', event.data);
                 }
             });
