@@ -526,8 +526,11 @@
         // Close iframe using Portals SDK
         // Note: SDK only available when running inside Portals (not in regular browser)
         function closePortalsIframe() {
+            // Debug: Log SDK status
+            console.log('PortalsSdk check:', typeof PortalsSdk !== 'undefined' ? PortalsSdk : 'undefined');
+
             try {
-                if (window.PortalsSdk && typeof window.PortalsSdk.closeIframe === 'function') {
+                if (typeof PortalsSdk !== 'undefined') {
                     // Use the official Portals SDK method
                     PortalsSdk.closeIframe();
                     console.log('Closing task sheet iframe via PortalsSdk.closeIframe()');
@@ -585,6 +588,13 @@
         // Initialize - show task sheet on load with slight delay
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Task Sheet loaded');
+
+            // Check if Portals SDK is loaded (for debugging)
+            if (typeof PortalsSdk !== 'undefined') {
+                console.log('PortalsSdk loaded successfully:', PortalsSdk);
+            } else {
+                console.log('PortalsSdk not available - running outside Portals environment');
+            }
 
             // Show task sheet after a brief delay
             setTimeout(() => {
