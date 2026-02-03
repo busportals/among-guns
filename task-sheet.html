@@ -94,17 +94,19 @@
             gap: 24px;
         }
 
+        /* Hide scrollbar but keep scrolling */
         .task-categories::-webkit-scrollbar {
-            width: 6px;
+            display: none;
         }
 
-        .task-categories::-webkit-scrollbar-track {
-            background: transparent;
+        .task-categories {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+            cursor: grab;
         }
 
-        .task-categories::-webkit-scrollbar-thumb {
-            background: rgba(114, 127, 134, 0.3);
-            border-radius: 3px;
+        .task-categories:active {
+            cursor: grabbing;
         }
 
         .logo {
@@ -494,6 +496,12 @@
         const taskSheet = document.getElementById('taskSheet');
         const hideTasksBtn = document.getElementById('hideTasksBtn');
         const clickOverlay = document.getElementById('clickOverlay');
+        const taskCategories = document.querySelector('.task-categories');
+
+        // Drag-to-scroll state
+        let isDragging = false;
+        let startY = 0;
+        let scrollTop = 0;
 
         // Show task sheet with animations
         function showTaskSheet() {
@@ -516,10 +524,11 @@
             // Reset strikethrough animations for next show
             resetStrikethroughs();
 
-            // If closing iframe, close via Portals SDK immediately (user gesture required)
-            // The visual animation will play while the iframe closes
+            // If closing iframe, wait for exit animation to complete before closing
             if (closeIframe) {
-                closePortalsIframe();
+                setTimeout(() => {
+                    closePortalsIframe();
+                }, 500); // Match the 0.5s transition duration
             }
         }
 
@@ -583,6 +592,32 @@
         // Prevent clicks inside task sheet from closing it
         taskSheet.addEventListener('click', (e) => {
             e.stopPropagation();
+        });
+
+        // Drag-to-scroll functionality
+        taskCategories.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startY = e.pageY - taskCategories.offsetTop;
+            scrollTop = taskCategories.scrollTop;
+            taskCategories.style.cursor = 'grabbing';
+        });
+
+        taskCategories.addEventListener('mouseleave', () => {
+            isDragging = false;
+            taskCategories.style.cursor = 'grab';
+        });
+
+        taskCategories.addEventListener('mouseup', () => {
+            isDragging = false;
+            taskCategories.style.cursor = 'grab';
+        });
+
+        taskCategories.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const y = e.pageY - taskCategories.offsetTop;
+            const walk = (y - startY) * 1.5; // Scroll speed multiplier
+            taskCategories.scrollTop = scrollTop - walk;
         });
 
         // Initialize - show task sheet on load with slight delay
