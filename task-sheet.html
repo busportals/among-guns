@@ -466,7 +466,7 @@
                     <div class="section-header-left">
                         <div class="section-icon">
                             <svg width="30" height="30" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M23.45 0C27.06 0 30 2.93 30 6.54V24.15C30 27.76 27.06 30.69 23.45 30.69H6.54C2.93 30.69 0 27.76 0 24.15V6.54C0 2.93 2.93 0 6.54 0H23.45ZM4 24.68C3.26 24.68 2.67 25.28 2.67 26.01C2.67 26.74 3.26 27.34 4 27.34C4.73 27.34 5.33 26.74 5.33 26.01C5.33 25.28 4.73 24.68 4 24.68ZM25.67 24.68C24.93 24.68 24.33 25.28 24.33 26.01C24.33 26.74 24.93 27.34 25.67 27.34C26.4 27.34 27 26.74 27 26.01C27 25.28 26.4 24.68 25.67 24.68ZM7.47 24.02C9.47 25.68 12.04 26.68 14.84 26.68C17.64 26.68 20.21 25.68 22.21 24.02H7.47ZM3.99 18.99C4.37 20.08 4.91 21.09 5.58 22.H24.05C24.72 21.09 25.26 20.07 25.64 18.99H3.99ZM3.39 14.01C3.35 14.39 3.33 14.78 3.33 15.17C3.33 15.8 3.38 16.41 3.48 17.01H26.18C26.28 16.41 26.33 15.8 26.33 15.17C26.33 14.78 26.31 14.39 26.27 14.01H3.39ZM5.12 9C4.54 9.92 4.08 10.93 3.77 12H25.89C25.58 10.93 25.12 9.92 24.54 9H5.12ZM14.84 3.67C11.68 3.67 8.82 5 6.74 7.06H22.93C20.85 5 17.99 3.67 14.84 3.67ZM4 3C3.26 3 2.67 3.59 2.67 4.33C2.67 5.07 3.26 5.67 4 5.67C4.73 5.67 5.33 5.07 5.33 4.33C5.33 3.59 4.73 3 4 3ZM25.67 3C24.93 3 24.33 3.59 24.33 4.33C24.33 5.07 24.93 5.67 25.67 5.67C26.4 5.67 27 5.07 27 4.33C27 3.59 26.4 3 25.67 3Z" fill="#727F86"/>
+                                <path d="M23.45 0C27.06 0 30 2.93 30 6.54V24.15C30 27.76 27.06 30.69 23.45 30.69H6.54C2.93 30.69 0 27.76 0 24.15V6.54C0 2.93 2.93 0 6.54 0H23.45ZM4 24.68C3.26 24.68 2.67 25.28 2.67 26.01C2.67 26.74 3.26 27.34 4 27.34C4.73 27.34 5.33 26.74 5.33 26.01C5.33 25.28 4.73 24.68 4 24.68ZM25.67 24.68C24.93 24.68 24.33 25.28 24.33 26.01C24.33 26.74 24.93 27.34 25.67 27.34C26.4 27.34 27 26.74 27 26.01C27 25.28 26.4 24.68 25.67 24.68ZM7.47 24.02C9.47 25.68 12.04 26.68 14.84 26.68C17.64 26.68 20.21 25.68 22.21 24.02H7.47ZM3.99 18.99C4.37 20.08 4.91 21.09 5.58 22H24.05C24.72 21.09 25.26 20.07 25.64 18.99H3.99ZM3.39 14.01C3.35 14.39 3.33 14.78 3.33 15.17C3.33 15.8 3.38 16.41 3.48 17.01H26.18C26.28 16.41 26.33 15.8 26.33 15.17C26.33 14.78 26.31 14.39 26.27 14.01H3.39ZM5.12 9C4.54 9.92 4.08 10.93 3.77 12H25.89C25.58 10.93 25.12 9.92 24.54 9H5.12ZM14.84 3.67C11.68 3.67 8.82 5 6.74 7.06H22.93C20.85 5 17.99 3.67 14.84 3.67ZM4 3C3.26 3 2.67 3.59 2.67 4.33C2.67 5.07 3.26 5.67 4 5.67C4.73 5.67 5.33 5.07 5.33 4.33C5.33 3.59 4.73 3 4 3ZM25.67 3C24.93 3 24.33 3.59 24.33 4.33C24.33 5.07 24.93 5.67 25.67 5.67C26.4 5.67 27 5.07 27 4.33C27 3.59 26.4 3 25.67 3Z" fill="#727F86"/>
                             </svg>
                         </div>
                         <h2 class="section-title">VENTS</h2>
@@ -516,15 +516,15 @@
             // Reset strikethrough animations for next show
             resetStrikethroughs();
 
-            // If closing iframe, wait for animation to complete then close via Portals SDK
+            // If closing iframe, close via Portals SDK immediately (user gesture required)
+            // The visual animation will play while the iframe closes
             if (closeIframe) {
-                setTimeout(() => {
-                    closePortalsIframe();
-                }, 500); // Match the CSS transition duration
+                closePortalsIframe();
             }
         }
 
         // Close iframe using Portals SDK
+        // Note: SDK only available when running inside Portals (not in regular browser)
         function closePortalsIframe() {
             try {
                 if (window.PortalsSdk && typeof window.PortalsSdk.closeIframe === 'function') {
@@ -532,7 +532,8 @@
                     PortalsSdk.closeIframe();
                     console.log('Closing task sheet iframe via PortalsSdk.closeIframe()');
                 } else {
-                    console.warn('PortalsSdk not available');
+                    // This is expected when testing outside of Portals
+                    console.info('PortalsSdk not available - this is normal when testing outside of Portals');
                 }
             } catch (error) {
                 console.error('Error closing iframe:', error);
