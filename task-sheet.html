@@ -27,35 +27,11 @@
 
         body {
             font-family: 'Courier Prime', 'Courier New', monospace;
-            background: #0f1519;
+            background: transparent;
             min-height: 100vh;
             overflow: hidden;
             position: relative;
             user-select: none;
-        }
-
-        /* Background blur effect */
-        .background-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .bg-blur {
-            position: absolute;
-            width: 1640px;
-            height: 1225px;
-            left: 50%;
-            top: -40px;
-            transform: translateX(-50%);
-            filter: blur(60px);
-            opacity: 0.37;
-            background: radial-gradient(ellipse at center,
-                rgba(157, 252, 179, 0.3) 0%,
-                rgba(119, 205, 166, 0.2) 20%,
-                rgba(56, 105, 94, 0.15) 40%,
-                transparent 70%);
         }
 
         /* Click overlay for closing */
@@ -70,7 +46,9 @@
         .task-sheet {
             position: fixed;
             z-index: 10;
-            width: 540px;
+            width: 90%;
+            min-width: 400px;
+            max-width: 720px;
             right: 50%;
             transform: translateX(50%) translateY(120%);
             top: 60px;
@@ -206,6 +184,13 @@
         .section-icon svg {
             max-width: 100%;
             max-height: 100%;
+            opacity: 0.5;
+        }
+
+        .completed-section .section-icon img,
+        .completed-section .section-icon svg {
+            opacity: 0.8;
+            filter: brightness(1.2) sepia(0.3) hue-rotate(100deg) saturate(0.8);
         }
 
         .section-title {
@@ -297,18 +282,11 @@
         }
 
         /* Responsive */
-        @media (max-width: 500px) {
+        @media (max-width: 460px) {
             .task-sheet {
-                width: calc(100% - 40px);
-                max-width: none;
-                right: 20px;
-                left: 20px;
-                transform: translateX(0) translateY(120%);
-                padding: 15px 25px;
-            }
-
-            .task-sheet.visible {
-                transform: translateX(0) translateY(0);
+                width: calc(100% - 30px);
+                min-width: unset;
+                padding: 20px 25px 30px;
             }
 
             .title {
@@ -325,18 +303,13 @@
             }
 
             .hide-tasks-btn {
-                left: 20px;
-                bottom: 30px;
+                left: 15px;
+                bottom: 25px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Background -->
-    <div class="background-overlay">
-        <div class="bg-blur"></div>
-    </div>
-
     <!-- Click overlay for closing task sheet -->
     <div class="click-overlay" id="clickOverlay"></div>
 
