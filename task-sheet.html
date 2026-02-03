@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Sheet - Dead Signal</title>
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=38472920"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Spice&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier Prime', monospace;
+            background-color: #0f1519;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        /* Background blur effect */
+        .bg-blur {
+            position: fixed;
+            top: -397px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3484px;
+            height: 2602px;
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-blur img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.37;
+        }
+
+        .bg-blur::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 21, 25, 0.45);
+        }
+
+        /* Main container */
+        .task-sheet {
+            position: relative;
+            z-index: 1;
+            max-width: 1468px;
+            margin: 139px auto 100px;
+            background: #aaa89b;
+            border: 1px solid #282d2f;
+            border-radius: 39px;
+            padding: 64px 74px;
+            overflow: hidden;
+        }
+
+        /* Header section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 44px;
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 17px;
+            color: #4c4c46;
+        }
+
+        .title {
+            font-family: 'Bungee', cursive;
+            font-size: 92px;
+            line-height: 0.911;
+            letter-spacing: -3.68px;
+        }
+
+        .progress {
+            font-family: 'Courier Prime', monospace;
+            font-size: 36px;
+            line-height: 35px;
+            letter-spacing: 8.25px;
+        }
+
+        /* Logo */
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo-spiral {
+            width: 107px;
+            height: 111px;
+            transform: rotate(93.44deg);
+            margin-bottom: -20px;
+        }
+
+        .logo-text {
+            font-family: 'Bungee Spice', cursive;
+            text-align: center;
+            width: 195px;
+        }
+
+        .logo-text .dead {
+            font-size: 70.5px;
+            line-height: 0.76;
+            letter-spacing: -1.9px;
+            color: #d8d7cb;
+        }
+
+        .logo-text .signal {
+            display: block;
+            font-size: 31.8px;
+            line-height: 0.911;
+            letter-spacing: 10.8px;
+            color: #d8d7cb;
+        }
+
+        /* Task sections */
+        .tasks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .task-section {
+            background: rgba(11, 11, 11, 0.04);
+            border-radius: 36px;
+            padding: 34px 52px 51px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-header.with-status {
+            justify-content: space-between;
+        }
+
+        .section-header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .section-icon {
+            width: 68px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .section-title {
+            font-family: 'Bungee', cursive;
+            font-size: 42px;
+            line-height: 0.911;
+            letter-spacing: 3.36px;
+            color: #4c4c46;
+        }
+
+        .section-status {
+            font-family: 'Bungee', cursive;
+            font-size: 42px;
+            line-height: 0.911;
+            letter-spacing: 3.36px;
+            color: #bec0a3;
+        }
+
+        /* Task items */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 23px;
+        }
+
+        .task-item {
+            font-family: 'Courier Prime', monospace;
+            font-weight: 700;
+            font-size: 26.45px;
+            line-height: 25.88px;
+            letter-spacing: 6.08px;
+        }
+
+        .task-item.active {
+            color: #d8d7cb;
+        }
+
+        .task-item.completed {
+            color: #4c4c46;
+            text-decoration: line-through;
+        }
+
+        /* Responsive */
+        @media (max-width: 1500px) {
+            .task-sheet {
+                margin: 80px 40px;
+                max-width: calc(100% - 80px);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .title {
+                font-size: 64px;
+            }
+            .progress {
+                font-size: 24px;
+                letter-spacing: 4px;
+            }
+            .logo-text .dead {
+                font-size: 50px;
+            }
+            .logo-text .signal {
+                font-size: 22px;
+                letter-spacing: 6px;
+            }
+            .section-title,
+            .section-status {
+                font-size: 32px;
+            }
+            .task-item {
+                font-size: 20px;
+                letter-spacing: 4px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .task-sheet {
+                padding: 40px 30px;
+                margin: 40px 20px;
+                border-radius: 24px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 30px;
+            }
+            .title {
+                font-size: 48px;
+            }
+            .progress {
+                font-size: 18px;
+                letter-spacing: 3px;
+            }
+            .logo {
+                align-self: flex-end;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .section-header.with-status {
+                flex-direction: column;
+            }
+            .section-title,
+            .section-status {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+            .task-item {
+                font-size: 16px;
+                letter-spacing: 3px;
+            }
+            .task-section {
+                padding: 24px 30px 35px;
+                border-radius: 24px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .title {
+                font-size: 32px;
+                letter-spacing: -1.5px;
+            }
+            .progress {
+                font-size: 14px;
+                letter-spacing: 2px;
+            }
+            .logo-spiral {
+                width: 60px;
+                height: 62px;
+            }
+            .logo-text .dead {
+                font-size: 36px;
+            }
+            .logo-text .signal {
+                font-size: 16px;
+                letter-spacing: 4px;
+            }
+            .section-icon {
+                width: 48px;
+                height: 48px;
+            }
+            .section-title,
+            .section-status {
+                font-size: 18px;
+                letter-spacing: 1px;
+            }
+            .task-item {
+                font-size: 12px;
+                letter-spacing: 2px;
+                line-height: 20px;
+            }
+            .task-list {
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background blur -->
+    <div class="bg-blur">
+        <img src="assets/bg-blur.png" alt="">
+    </div>
+
+    <!-- Main Task Sheet -->
+    <div class="task-sheet">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-text">
+                <h1 class="title">TASK SHEET</h1>
+                <p class="progress">45% COMPLETE</p>
+            </div>
+            <div class="logo">
+                <img class="logo-spiral" src="assets/logo-spiral.svg" alt="Dead Signal Logo">
+                <div class="logo-text">
+                    <span class="dead">DEAD </span>
+                    <span class="signal">SIGNAL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Sections -->
+        <div class="tasks-container">
+            <!-- BOTANICS -->
+            <div class="task-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <img src="assets/icon-botanics.svg" alt="Botanics">
+                    </div>
+                    <h2 class="section-title">BOTANICS</h2>
+                </div>
+                <div class="task-list">
+                    <p class="task-item active">SORT SAMPLES</p>
+                    <p class="task-item completed">LABEL BOXES</p>
+                </div>
+            </div>
+
+            <!-- MEDBAY -->
+            <div class="task-section">
+                <div class="section-header with-status">
+                    <div class="section-header-left">
+                        <div class="section-icon">
+                            <img src="assets/icon-medbay.svg" alt="Medbay">
+                        </div>
+                        <h2 class="section-title">MEDBAY</h2>
+                    </div>
+                    <span class="section-status">COMPLETED</span>
+                </div>
+                <div class="task-list">
+                    <p class="task-item completed">APPROVE MEDICAL I.D</p>
+                    <p class="task-item completed">POWER UP MEDBAYS</p>
+                    <p class="task-item completed">DISPENSE MEDICATION</p>
+                </div>
+            </div>
+
+            <!-- OFFICES -->
+            <div class="task-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <img src="assets/icon-offices-2.svg" alt="Offices">
+                    </div>
+                    <h2 class="section-title">OFFICES</h2>
+                </div>
+                <div class="task-list">
+                    <p class="task-item active">SORT SAMPLES</p>
+                    <p class="task-item completed">LABEL BOXES</p>
+                </div>
+            </div>
+
+            <!-- STORAGE -->
+            <div class="task-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 3D box icon -->
+                            <path d="M34 8L8 20L34 32L60 20L34 8Z" fill="#4C4C46"/>
+                            <path d="M8 20V48L34 60V32L8 20Z" fill="#4C4C46"/>
+                            <path d="M60 20V48L34 60V32L60 20Z" fill="#5A5A4E"/>
+                        </svg>
+                    </div>
+                    <h2 class="section-title">STORAGE</h2>
+                </div>
+                <div class="task-list">
+                    <p class="task-item active">OPEN BAY DOOR</p>
+                    <p class="task-item completed">SOMETHING ELSE</p>
+                    <p class="task-item completed">DISPENSE MEDICATION</p>
+                </div>
+            </div>
+
+            <!-- POWER -->
+            <div class="task-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <img src="assets/icon-power.svg" alt="Power">
+                    </div>
+                    <h2 class="section-title">POWER</h2>
+                </div>
+                <div class="task-list">
+                    <p class="task-item active">REPAIR BROKEN LEVER</p>
+                    <p class="task-item completed">RESTART GENERATOR</p>
+                    <p class="task-item completed">SWITCH ON ALL POWER LEVELS</p>
+                </div>
+            </div>
+
+            <!-- VENTS -->
+            <div class="task-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <img src="assets/icon-vents.svg" alt="Vents">
+                    </div>
+                    <h2 class="section-title">VENTS</h2>
+                </div>
+                <div class="task-list">
+                    <p class="task-item active">CLEAN VENTS</p>
+                    <p class="task-item completed">REPAIR BROKEN VENTS</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Portals SDK integration for dynamic task updates
+        // This can be extended to receive task state from the game
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Task Sheet loaded');
+
+            // Example: Listen for messages from Portals
+            window.addEventListener('message', function(event) {
+                if (event.data && event.data.type === 'updateTasks') {
+                    // Handle task updates from the game
+                    console.log('Received task update:', event.data);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

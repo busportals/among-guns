@@ -1,0 +1,10 @@
+<svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Top flap left -->
+  <path d="M5.5 19.3L33.2 32.1L23 37L-5 24L5.5 19.3Z" transform="translate(3, 3)" fill="#4C4C46"/>
+  <!-- Top flap right -->
+  <path d="M35 32L62.7 19.1L52.1 14.3L24.4 27.2L35 32Z" transform="translate(3, 3)" fill="#4C4C46"/>
+  <!-- Left side -->
+  <path d="M0 31.7L28.6 45V13.3L0 0V31.7Z" transform="translate(2, 19)" fill="#4C4C46"/>
+  <!-- Right side -->
+  <path d="M30 13.3V45L58.6 31.7V0L30 13.3Z" transform="translate(7, 19)" fill="#4C4C46"/>
+</svg>
