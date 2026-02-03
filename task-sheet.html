@@ -180,17 +180,19 @@
             flex-shrink: 0;
         }
 
+        /* Icon colors from Figma: #727f86 for inactive, #77cda6 for completed */
         .section-icon img,
         .section-icon svg {
             max-width: 100%;
             max-height: 100%;
-            opacity: 0.5;
+            /* Filter to convert to #727f86 */
+            filter: brightness(0) saturate(100%) invert(53%) sepia(7%) saturate(531%) hue-rotate(166deg) brightness(89%) contrast(88%);
         }
 
         .completed-section .section-icon img,
         .completed-section .section-icon svg {
-            opacity: 0.8;
-            filter: brightness(1.2) sepia(0.3) hue-rotate(100deg) saturate(0.8);
+            /* Filter to convert to #77cda6 */
+            filter: brightness(0) saturate(100%) invert(76%) sepia(26%) saturate(491%) hue-rotate(103deg) brightness(92%) contrast(87%);
         }
 
         .section-title {
