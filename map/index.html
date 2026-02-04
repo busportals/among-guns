@@ -20,9 +20,9 @@
         background: none;
       }
 
-      /* Override any dark backgrounds from the React app */
+      /* Override any dark backgrounds from the React app, but exclude the green progress bar */
       #root [class*="dark" i],
-      #root [class*="bg-[#14" i] {
+      #root [class*="bg-" i]:not([class*="bg-[#1bff63]"]) {
         background-color: transparent !important;
       }
 
