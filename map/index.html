@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Implement Hover Highlighting</title>
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=10005456"></script>
     <style>
       html, body, #root {
         margin: 0;
@@ -20,5 +21,35 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      // Wire up close button to Portals SDK
+      document.addEventListener('DOMContentLoaded', function() {
+        // Wait for React to render, then find and wire up the close button
+        setTimeout(function() {
+          // Look for the X button - try common selectors
+          const closeButton = document.querySelector('[class*="close"]') ||
+                             document.querySelector('[class*="Close"]') ||
+                             document.querySelector('button[aria-label*="close"]') ||
+                             document.querySelector('button[aria-label*="Close"]') ||
+                             document.querySelector('svg[class*="close"]')?.parentElement ||
+                             document.querySelector('svg[class*="Close"]')?.parentElement;
+
+          if (closeButton) {
+            console.log('Found close button, attaching Portals SDK close handler');
+            closeButton.addEventListener('click', function(e) {
+              console.log('Close button clicked');
+              if (typeof PortalsSdk !== 'undefined') {
+                PortalsSdk.closeIframe();
+                console.log('Closing iframe via PortalsSdk.closeIframe()');
+              } else {
+                console.warn('PortalsSdk not available');
+              }
+            });
+          } else {
+            console.warn('Could not find close button');
+          }
+        }, 500);
+      });
+    </script>
   </body>
 </html>
