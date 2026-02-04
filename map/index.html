@@ -36,7 +36,7 @@
       (function() {
         'use strict';
 
-        const DEBUG = false;
+        const DEBUG = true;
         let latestTaskData = { completed: 0, required: 0, percentage: 0 };
 
         function log(...args) {
@@ -158,12 +158,14 @@
 
                   // Update only the green progress bar div
                   divs.forEach(div => {
+                    log('Checking div:', div.className);
                     // Target the green bar specifically
                     if (div.className.includes('bg-[#1bff63]')) {
                       const targetWidth = percentage + '%';
-                      div.style.width = targetWidth;
                       div.style.setProperty('width', targetWidth, 'important');
-                      log('Updated green progress bar to:', targetWidth);
+                      div.style.setProperty('display', 'block', 'important');
+                      div.style.setProperty('opacity', '1', 'important');
+                      log('Updated green progress bar to:', targetWidth, 'computed:', window.getComputedStyle(div).width);
                     }
                   });
                 } else {
@@ -289,6 +291,12 @@
           setupCloseButton();
           setupTaskProgressListener();
           setupProgressUpdateObserver();
+
+          // Set initial progress to 0% after a short delay for React to render
+          setTimeout(() => {
+            updateTaskProgress(0, 1); // 0/1 = 0%
+            log('Set initial progress to 0%');
+          }, 1000);
         }
 
         if (document.readyState === 'loading') {
