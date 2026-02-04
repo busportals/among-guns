@@ -14,16 +14,10 @@
         overflow: hidden;
       }
 
-      /* High specificity for transparent backgrounds */
+      /* Make only the outer container transparent, not internal UI panels */
       html, html > body, html > body > #root {
-        background-color: transparent;
-        background: none;
-      }
-
-      /* Override any dark backgrounds from the React app, but exclude the green progress bar */
-      #root [class*="dark" i],
-      #root [class*="bg-" i]:not([class*="bg-[#1bff63]"]) {
         background-color: transparent !important;
+        background: none !important;
       }
 
       /* Force green progress bar to be visible */
