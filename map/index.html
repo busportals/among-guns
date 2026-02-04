@@ -156,12 +156,14 @@
                     }
                   });
 
-                  // Try to update div widths
+                  // Try to update div widths (only update the green progress bar, not the background)
                   divs.forEach(div => {
-                    if (div.style.width || getComputedStyle(div).width !== 'auto') {
+                    // Only update if it looks like a progress bar (has green color or no fixed width class)
+                    const isBackground = div.className.includes('bg-[#141d23]') || div.className.includes('w-[');
+                    if (!isBackground) {
                       const targetWidth = percentage + '%';
                       div.style.width = targetWidth;
-                      log('Updated div width to:', targetWidth, div);
+                      log('Updated progress bar width to:', targetWidth, div);
                     }
                   });
                 } else {
