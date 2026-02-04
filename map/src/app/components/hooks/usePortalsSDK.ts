@@ -43,6 +43,7 @@ export function usePortalsSDK() {
   });
 
   useEffect(() => {
+    // Check if SDK is available immediately
     if (typeof PortalsSdk !== 'undefined' && PortalsSdk.setMessageListener) {
       PortalsSdk.setMessageListener((message: string) => {
         console.log('[Portals Map] Received message:', message);
@@ -54,9 +55,39 @@ export function usePortalsSDK() {
         }
       });
       console.log('[Portals Map] Task progress listener initialized');
-    } else {
-      console.warn('[Portals Map] PortalsSdk not available');
+      return;
     }
+
+    // If not available, wait for it to be injected
+    console.log('[Portals Map] Waiting for PortalsSdk to be injected...');
+
+    const checkInterval = setInterval(() => {
+      if (typeof PortalsSdk !== 'undefined' && PortalsSdk.setMessageListener) {
+        clearInterval(checkInterval);
+
+        PortalsSdk.setMessageListener((message: string) => {
+          console.log('[Portals Map] Received message:', message);
+
+          const progress = parseTaskProgress(message);
+          if (progress) {
+            console.log('[Portals Map] Updating task progress:', progress);
+            setTaskProgress(progress);
+          }
+        });
+        console.log('[Portals Map] Task progress listener initialized (delayed)');
+      }
+    }, 100);
+
+    // Cleanup interval after 5 seconds if SDK never appears
+    const timeout = setTimeout(() => {
+      clearInterval(checkInterval);
+      console.warn('[Portals Map] PortalsSdk not available after 5 seconds');
+    }, 5000);
+
+    return () => {
+      clearInterval(checkInterval);
+      clearTimeout(timeout);
+    };
   }, []);
 
   const closeIframe = () => {
