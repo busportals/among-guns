@@ -105,26 +105,55 @@
           percentageElements.forEach(el => {
             if (el.textContent.trim() !== percentage + '%') {
               el.textContent = percentage + '%';
-              log('Updated percentage element to:', percentage + '%', el);
+              log('Updated percentage element to:', percentage + '%');
 
-              // Log the surrounding structure to understand the DOM
-              log('Percentage element parent:', el.parentElement);
-              log('Percentage element parent classes:', el.parentElement?.className);
-              log('Percentage element parent siblings:', el.parentElement?.parentElement?.children);
+              // Find the progress bar container (the inline-grid sibling)
+              const container = el.parentElement;
+              if (container) {
+                // Look for the inline-grid sibling
+                const siblings = Array.from(container.children);
+                const progressBarContainer = siblings.find(sibling =>
+                  sibling !== el && sibling.className.includes('inline-grid')
+                );
 
-              // Look for sibling elements that might be the progress bar
-              const parent = el.parentElement?.parentElement;
-              if (parent) {
-                log('Looking at parent container:', parent);
-                Array.from(parent.children).forEach((child, i) => {
-                  log(`  Child ${i}:`, child, 'classes:', child.className, 'style:', child.style.cssText);
-                  // Check grandchildren
-                  if (child.children.length > 0) {
-                    Array.from(child.children).forEach((grandchild, j) => {
-                      log(`    Grandchild ${i}.${j}:`, grandchild, 'classes:', grandchild.className, 'style:', grandchild.style.cssText);
-                    });
-                  }
-                });
+                if (progressBarContainer) {
+                  log('Found progress bar container:', progressBarContainer);
+
+                  // Look inside for SVG or other progress elements
+                  const svgs = progressBarContainer.querySelectorAll('svg');
+                  const rects = progressBarContainer.querySelectorAll('rect');
+                  const divs = progressBarContainer.querySelectorAll('div');
+
+                  log('Found in progress container:', svgs.length, 'SVGs,', rects.length, 'rects,', divs.length, 'divs');
+
+                  // Try to update SVG rect widths
+                  rects.forEach(rect => {
+                    const currentWidth = parseFloat(rect.getAttribute('width')) || 0;
+                    const parent = rect.closest('svg');
+                    if (parent) {
+                      // Get the total width from viewBox or clientWidth
+                      const viewBox = parent.viewBox.baseVal;
+                      const totalWidth = viewBox ? viewBox.width : parent.clientWidth;
+                      const targetWidth = (percentage / 100) * totalWidth;
+
+                      if (Math.abs(currentWidth - targetWidth) > 0.1) {
+                        rect.setAttribute('width', targetWidth);
+                        log('Updated SVG rect width from', currentWidth, 'to', targetWidth);
+                      }
+                    }
+                  });
+
+                  // Try to update div widths
+                  divs.forEach(div => {
+                    if (div.style.width || getComputedStyle(div).width !== 'auto') {
+                      const targetWidth = percentage + '%';
+                      div.style.width = targetWidth;
+                      log('Updated div width to:', targetWidth, div);
+                    }
+                  });
+                } else {
+                  log('Could not find inline-grid progress bar container');
+                }
               }
             }
           });
