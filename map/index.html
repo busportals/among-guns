@@ -27,10 +27,23 @@
   <body>
     <div id="root"></div>
     <script>
-      // Wire up close button to Portals SDK
+      // Wire up close button to Portals SDK and force transparent backgrounds
       document.addEventListener('DOMContentLoaded', function() {
         // Wait for React to render, then find and wire up the close button
         setTimeout(function() {
+          // Force transparent backgrounds on all elements
+          const allElements = document.querySelectorAll('*');
+          allElements.forEach(function(el) {
+            const computedStyle = window.getComputedStyle(el);
+            const bgColor = computedStyle.backgroundColor;
+
+            // If element has the dark background color, make it transparent
+            if (bgColor === 'rgb(15, 21, 25)' || bgColor === 'rgba(15, 21, 25, 1)') {
+              el.style.backgroundColor = 'transparent';
+              console.log('Made element transparent:', el);
+            }
+          });
+
           // Look for the X button - try common selectors
           const closeButton = document.querySelector('[class*="close"]') ||
                              document.querySelector('[class*="Close"]') ||
