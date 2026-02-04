@@ -481,8 +481,8 @@
                     }
                 }
 
-                // Pipe-delimited messages
-                var parts = trimmed.split('|');
+                // Space-delimited messages (Portals substitutes |Var| with the value)
+                var parts = trimmed.split(' ');
                 var type = parts[0];
 
                 switch (type) {
