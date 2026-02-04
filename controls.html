@@ -4,7 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Controls</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'PP Supply Mono';
+            src: url('https://busportals.github.io/portals-games/fonts/PPSupplyMono-Regular.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'PP Supply Mono';
+            src: url('https://busportals.github.io/portals-games/fonts/PPSupplyMono-Regular.woff2') format('woff2');
+            font-weight: 300;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,9 +28,9 @@
         }
 
         body {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'PP Supply Mono', 'Courier New', Courier, monospace;
             background-color: transparent;
-            color: #F0E6D8;
+            color: #C7E0EA;
             min-height: 100vh;
             display: flex;
             align-items: flex-end;
@@ -24,132 +40,95 @@
         }
 
         .panel {
-            background: linear-gradient(145deg, rgba(45, 37, 32, 0.95), rgba(37, 32, 25, 0.95));
-            border: 2px solid #4D4038;
-            border-radius: 8px;
-            padding: 10px 12px;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 22px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .panel-title {
-            font-size: 9px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #D4763A;
-            text-align: center;
-            margin-bottom: 8px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #3D3028;
+            font-family: 'Bungee', cursive;
+            font-size: 16px;
+            line-height: 16px;
+            letter-spacing: 0.62px;
+            color: #C7E0EA;
         }
 
         .controls-list {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 7.5px;
         }
 
         .control-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 11px;
         }
 
-        /* Compact Key Style */
         .key {
-            min-width: 22px;
-            height: 22px;
-            background: linear-gradient(180deg, #4A4038, #3A3028);
-            border: 1px solid #5A5048;
-            border-radius: 4px;
+            width: 26px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 6.7px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #D4763A;
-            box-shadow: 0 2px 0 #2A2218;
-            padding: 0 4px;
+            padding: 6.7px 9px;
+            font-family: 'PP Supply Mono', 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 13px;
+            line-height: 12.7px;
+            letter-spacing: 0.62px;
+            color: #C7E0EA;
         }
 
-        /* Compact Mouse */
-        .mouse {
-            width: 16px;
-            height: 22px;
-            background: linear-gradient(180deg, #4A4038, #3A3028);
-            border: 1px solid #5A5048;
-            border-radius: 8px 8px 5px 5px;
-            position: relative;
-            box-shadow: 0 2px 0 #2A2218;
-        }
-
-        .mouse::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1px;
-            height: 7px;
-            background: #5A5048;
-        }
-
-        .mouse-left, .mouse-right {
-            position: absolute;
-            top: 2px;
-            width: 6px;
-            height: 8px;
-            border-radius: 4px 4px 0 0;
-        }
-
-        .mouse-left { left: 2px; }
-        .mouse-right { right: 2px; }
-
-        .mouse.left .mouse-left {
-            background: #D4763A;
-        }
-
-        .mouse.right .mouse-right {
-            background: #D4763A;
+        .mouse-icon {
+            width: 26px;
+            height: 31.5px;
+            flex-shrink: 0;
         }
 
         .control-text {
-            font-size: 10px;
-            color: #A09080;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .control-text strong {
-            color: #F0E6D8;
-        }
-
-        .modifier {
-            font-size: 8px;
-            color: #4A9B9B;
-            margin-left: 2px;
+            font-family: 'PP Supply Mono', 'Courier New', monospace;
+            font-weight: 300;
+            font-size: 13px;
+            line-height: 12.7px;
+            letter-spacing: 0.62px;
+            color: #C7E0EA;
         }
     </style>
 </head>
 <body>
     <div class="panel">
-        <div class="panel-title">Controls</div>
+        <div class="panel-title">CONTROLS</div>
         <div class="controls-list">
             <div class="control-item">
                 <div class="key">T</div>
-                <div class="control-text"><strong>Cursor Lock</strong></div>
+                <div class="control-text">Cursor Lock</div>
             </div>
             <div class="control-item">
                 <div class="key">F</div>
-                <div class="control-text"><strong>Map</strong><span class="modifier">(hold)</span></div>
+                <div class="control-text">Show Map/Tasks</div>
             </div>
             <div class="control-item">
-                <div class="mouse right"><div class="mouse-left"></div><div class="mouse-right"></div></div>
-                <div class="control-text"><strong>Aim</strong></div>
+                <svg class="mouse-icon" viewBox="0 0 26.1592 31.4533" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="26.1592" height="31.4533" rx="6.72664" fill="white" fill-opacity="0.06"/>
+                    <path d="M19.168 19.962C19.1679 22.5934 17.0347 24.7266 14.4033 24.7266H11.7559C9.12464 24.7264 6.99124 22.5933 6.99121 19.962V15.7266H19.168V19.962Z" fill="#829197"/>
+                    <path d="M12.0215 13.6095H6.99121V11.4913C6.99124 8.86002 9.12464 6.72693 11.7559 6.72664H12.0215V13.6095Z" fill="#829197"/>
+                    <path d="M14.4033 6.72664C17.0347 6.7267 19.1679 8.85988 19.168 11.4913V13.6095H14.1387V6.72664H14.4033Z" fill="#58CDFF"/>
+                </svg>
+                <div class="control-text">Aim</div>
             </div>
             <div class="control-item">
-                <div class="mouse left"><div class="mouse-left"></div><div class="mouse-right"></div></div>
-                <div class="control-text"><strong>Shoot</strong></div>
+                <svg class="mouse-icon" viewBox="0 0 26.1592 31.4533" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="26.1592" height="31.4533" rx="6.72664" fill="white" fill-opacity="0.06"/>
+                    <path d="M19.168 19.962C19.1679 22.5934 17.0347 24.7266 14.4033 24.7266H11.7559C9.12464 24.7264 6.99124 22.5933 6.99121 19.962V15.7266H19.168V19.962Z" fill="#829197"/>
+                    <path d="M12.0215 13.6095H6.99121V11.4913C6.99124 8.86002 9.12464 6.72693 11.7559 6.72664H12.0215V13.6095Z" fill="#58CDFF"/>
+                    <path d="M14.4033 6.72664C17.0347 6.7267 19.1679 8.85988 19.168 11.4913V13.6095H14.1387V6.72664H14.4033Z" fill="#829197"/>
+                </svg>
+                <div class="control-text">Fire</div>
             </div>
         </div>
     </div>
