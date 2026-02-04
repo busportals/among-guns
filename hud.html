@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Dead Signal HUD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@600&display=swap" rel="stylesheet">
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=20260131"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            background: transparent !important;
+            background-color: transparent !important;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Bungee', cursive;
+            user-select: none;
+            position: relative;
+        }
+
+        /* ========== TOP CENTER: Role + Ammo ========== */
+        #top-ui {
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 19px;
+            width: 110px;
+        }
+
+        #role-badge {
+            width: 100%;
+            border: 1px solid #849399;
+            border-radius: 9px;
+            padding: 10px;
+            font-family: 'Bungee', cursive;
+            font-size: 15px;
+            line-height: 17px;
+            letter-spacing: 0.8267px;
+            color: #c7e0ea;
+            text-align: center;
+        }
+
+        #ammo-display {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        .bullet-icon {
+            width: 20.578px;
+            height: 27px;
+            flex-shrink: 0;
+        }
+
+        #ammo-count {
+            font-family: 'Bungee', cursive;
+            font-size: 32.459px;
+            line-height: 22.992px;
+            letter-spacing: -0.4057px;
+            color: #a6bcc4;
+            text-align: right;
+        }
+
+        /* ========== MINIMAP PLACEHOLDER ========== */
+        #minimap {
+            position: fixed;
+            bottom: 243px;
+            left: 50px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.24);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(132, 147, 153, 0.3);
+        }
+
+        /* ========== BOTTOM LEFT: Health + Tooltip ========== */
+        #health-section {
+            position: fixed;
+            bottom: 132px;
+            left: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 21px;
+            width: 280px;
+        }
+
+        #health-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .heart-icon {
+            width: 24px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .health-track {
+            flex: 1;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #health-fill {
+            height: 100%;
+            width: 100%;
+            background: #4ade80;
+            border-radius: 7px;
+            transition: width 0.4s ease, background 0.4s ease;
+        }
+
+        #tooltip {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .key-badge {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #354752;
+            border-radius: 9px;
+            padding: 8px 13px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 13px;
+            letter-spacing: 1.7756px;
+            color: rgba(237, 241, 241, 0.86);
+            text-align: center;
+        }
+
+        .tooltip-text {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 13px;
+            letter-spacing: 1.7756px;
+            color: rgba(237, 241, 241, 0.86);
+        }
+
+        /* ========== BOTTOM RIGHT: Inventory ========== */
+        #inventory-section {
+            position: fixed;
+            bottom: 51px;
+            right: 50px;
+            width: 425px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 17px;
+        }
+
+        #item-name {
+            font-family: 'Bungee', cursive;
+            font-size: 18.187px;
+            line-height: 17px;
+            letter-spacing: 0.8267px;
+            color: #c7e0ea;
+            text-align: right;
+            width: 100%;
+        }
+
+        #inventory-slots {
+            display: flex;
+            gap: 11px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .slot-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 98px;
+            flex-shrink: 0;
+        }
+
+        .slot {
+            width: 98px;
+            height: 98px;
+            background: rgba(0, 0, 0, 0.24);
+            backdrop-filter: blur(7.65px);
+            -webkit-backdrop-filter: blur(7.65px);
+            border-radius: 18px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: box-shadow 0.15s ease;
+            overflow: hidden;
+            padding: 5.698px;
+        }
+
+        .slot.selected {
+            background: rgba(0, 0, 0, 0.28);
+            border: 3px solid #69d2ff;
+            box-shadow: 0px 0px 18.5px rgba(67, 205, 255, 0.37);
+            padding: 2.698px;
+        }
+
+        .slot-icon {
+            width: 86.605px;
+            height: 86.605px;
+            border-radius: 16.956px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slot-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .slot-icon svg {
+            width: 48px;
+            height: 48px;
+            opacity: 0.6;
+        }
+
+        .slot-number {
+            width: 39px;
+            border-radius: 53px;
+            padding: 6px 0;
+            text-align: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 13px;
+            letter-spacing: 1.7756px;
+            background: rgba(0, 0, 0, 0.24);
+            color: rgba(237, 241, 241, 0.86);
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        .slot-number.selected {
+            background: #69d2ff;
+            color: rgba(0, 0, 0, 0.86);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP CENTER: Role & Ammo -->
+    <div id="top-ui">
+        <div id="role-badge">CREWMATE</div>
+        <div id="ammo-display">
+            <svg class="bullet-icon" viewBox="0 0 20.5782 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.16672 0.378904C4.56812 4.60688 5.28222 9.03447 5.28153 13.4911V20.8516C5.28153 20.9977 5.2238 21.1378 5.12106 21.2412C5.01831 21.3445 4.87896 21.4025 4.73365 21.4025H0.547877C0.402571 21.4025 0.263216 21.3445 0.16047 21.2412C0.0577231 21.1378 5.11252e-07 20.9977 5.11252e-07 20.8516V13.4911C-0.000697525 9.03447 0.713405 4.60688 2.1148 0.378904C2.15083 0.26868 2.22054 0.172707 2.31401 0.104669C2.40747 0.0366303 2.5199 0 2.63528 0C2.75067 0 2.8631 0.0366303 2.95656 0.104669C3.05002 0.172707 3.11974 0.26868 3.15577 0.378904H3.16672ZM10.2891 0.00426975C10.1743 0.00397161 10.0622 0.0399807 9.96881 0.107207C9.87541 0.174434 9.80538 0.269477 9.76863 0.378904C8.36723 4.60688 7.65313 9.03447 7.65383 13.4911V20.8516C7.65383 20.9977 7.71155 21.1378 7.8143 21.2412C7.91704 21.3445 8.0564 21.4025 8.2017 21.4025H12.3765C12.5218 21.4025 12.6612 21.3445 12.7639 21.2412C12.8667 21.1378 12.9244 20.9977 12.9244 20.8516V13.4911C12.9339 9.03597 12.2291 4.60842 10.837 0.378904C10.7989 0.264872 10.7247 0.166521 10.6257 0.0988729C10.5268 0.031225 10.4086 -0.00200099 10.2891 0.00426975ZM18.4634 0.378904C18.4274 0.26868 18.3577 0.172707 18.2642 0.104669C18.1708 0.0366303 18.0583 0 17.9429 0C17.8276 0 17.7151 0.0366303 17.6217 0.104669C17.5282 0.172707 17.4585 0.26868 17.4225 0.378904C16.0211 4.60688 15.307 9.03447 15.3077 13.4911V20.8516C15.3077 20.9977 15.3654 21.1378 15.4681 21.2412C15.5709 21.3445 15.7102 21.4025 15.8555 21.4025H20.0303C20.1757 21.4025 20.315 21.3445 20.4178 21.2412C20.5205 21.1378 20.5782 20.9977 20.5782 20.8516V13.4911C20.5789 9.03447 19.8648 4.60688 18.4634 0.378904ZM4.72269 22.4162H0.547877C0.402571 22.4162 0.263216 22.4743 0.16047 22.5776C0.0577231 22.6809 5.11252e-07 22.8211 5.11252e-07 22.9672V25.7218C0.00855074 26.0629 0.148947 26.3871 0.391384 26.6258C0.633822 26.8644 0.959209 26.9987 1.29847 27H3.96662C4.3115 27 4.64234 26.8626 4.88672 26.6179C5.1311 26.3732 5.26912 26.0411 5.27057 25.6943V22.9396C5.2677 22.7954 5.20871 22.6581 5.10628 22.5572C5.00384 22.4562 4.86612 22.3997 4.72269 22.3997V22.4162ZM12.393 22.4162H8.2017C8.0564 22.4162 7.91704 22.4743 7.8143 22.5776C7.71155 22.6809 7.65383 22.8211 7.65383 22.9672V25.7218C7.66238 26.0629 7.80277 26.3871 8.04521 26.6258C8.28765 26.8644 8.61304 26.9987 8.95229 27H11.6259C11.9699 26.9985 12.2993 26.8605 12.5425 26.616C12.7857 26.3714 12.923 26.0401 12.9244 25.6943V22.9396C12.9215 22.7954 12.8625 22.6581 12.7601 22.5572C12.6577 22.4562 12.5199 22.3997 12.3765 22.3997L12.393 22.4162ZM20.0632 22.4162H15.8555C15.7102 22.4162 15.5709 22.4743 15.4681 22.5776C15.3654 22.6809 15.3077 22.8211 15.3077 22.9672V25.7218C15.3162 26.0638 15.4574 26.3889 15.701 26.6277C15.9446 26.8665 16.2714 27.0001 16.6116 27H19.2798C19.6237 26.9985 19.9531 26.8605 20.1963 26.616C20.4395 26.3714 20.5768 26.0401 20.5782 25.6943V22.9396C20.5754 22.7954 20.5164 22.6581 20.4139 22.5572C20.3115 22.4562 20.1738 22.3997 20.0303 22.3997L20.0632 22.4162Z" fill="#A6BCC4"/>
+            </svg>
+            <span id="ammo-count">0</span>
+        </div>
+    </div>
+
+    <!-- MINIMAP PLACEHOLDER -->
+    <div id="minimap"></div>
+
+    <!-- BOTTOM LEFT: Health & Tooltip -->
+    <div id="health-section">
+        <div id="health-bar">
+            <svg class="heart-icon" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22L1.244 11.244C-0.414 9.586-0.414 5.414 2.5 3C4.5 1.4 7.5 1.5 10 4L12 6L14 4C16.5 1.5 19.5 1.4 21.5 3C24.414 5.414 24.414 9.586 22.756 11.244L12 22Z" fill="#4ade80"/>
+            </svg>
+            <div class="health-track">
+                <div id="health-fill"></div>
+            </div>
+        </div>
+        <div id="tooltip">
+            <span class="key-badge">F</span>
+            <span class="tooltip-text">to show tasks & map</span>
+        </div>
+    </div>
+
+    <!-- BOTTOM RIGHT: Inventory -->
+    <div id="inventory-section">
+        <div id="item-name">FIST</div>
+        <div id="inventory-slots">
+            <!-- Slot 1: Hand (always present) -->
+            <div class="slot-wrapper">
+                <div class="slot selected" data-slot="1">
+                    <div class="slot-icon">
+                        <svg viewBox="0 0 24 24" fill="#c7e0ea" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.5 10.5V12a7.5 7.5 0 01-7.5 7.5h-1A7.5 7.5 0 013.5 12V8.25a1.5 1.5 0 013 0V12h.75V4.5a1.5 1.5 0 013 0V10.5h.75V3a1.5 1.5 0 013 0v7.5h.75V4.5a1.5 1.5 0 013 0v6h.75V8.25a1.5 1.5 0 013 0v2.25z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="slot-number selected">1</div>
+            </div>
+            <!-- Slot 2: Empty -->
+            <div class="slot-wrapper">
+                <div class="slot" data-slot="2">
+                    <div class="slot-icon"></div>
+                </div>
+                <div class="slot-number">2</div>
+            </div>
+            <!-- Slot 3: Empty -->
+            <div class="slot-wrapper">
+                <div class="slot" data-slot="3">
+                    <div class="slot-icon"></div>
+                </div>
+                <div class="slot-number">3</div>
+            </div>
+            <!-- Slot 4: Empty -->
+            <div class="slot-wrapper">
+                <div class="slot" data-slot="4">
+                    <div class="slot-icon"></div>
+                </div>
+                <div class="slot-number">4</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== STATE =====
+        const gameState = {
+            health: 100,
+            ammo: 0,
+            role: 'crewmate',
+            selectedSlot: 1,
+            inventory: [
+                { id: 'hand', name: 'FIST', icon: null },
+                null,
+                null,
+                null
+            ]
+        };
+
+        // ===== DOM REFERENCES =====
+        const roleBadge = document.getElementById('role-badge');
+        const ammoCount = document.getElementById('ammo-count');
+        const healthFill = document.getElementById('health-fill');
+        const heartIcon = document.querySelector('.heart-icon path');
+        const itemName = document.getElementById('item-name');
+        const slots = document.querySelectorAll('.slot');
+        const slotNumbers = document.querySelectorAll('.slot-number');
+
+        // ===== RENDER FUNCTIONS =====
+        function renderHealth() {
+            const pct = Math.max(0, Math.min(100, gameState.health));
+            healthFill.style.width = pct + '%';
+
+            let color;
+            if (pct > 66) {
+                color = '#4ade80';
+            } else if (pct > 33) {
+                color = '#fbbf24';
+            } else {
+                color = '#ef4444';
+            }
+            healthFill.style.background = color;
+            heartIcon.setAttribute('fill', color);
+        }
+
+        function renderAmmo() {
+            ammoCount.textContent = gameState.ammo;
+        }
+
+        function renderRole() {
+            const role = gameState.role.toUpperCase();
+            roleBadge.textContent = role;
+        }
+
+        function renderInventory() {
+            for (let i = 0; i < 4; i++) {
+                const slot = slots[i];
+                const number = slotNumbers[i];
+                const item = gameState.inventory[i];
+                const isSelected = gameState.selectedSlot === i + 1;
+                const iconContainer = slot.querySelector('.slot-icon');
+
+                // Selected state
+                slot.classList.toggle('selected', isSelected);
+                number.classList.toggle('selected', isSelected);
+
+                // Slot content (skip slot 1 - hand is in HTML)
+                if (i === 0) continue;
+
+                if (item && item.icon) {
+                    const img = iconContainer.querySelector('img');
+                    if (img) {
+                        img.src = item.icon;
+                        img.alt = item.name;
+                    } else {
+                        iconContainer.innerHTML = '<img src="' + escapeAttr(item.icon) + '" alt="' + escapeAttr(item.name) + '" style="max-width:100%;max-height:100%;object-fit:contain;" onerror="this.style.display=\'none\'">';
+                    }
+                } else if (item && !item.icon) {
+                    iconContainer.innerHTML = '<span style="font-family:Bungee;font-size:11px;color:rgba(199,224,234,0.5);text-align:center;word-break:break-word;">' + escapeHtml(item.name) + '</span>';
+                } else {
+                    iconContainer.innerHTML = '';
+                }
+            }
+
+            // Update item name
+            const selectedItem = gameState.inventory[gameState.selectedSlot - 1];
+            itemName.textContent = selectedItem ? selectedItem.name : '';
+        }
+
+        function renderAll() {
+            renderHealth();
+            renderAmmo();
+            renderRole();
+            renderInventory();
+        }
+
+        // ===== SLOT SELECTION =====
+        function selectSlot(slotIndex) {
+            if (slotIndex < 1 || slotIndex > 4) return;
+
+            gameState.selectedSlot = slotIndex;
+            renderInventory();
+
+            // Send to Unity
+            if (typeof PortalsSdk !== 'undefined') {
+                PortalsSdk.sendMessageToUnity(JSON.stringify({
+                    action: 'select_slot',
+                    slot: slotIndex
+                }));
+            }
+        }
+
+        // ===== INPUT HANDLERS =====
+
+        // Keyboard: 1-4
+        document.addEventListener('keydown', function(e) {
+            var key = e.key;
+            if (key >= '1' && key <= '4') {
+                e.preventDefault();
+                selectSlot(parseInt(key));
+            }
+        });
+
+        // Click on slots
+        slots.forEach(function(slot) {
+            slot.addEventListener('click', function() {
+                var slotIndex = parseInt(slot.dataset.slot);
+                selectSlot(slotIndex);
+            });
+        });
+
+        // ===== MESSAGE HANDLING =====
+        if (typeof PortalsSdk !== 'undefined') {
+            PortalsSdk.setMessageListener(function(message) {
+                console.log('HUD received:', message);
+                var trimmed = message.trim();
+
+                // Handle JSON messages (role reveal)
+                if (trimmed.charAt(0) === '{') {
+                    try {
+                        var data = JSON.parse(trimmed);
+                        if (data.action === 'reveal_role') {
+                            var roleNum = parseInt(data.role);
+                            gameState.role = roleNum === 2 ? 'imposter' : 'crewmate';
+                            renderRole();
+                        }
+                        return;
+                    } catch (e) {
+                        // Not valid JSON, fall through to pipe parsing
+                    }
+                }
+
+                // Pipe-delimited messages
+                var parts = trimmed.split('|');
+                var type = parts[0];
+
+                switch (type) {
+                    case 'health':
+                        gameState.health = parseFloat(parts[1]) || 0;
+                        renderHealth();
+                        break;
+
+                    case 'ammo':
+                        gameState.ammo = parseInt(parts[1]) || 0;
+                        renderAmmo();
+                        break;
+
+                    case 'role':
+                        gameState.role = parts[1].toLowerCase().trim();
+                        renderRole();
+                        break;
+
+                    case 'select':
+                        selectSlot(parseInt(parts[1]));
+                        break;
+
+                    case 'item':
+                        var slot = parseInt(parts[1]);
+                        if (slot >= 2 && slot <= 4) {
+                            gameState.inventory[slot - 1] = {
+                                id: parts[2] || 'item',
+                                name: (parts[2] || 'ITEM').toUpperCase(),
+                                icon: parts[3] || null
+                            };
+                            renderInventory();
+                        }
+                        break;
+
+                    case 'clear':
+                        if (parts[1] === 'all') {
+                            // Clear slots 2-4, keep hand
+                            gameState.inventory[1] = null;
+                            gameState.inventory[2] = null;
+                            gameState.inventory[3] = null;
+                            gameState.selectedSlot = 1;
+                            renderInventory();
+                        } else {
+                            var clearSlot = parseInt(parts[1]);
+                            if (clearSlot >= 2 && clearSlot <= 4) {
+                                gameState.inventory[clearSlot - 1] = null;
+                                if (gameState.selectedSlot === clearSlot) {
+                                    gameState.selectedSlot = 1;
+                                }
+                                renderInventory();
+                            }
+                        }
+                        break;
+                }
+            });
+        }
+
+        // ===== UTILITY =====
+        function escapeHtml(str) {
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function escapeAttr(str) {
+            return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // ===== INIT =====
+        function init() {
+            renderAll();
+
+            if (typeof PortalsSdk !== 'undefined') {
+                PortalsSdk.focusGameKeyboard();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
