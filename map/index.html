@@ -106,6 +106,26 @@
             if (el.textContent.trim() !== percentage + '%') {
               el.textContent = percentage + '%';
               log('Updated percentage element to:', percentage + '%', el);
+
+              // Log the surrounding structure to understand the DOM
+              log('Percentage element parent:', el.parentElement);
+              log('Percentage element parent classes:', el.parentElement?.className);
+              log('Percentage element parent siblings:', el.parentElement?.parentElement?.children);
+
+              // Look for sibling elements that might be the progress bar
+              const parent = el.parentElement?.parentElement;
+              if (parent) {
+                log('Looking at parent container:', parent);
+                Array.from(parent.children).forEach((child, i) => {
+                  log(`  Child ${i}:`, child, 'classes:', child.className, 'style:', child.style.cssText);
+                  // Check grandchildren
+                  if (child.children.length > 0) {
+                    Array.from(child.children).forEach((grandchild, j) => {
+                      log(`    Grandchild ${i}.${j}:`, grandchild, 'classes:', grandchild.className, 'style:', grandchild.style.cssText);
+                    });
+                  }
+                });
+              }
             }
           });
 
