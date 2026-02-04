@@ -22,8 +22,17 @@
 
       /* Override any dark backgrounds from the React app */
       #root [class*="dark" i],
-      #root [class*="bg-" i] {
+      #root [class*="bg-[#14" i] {
         background-color: transparent !important;
+      }
+
+      /* Force green progress bar to be visible */
+      [class*="bg-[#1bff63]"] {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        min-height: 6px !important;
+        background-color: #1bff63 !important;
       }
     </style>
     <script type="module" crossorigin src="/among-guns/map/assets/index-DnFOBFND.js"></script>
@@ -246,7 +255,7 @@
         function setupProgressUpdateObserver() {
           // Watch for DOM changes and re-apply progress if React re-renders
           const observer = new MutationObserver(function() {
-            if (latestTaskData.percentage > 0) {
+            if (latestTaskData.completed !== undefined) {
               applyTaskProgressToDOM(latestTaskData.percentage);
             }
           });
@@ -292,11 +301,20 @@
           setupTaskProgressListener();
           setupProgressUpdateObserver();
 
-          // Set initial progress to 0% after a short delay for React to render
+          // Set initial progress to 0% after React renders
+          // Try multiple times to override React's initial state
           setTimeout(() => {
             updateTaskProgress(0, 1); // 0/1 = 0%
-            log('Set initial progress to 0%');
-          }, 1000);
+            log('Set initial progress to 0% (attempt 1)');
+          }, 500);
+          setTimeout(() => {
+            updateTaskProgress(0, 1);
+            log('Set initial progress to 0% (attempt 2)');
+          }, 1500);
+          setTimeout(() => {
+            updateTaskProgress(0, 1);
+            log('Set initial progress to 0% (attempt 3)');
+          }, 3000);
         }
 
         if (document.readyState === 'loading') {
