@@ -10,7 +10,7 @@
   --color-vents: #3BD16B;
 
   /* UI Colors */
-  --color-background: rgb(15, 21, 25);
+  --color-background: rgba(15, 21, 25, 0.95);
   --color-close-button: #465D6A;
   --color-task-incomplete: rgba(255, 255, 255, 0.4);
   --color-task-complete: #fff;

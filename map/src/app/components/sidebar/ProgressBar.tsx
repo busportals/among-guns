@@ -10,7 +10,7 @@ export function ProgressBar({ percentage, animatedPercentage }: ProgressBarProps
         className="bg-clip-text bg-gradient-to-t font-['Bungee:Regular',sans-serif] from-[#7897a9] from-[9.789%] leading-[0.911] not-italic relative shrink-0 text-[16.525px] to-[141.82%] to-white tracking-[-0.9915px]"
         style={{ WebkitTextFillColor: "transparent" }}
       >
-        {percentage}%
+        {animatedPercentage}%
       </p>
       <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid items-[start] justify-items-[start] leading-[0] relative shrink-0">
         <div className="bg-[#141d23] col-1 h-[6px] ml-0 mt-[0.04px] rounded-[25.2px] row-1 w-[203px]" />
