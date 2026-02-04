@@ -43,10 +43,10 @@ export function usePortalsSDK() {
   });
 
   useEffect(() => {
-    // Check if SDK is available immediately
+    // First try PortalsSdk API if available
     if (typeof PortalsSdk !== 'undefined' && PortalsSdk.setMessageListener) {
       PortalsSdk.setMessageListener((message: string) => {
-        console.log('[Portals Map] Received message:', message);
+        console.log('[Portals Map] Received message via SDK:', message);
 
         const progress = parseTaskProgress(message);
         if (progress) {
@@ -54,39 +54,42 @@ export function usePortalsSDK() {
           setTaskProgress(progress);
         }
       });
-      console.log('[Portals Map] Task progress listener initialized');
+      console.log('[Portals Map] Task progress listener initialized via SDK');
       return;
     }
 
-    // If not available, wait for it to be injected
-    console.log('[Portals Map] Waiting for PortalsSdk to be injected...');
+    // Fallback to postMessage API
+    console.log('[Portals Map] Using postMessage for communication');
 
-    const checkInterval = setInterval(() => {
-      if (typeof PortalsSdk !== 'undefined' && PortalsSdk.setMessageListener) {
-        clearInterval(checkInterval);
+    const handleMessage = (event: MessageEvent) => {
+      // Parse the message - it could be an object or a string
+      let messageData: string;
 
-        PortalsSdk.setMessageListener((message: string) => {
-          console.log('[Portals Map] Received message:', message);
-
-          const progress = parseTaskProgress(message);
-          if (progress) {
-            console.log('[Portals Map] Updating task progress:', progress);
-            setTaskProgress(progress);
-          }
-        });
-        console.log('[Portals Map] Task progress listener initialized (delayed)');
+      if (typeof event.data === 'string') {
+        messageData = event.data;
+      } else if (typeof event.data === 'object' && event.data !== null) {
+        // Convert object to string format: {key:value, key2:value2}
+        messageData = JSON.stringify(event.data)
+          .replace(/[{}"]/g, '')
+          .replace(/,/g, ', ');
+      } else {
+        return;
       }
-    }, 100);
 
-    // Cleanup interval after 5 seconds if SDK never appears
-    const timeout = setTimeout(() => {
-      clearInterval(checkInterval);
-      console.warn('[Portals Map] PortalsSdk not available after 5 seconds');
-    }, 5000);
+      console.log('[Portals Map] Received postMessage:', messageData);
+
+      const progress = parseTaskProgress(messageData);
+      if (progress) {
+        console.log('[Portals Map] Updating task progress:', progress);
+        setTaskProgress(progress);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    console.log('[Portals Map] Task progress listener initialized via postMessage');
 
     return () => {
-      clearInterval(checkInterval);
-      clearTimeout(timeout);
+      window.removeEventListener('message', handleMessage);
     };
   }, []);
 
