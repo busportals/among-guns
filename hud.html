@@ -463,7 +463,7 @@
         // ===== MESSAGE HANDLING =====
         if (typeof PortalsSdk !== 'undefined') {
             PortalsSdk.setMessageListener(function(message) {
-                console.log('HUD received:', message);
+                console.log('HUD received:', JSON.stringify(message));
                 var trimmed = message.trim();
 
                 // Handle JSON messages (role reveal)
@@ -477,12 +477,12 @@
                         }
                         return;
                     } catch (e) {
-                        // Not valid JSON, fall through to pipe parsing
+                        // Not valid JSON, fall through
                     }
                 }
 
-                // Space-delimited messages (Portals substitutes |Var| with the value)
-                var parts = trimmed.split(' ');
+                // Split on whitespace (handles variable spacing from Portals substitution)
+                var parts = trimmed.split(/\s+/).filter(Boolean);
                 var type = parts[0];
 
                 switch (type) {
