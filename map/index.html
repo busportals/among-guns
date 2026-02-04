@@ -37,6 +37,7 @@
         'use strict';
 
         const DEBUG = false;
+        let latestTaskData = { completed: 0, required: 0, percentage: 0 };
 
         function log(...args) {
           if (DEBUG) console.log('[Portals Map]', ...args);
@@ -93,6 +94,72 @@
             });
         }
 
+        function applyTaskProgressToDOM(percentage) {
+          // Find and update percentage text (look for elements containing %)
+          const percentageElements = Array.from(document.querySelectorAll('*')).filter(el => {
+            return el.textContent && el.textContent.includes('%') &&
+                   el.children.length === 0 && // leaf node
+                   /^\d+%$/.test(el.textContent.trim());
+          });
+
+          percentageElements.forEach(el => {
+            if (el.textContent.trim() !== percentage + '%') {
+              el.textContent = percentage + '%';
+              log('Updated percentage element to:', percentage + '%');
+            }
+          });
+
+          // Try to find and update progress bar
+          const progressBars = document.querySelectorAll('[class*="progress" i], [role="progressbar"]');
+          progressBars.forEach(bar => {
+            const targetWidth = percentage + '%';
+            if (bar.style.width !== targetWidth) {
+              bar.style.width = targetWidth;
+              log('Updated progress bar width to:', targetWidth);
+            }
+            if (bar.setAttribute) {
+              bar.setAttribute('aria-valuenow', percentage);
+              bar.setAttribute('aria-valuemin', 0);
+              bar.setAttribute('aria-valuemax', 100);
+            }
+          });
+        }
+
+        function updateTaskProgress(completed, required) {
+          const percentage = required > 0 ? Math.round((completed / required) * 100) : 0;
+
+          // Store latest data
+          latestTaskData = { completed, required, percentage };
+
+          // Apply to DOM immediately
+          applyTaskProgressToDOM(percentage);
+
+          // Dispatch custom event for React app (in case it's listening)
+          const event = new CustomEvent('portalsTaskUpdate', {
+            detail: { completed, required, percentage }
+          });
+          window.dispatchEvent(event);
+        }
+
+        function setupProgressUpdateObserver() {
+          // Watch for DOM changes and re-apply progress if React re-renders
+          const observer = new MutationObserver(function() {
+            if (latestTaskData.percentage > 0) {
+              applyTaskProgressToDOM(latestTaskData.percentage);
+            }
+          });
+
+          // Start observing once root is available
+          waitForElement('#root').then(root => {
+            observer.observe(root, {
+              childList: true,
+              subtree: true,
+              characterData: true
+            });
+            log('Progress update observer started');
+          });
+        }
+
         function setupTaskProgressListener() {
           // Listen for messages from Portals (same system as status-bar.html)
           if (typeof PortalsSdk !== 'undefined' && PortalsSdk.setMessageListener) {
@@ -108,15 +175,7 @@
                 const required = parseInt(requiredMatch[1]);
                 log('Updating task progress:', completed, '/', required);
 
-                // Dispatch custom event for React app to listen to
-                const event = new CustomEvent('portalsTaskUpdate', {
-                  detail: {
-                    completed: completed,
-                    required: required,
-                    percentage: required > 0 ? Math.round((completed / required) * 100) : 0
-                  }
-                });
-                window.dispatchEvent(event);
+                updateTaskProgress(completed, required);
               }
             });
             log('Task progress listener initialized');
@@ -129,6 +188,7 @@
         function initialize() {
           setupCloseButton();
           setupTaskProgressListener();
+          setupProgressUpdateObserver();
         }
 
         if (document.readyState === 'loading') {
