@@ -1,0 +1,34 @@
+/* Among Guns Map - Design Tokens */
+
+:root {
+  /* Location Colors */
+  --color-botanics: #1BFF63;
+  --color-medbay: #3DD1DC;
+  --color-offices: #E17E58;
+  --color-storage: #D7E569;
+  --color-power: #C8FF49;
+  --color-vents: #3BD16B;
+
+  /* UI Colors */
+  --color-background: rgb(15, 21, 25);
+  --color-close-button: #465D6A;
+  --color-task-incomplete: rgba(255, 255, 255, 0.4);
+  --color-task-complete: #fff;
+
+  /* Spacing */
+  --sidebar-width: 368px;
+  --sidebar-padding: 40px;
+  --gap-tasks: 14px;
+  --gap-content: 80px;
+  --close-button-offset: 40px;
+
+  /* Map Dimensions */
+  --map-natural-width: 1200px;
+  --map-natural-height: 700px;
+
+  /* Transitions */
+  --transition-hover: 0.4s ease-in-out;
+  --transition-progress: 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-scale: 0.3s ease-out;
+  --transition-color: 0.3s;
+}

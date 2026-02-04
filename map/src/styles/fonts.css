@@ -1,0 +1,9 @@
+/* PP Supply Mono font import */
+/* Note: PP Supply Mono is a commercial font. Using a fallback for web preview. */
+/* If you have a license, you can replace this with the proper @font-face declaration */
+
+/* Fallback using a similar monospace font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+/* Bungee font (used in the logo) */
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
