@@ -93,11 +93,48 @@
             });
         }
 
+        function setupTaskProgressListener() {
+          // Listen for messages from Portals (same system as status-bar.html)
+          if (typeof PortalsSdk !== 'undefined' && PortalsSdk.setMessageListener) {
+            PortalsSdk.setMessageListener(function(message) {
+              log('PORTALS MSG:', message);
+
+              // Parse the message to extract taskscompleted and tasksrequired
+              const completedMatch = message.match(/taskscompleted\s*:\s*(\d+)/);
+              const requiredMatch = message.match(/tasksrequired\s*:\s*(\d+)/);
+
+              if (completedMatch && requiredMatch) {
+                const completed = parseInt(completedMatch[1]);
+                const required = parseInt(requiredMatch[1]);
+                log('Updating task progress:', completed, '/', required);
+
+                // Dispatch custom event for React app to listen to
+                const event = new CustomEvent('portalsTaskUpdate', {
+                  detail: {
+                    completed: completed,
+                    required: required,
+                    percentage: required > 0 ? Math.round((completed / required) * 100) : 0
+                  }
+                });
+                window.dispatchEvent(event);
+              }
+            });
+            log('Task progress listener initialized');
+          } else {
+            console.warn('PortalsSdk.setMessageListener not available');
+          }
+        }
+
         // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', setupCloseButton);
-        } else {
+        function initialize() {
           setupCloseButton();
+          setupTaskProgressListener();
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initialize);
+        } else {
+          initialize();
         }
       })();
     </script>
