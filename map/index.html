@@ -102,7 +102,20 @@
                    /^\d+%$/.test(el.textContent.trim());
           });
 
+          log('Looking for percentage elements, found:', percentageElements.length);
+          if (percentageElements.length === 0) {
+            // Try to find ANY elements with % in them
+            const anyPercent = Array.from(document.querySelectorAll('*')).filter(el =>
+              el.textContent && el.textContent.includes('%')
+            );
+            log('Found', anyPercent.length, 'elements containing %');
+            anyPercent.slice(0, 3).forEach(el => {
+              log('  Example:', el, 'text:', el.textContent, 'children:', el.children.length);
+            });
+          }
+
           percentageElements.forEach(el => {
+            log('Checking percentage element:', el.textContent.trim(), 'vs target:', percentage + '%');
             if (el.textContent.trim() !== percentage + '%') {
               el.textContent = percentage + '%';
               log('Updated percentage element to:', percentage + '%');
