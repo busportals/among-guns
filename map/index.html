@@ -36,7 +36,7 @@
       (function() {
         'use strict';
 
-        const DEBUG = false;
+        const DEBUG = true;
         let latestTaskData = { completed: 0, required: 0, percentage: 0 };
 
         function log(...args) {
@@ -105,23 +105,59 @@
           percentageElements.forEach(el => {
             if (el.textContent.trim() !== percentage + '%') {
               el.textContent = percentage + '%';
-              log('Updated percentage element to:', percentage + '%');
+              log('Updated percentage element to:', percentage + '%', el);
             }
           });
 
-          // Try to find and update progress bar
-          const progressBars = document.querySelectorAll('[class*="progress" i], [role="progressbar"]');
-          progressBars.forEach(bar => {
-            const targetWidth = percentage + '%';
-            if (bar.style.width !== targetWidth) {
-              bar.style.width = targetWidth;
-              log('Updated progress bar width to:', targetWidth);
-            }
-            if (bar.setAttribute) {
-              bar.setAttribute('aria-valuenow', percentage);
-              bar.setAttribute('aria-valuemin', 0);
-              bar.setAttribute('aria-valuemax', 100);
-            }
+          // Try to find and update progress bar with multiple strategies
+          const progressSelectors = [
+            '[class*="progress" i]',
+            '[role="progressbar"]',
+            '[class*="bar" i]',
+            'svg [class*="progress" i]',
+            'rect[class*="progress" i]',
+            '[class*="fill" i]'
+          ];
+
+          progressSelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            log('Found', elements.length, 'elements for selector:', selector);
+
+            elements.forEach(el => {
+              const targetWidth = percentage + '%';
+              log('Checking element:', el, 'current width:', el.style.width);
+
+              // Try setting width
+              if (el.style.width !== targetWidth) {
+                el.style.width = targetWidth;
+                log('Set width to:', targetWidth, 'on element:', el);
+              }
+
+              // Try setting transform (some progress bars use scale)
+              const scaleX = percentage / 100;
+              if (el.style.transform && !el.style.transform.includes('scale')) {
+                el.style.transform = `scaleX(${scaleX})`;
+                log('Set scaleX to:', scaleX, 'on element:', el);
+              }
+
+              // Try setting attributes
+              if (el.setAttribute) {
+                el.setAttribute('aria-valuenow', percentage);
+                el.setAttribute('aria-valuemin', 0);
+                el.setAttribute('aria-valuemax', 100);
+              }
+
+              // If it's an SVG rect, try setting width attribute
+              if (el.tagName === 'rect') {
+                const parent = el.closest('svg');
+                if (parent) {
+                  const viewBoxWidth = parent.viewBox?.baseVal?.width || parent.clientWidth || 100;
+                  const rectWidth = (percentage / 100) * viewBoxWidth;
+                  el.setAttribute('width', rectWidth);
+                  log('Set SVG rect width to:', rectWidth, 'on element:', el);
+                }
+              }
+            });
           });
         }
 
