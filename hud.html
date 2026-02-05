@@ -509,6 +509,14 @@
                 console.log('HUD received:', JSON.stringify(message));
                 var trimmed = message.trim();
 
+                // Handle role message
+                if (trimmed.indexOf('role:') === 0 || trimmed.indexOf('role ') === 0) {
+                    var roleVal = parseInt(trimmed.replace(/^role[\s:]+/, ''));
+                    gameState.role = roleVal === 1 ? 'imposter' : 'crewmate';
+                    renderRole();
+                    return;
+                }
+
                 // Handle JSON messages (role reveal)
                 if (trimmed.charAt(0) === '{') {
                     try {
