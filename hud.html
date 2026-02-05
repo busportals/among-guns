@@ -82,7 +82,7 @@
             text-align: right;
         }
 
-        /* ========== MINIMAP PLACEHOLDER ========== */
+        /* ========== MINIMAP ========== */
         #minimap {
             position: fixed;
             bottom: 159px;
@@ -92,18 +92,30 @@
             border-radius: 126px;
             background: rgba(217, 217, 217, 0.04);
             border: 1px solid #434c4f;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
 
-        #minimap-text {
-            font-family: 'Bungee', cursive;
-            font-size: 15px;
-            line-height: 17px;
-            letter-spacing: 0.8267px;
-            color: #c7e0ea;
-            text-align: center;
+        #minimap-image {
+            position: absolute;
+            width: 1330px;
+            height: 892px;
+            top: 0;
+            left: 0;
+            will-change: transform;
+            transition: transform 0.15s ease-out;
+        }
+
+        #player-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            margin: -5px 0 0 -5px;
+            background: #69d2ff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(105, 210, 255, 0.8);
+            z-index: 2;
         }
 
         /* ========== BOTTOM LEFT: Health + Tooltip ========== */
@@ -300,7 +312,10 @@
     </div>
 
     <!-- MINIMAP PLACEHOLDER -->
-    <div id="minimap"><span id="minimap-text">MINI MAP<br>PLACEHOLDER</span></div>
+    <div id="minimap">
+        <img id="minimap-image" src="assets/minimap.png" alt="Map">
+        <div id="player-dot"></div>
+    </div>
 
     <!-- BOTTOM LEFT: Health & Tooltip -->
     <div id="health-section">
@@ -509,6 +524,22 @@
                     }
                 }
 
+                // Handle Portals variable format: "name"pos:{"name"="(x,y,z)"}
+                var posMatch = trimmed.match(/"([^"]+)"pos:\{(.+)\}/);
+                if (posMatch) {
+                    var posPlayerName = posMatch[1];
+                    var posDataStr = posMatch[2];
+                    var posValueRegex = new RegExp('"' + posPlayerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"\\s*=\\s*"\\(([^)]+)\\)"');
+                    var posValueMatch = posDataStr.match(posValueRegex);
+                    if (posValueMatch) {
+                        var coords = posValueMatch[1].split(',');
+                        var wx = parseFloat(coords[0]) || 0;
+                        var wz = parseFloat(coords[2]) || 0;
+                        updateMinimap(wx, wz);
+                    }
+                    return;
+                }
+
                 // Handle Portals variable format: "name"health:{"name"="value"}
                 var varMatch = trimmed.match(/"([^"]+)"health:\{(.+)\}/);
                 if (varMatch) {
@@ -591,6 +622,26 @@
 
         function escapeAttr(str) {
             return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // ===== MINIMAP =====
+        var minimapImage = document.getElementById('minimap-image');
+
+        // Map bounds: Z -170 (left) to -5 (right), X -90 (top) to 9 (bottom)
+        var MAP_Z_MIN = -170, MAP_Z_MAX = -5;
+        var MAP_X_MIN = -90,  MAP_X_MAX = 9;
+        var IMG_W = 1330, IMG_H = 892;
+        var MINIMAP_R = 126; // radius = center offset
+
+        function updateMinimap(worldX, worldZ) {
+            // Convert world coords to pixel position on image
+            var imgX = (worldZ - MAP_Z_MIN) / (MAP_Z_MAX - MAP_Z_MIN) * IMG_W;
+            var imgY = (worldX - MAP_X_MIN) / (MAP_X_MAX - MAP_X_MIN) * IMG_H;
+
+            // Offset image so that point is at center of minimap circle
+            var tx = MINIMAP_R - imgX;
+            var ty = MINIMAP_R - imgY;
+            minimapImage.style.transform = 'translate(' + tx + 'px, ' + ty + 'px)';
         }
 
         // ===== INIT =====
