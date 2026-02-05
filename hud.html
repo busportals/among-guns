@@ -570,7 +570,7 @@
                         break;
 
                     case 'role':
-                        gameState.role = parts[1].toLowerCase().trim();
+                        gameState.role = parseInt(parts[1]) === 1 ? 'imposter' : 'crewmate';
                         renderRole();
                         break;
 
