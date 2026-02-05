@@ -90,15 +90,15 @@
             width: 252px;
             height: 252px;
             border-radius: 126px;
-            background: rgba(217, 217, 217, 0.04);
+            background: #0F1519;
             border: 1px solid #434c4f;
             overflow: hidden;
         }
 
         #minimap-image {
             position: absolute;
-            width: 1330px;
-            height: 892px;
+            width: 1013px;
+            height: 669px;
             top: 0;
             left: 0;
             will-change: transform;
@@ -313,7 +313,7 @@
 
     <!-- MINIMAP PLACEHOLDER -->
     <div id="minimap">
-        <img id="minimap-image" src="assets/minimap.png" alt="Map">
+        <img id="minimap-image" src="assets/mapskeleton.png" alt="Map">
         <div id="player-dot"></div>
     </div>
 
@@ -638,10 +638,10 @@
         // ===== MINIMAP =====
         var minimapImage = document.getElementById('minimap-image');
 
-        // Map bounds: Z -170 (left) to -5 (right), X -90 (top) to 9 (bottom)
-        var MAP_Z_MIN = -170, MAP_Z_MAX = -5;
-        var MAP_X_MIN = -90,  MAP_X_MAX = 9;
-        var IMG_W = 1330, IMG_H = 892;
+        // Map bounds: Z -61.72 (left) to 59.675 (right), X -34.518 (top) to 55.363 (bottom)
+        var MAP_Z_MIN = -61.72, MAP_Z_MAX = 59.675;
+        var MAP_X_MIN = -34.518, MAP_X_MAX = 55.363;
+        var IMG_W = 1013, IMG_H = 669;
         var MINIMAP_R = 126; // radius = center offset
 
         function updateMinimap(worldX, worldZ) {
