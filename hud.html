@@ -556,8 +556,8 @@
                     return;
                 }
 
-                // Split on whitespace (handles variable spacing from Portals substitution)
-                var parts = trimmed.split(/\s+/).filter(Boolean);
+                // Split on whitespace or colon (handles variable spacing from Portals substitution)
+                var parts = trimmed.split(/[\s:]+/).filter(Boolean);
                 var type = parts[0];
 
                 switch (type) {
