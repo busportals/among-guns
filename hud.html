@@ -122,16 +122,27 @@
             gap: 12px;
         }
 
-        .heart-icon {
+        .heart-container {
             width: 41px;
             height: 41px;
             flex-shrink: 0;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heart-icon {
+            width: 22px;
+            height: 20px;
         }
 
         .health-track {
             width: 237px;
             height: 9px;
             background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
             overflow: hidden;
             position: relative;
         }
@@ -140,8 +151,29 @@
             height: 100%;
             width: 100%;
             background: #1eff43;
+            border-radius: 5px;
             box-shadow: 0px 0px 10.767px rgba(0, 255, 64, 0.84);
             transition: width 0.4s ease, background 0.4s ease;
+        }
+
+        @keyframes health-damage {
+            0% { filter: brightness(1); }
+            15% { filter: brightness(2.5); }
+            100% { filter: brightness(1); }
+        }
+
+        #health-fill.damage {
+            animation: health-damage 0.4s ease-out;
+        }
+
+        @keyframes heart-damage {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .heart-container.damage {
+            animation: heart-damage 0.4s ease-out;
         }
 
         @keyframes ammo-pulse {
@@ -195,7 +227,7 @@
         .slot {
             width: 98px;
             height: 98px;
-            background: rgba(0, 0, 0, 0.24);
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(7.65px);
             -webkit-backdrop-filter: blur(7.65px);
             border-radius: 18px;
@@ -231,11 +263,7 @@
             object-fit: contain;
         }
 
-        .slot-icon svg {
-            width: 48px;
-            height: 48px;
-            opacity: 0.6;
-        }
+
 
         .slot-number {
             width: 39px;
@@ -247,7 +275,7 @@
             font-weight: 600;
             line-height: 13px;
             letter-spacing: 1.7756px;
-            background: rgba(0, 0, 0, 0.24);
+            background: rgba(0, 0, 0, 0.3);
             color: rgba(237, 241, 241, 0.86);
             transition: background 0.15s ease, color 0.15s ease;
         }
@@ -277,9 +305,11 @@
     <!-- BOTTOM LEFT: Health & Tooltip -->
     <div id="health-section">
         <div id="health-bar">
-            <svg class="heart-icon" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20.5 37L3.08 22.08C0.5 19.5 0.5 13.5 5.5 10C8 8 12 8.1 15.5 11L20.5 15L25.5 11C29 8.1 33 8 35.5 10C40.5 13.5 40.5 19.5 37.92 22.08L20.5 37Z" fill="#1eff43"/>
-            </svg>
+            <div class="heart-container">
+                <svg class="heart-icon" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22L1.244 11.244C-0.414 9.586-0.414 5.414 2.5 3C4.5 1.4 7.5 1.5 10 4L12 6L14 4C16.5 1.5 19.5 1.4 21.5 3C24.414 5.414 24.414 9.586 22.756 11.244L12 22Z" fill="#1eff43"/>
+                </svg>
+            </div>
             <div class="health-track">
                 <div id="health-fill"></div>
             </div>
@@ -294,9 +324,7 @@
             <div class="slot-wrapper">
                 <div class="slot selected" data-slot="1">
                     <div class="slot-icon">
-                        <svg viewBox="0 0 24 24" fill="#c7e0ea" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19.5 10.5V12a7.5 7.5 0 01-7.5 7.5h-1A7.5 7.5 0 013.5 12V8.25a1.5 1.5 0 013 0V12h.75V4.5a1.5 1.5 0 013 0V10.5h.75V3a1.5 1.5 0 013 0v7.5h.75V4.5a1.5 1.5 0 013 0v6h.75V8.25a1.5 1.5 0 013 0v2.25z"/>
-                        </svg>
+                        <img src="data:image/png;base64,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" alt="Fist" style="width:100%;height:100%;object-fit:cover;opacity:0.2;border-radius:16.956px;">
                     </div>
                 </div>
                 <div class="slot-number selected">1</div>
@@ -350,21 +378,23 @@
         const slotNumbers = document.querySelectorAll('.slot-number');
 
         // ===== RENDER FUNCTIONS =====
-        function renderHealth() {
+        function renderHealth(animate) {
             const pct = Math.max(0, Math.min(100, gameState.health));
             healthFill.style.width = pct + '%';
 
-            let color;
-            if (pct > 66) {
-                color = '#1eff43';
-            } else if (pct > 33) {
-                color = '#fbbf24';
-            } else {
-                color = '#ef4444';
-            }
+            var color = pct > 20 ? '#1eff43' : '#ef4444';
             healthFill.style.background = color;
             healthFill.style.boxShadow = '0px 0px 10.767px ' + color;
             heartIcon.setAttribute('fill', color);
+
+            if (animate) {
+                var heartContainer = document.querySelector('.heart-container');
+                healthFill.classList.remove('damage');
+                heartContainer.classList.remove('damage');
+                void healthFill.offsetWidth;
+                healthFill.classList.add('damage');
+                heartContainer.classList.add('damage');
+            }
         }
 
         function renderAmmo(animate) {
@@ -479,15 +509,27 @@
                     }
                 }
 
+                // Handle Portals variable format: "name"health:{"name"="value"}
+                var varMatch = trimmed.match(/"([^"]+)"health:\{(.+)\}/);
+                if (varMatch) {
+                    var playerName = varMatch[1];
+                    var dataStr = varMatch[2];
+                    var valueRegex = new RegExp('"' + playerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"\\s*=\\s*"([^"]*)"');
+                    var valueMatch = dataStr.match(valueRegex);
+                    if (valueMatch) {
+                        var newHealth = parseFloat(valueMatch[1]) || 0;
+                        var took_damage = newHealth < gameState.health;
+                        gameState.health = newHealth;
+                        renderHealth(took_damage);
+                    }
+                    return;
+                }
+
                 // Split on whitespace (handles variable spacing from Portals substitution)
                 var parts = trimmed.split(/\s+/).filter(Boolean);
                 var type = parts[0];
 
                 switch (type) {
-                    case 'health':
-                        gameState.health = parseFloat(parts[1]) || 0;
-                        renderHealth();
-                        break;
 
                     case 'ammo':
                         var newAmmo = parseInt(parts[1]) || 0;
