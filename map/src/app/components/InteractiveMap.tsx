@@ -41,10 +41,22 @@ const TASK_DATA: Record<string, Task[]> = {
 function CloseButton() {
   const handleClose = () => {
     try {
-      // Use Portals SDK if available
-      if (typeof PortalsSdk !== 'undefined' && PortalsSdk?.closeIframe) {
-        PortalsSdk.closeIframe();
-        console.log('[Portals Map] Iframe closed via Portals SDK');
+      if (typeof PortalsSdk !== 'undefined') {
+        // Deactivate the map task
+        if (PortalsSdk?.sendMessageToUnity) {
+          const message = JSON.stringify({
+            TaskName: 'map',
+            TaskTargetState: 'SetActiveToNotActive'
+          });
+          PortalsSdk.sendMessageToUnity(message);
+          console.log('[Portals Map] Sent task deactivation:', message);
+        }
+
+        // Close the iframe
+        if (PortalsSdk?.closeIframe) {
+          PortalsSdk.closeIframe();
+          console.log('[Portals Map] Iframe closed via Portals SDK');
+        }
       } else {
         // Fallback: postMessage to parent
         if (window.parent && window.parent !== window) {

@@ -3,12 +3,14 @@ declare global {
   interface Window {
     PortalsSdk?: {
       closeIframe: () => void;
+      sendMessageToUnity: (message: string) => void;
       setMessageListener: (callback: (message: string) => void) => void;
     };
   }
 
   const PortalsSdk: {
     closeIframe: () => void;
+    sendMessageToUnity: (message: string) => void;
     setMessageListener: (callback: (message: string) => void) => void;
   } | undefined;
 }
