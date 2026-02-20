@@ -734,10 +734,12 @@
             var selfImg = worldToImg(displayX, displayZ);
             var tx = MINIMAP_R - selfImg.x;
             var ty = MINIMAP_R - selfImg.y;
-            minimapImage.style.transform = 'translate(' + tx + 'px, ' + ty + 'px) rotate(' + displayRot + 'deg)';
+            // -90 corrects for Z→imageX axis mapping (standalone assumes Z→imageY)
+            minimapImage.style.transform = 'translate(' + tx + 'px, ' + ty + 'px) rotate(' + (-displayRot - 90) + 'deg)';
             minimapImage.style.transformOrigin = selfImg.x + 'px ' + selfImg.y + 'px';
 
             // Other player arrows (rotated relative to camera)
+            // Rotation matrix for (-displayRot - 90): cos = -sinA, sin = -cosA
             var rad = displayRot * Math.PI / 180;
             var cosA = Math.cos(rad);
             var sinA = Math.sin(rad);
@@ -756,8 +758,8 @@
                 var otherImg = worldToImg(displayOtherPos[name].x, displayOtherPos[name].z);
                 var dx = otherImg.x - selfImg.x;
                 var dy = otherImg.y - selfImg.y;
-                var ox = cosA * dx + sinA * dy;
-                var oy = -sinA * dx + cosA * dy;
+                var ox = -sinA * dx + cosA * dy;
+                var oy = -cosA * dx - sinA * dy;
                 var rot = ((displayOtherRot[name] - displayRot) % 360 + 360) % 360;
 
                 if (!otherDots[name]) {
