@@ -102,20 +102,30 @@
             top: 0;
             left: 0;
             will-change: transform;
-            transition: transform 0.15s ease-out;
         }
 
-        #player-dot {
+        #self-dot {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 10px;
-            height: 10px;
-            margin: -5px 0 0 -5px;
+            width: 14px;
+            height: 14px;
+            margin: -7px 0 0 -7px;
             background: #69d2ff;
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(105, 210, 255, 0.8);
+            clip-path: polygon(50% 0%, 100% 100%, 50% 70%, 0% 100%);
             z-index: 2;
+        }
+
+        .other-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            margin: -6px 0 0 -6px;
+            background: #ff6b6b;
+            clip-path: polygon(50% 0%, 100% 100%, 50% 70%, 0% 100%);
+            z-index: 1;
         }
 
         /* ========== BOTTOM LEFT: Health + Tooltip ========== */
@@ -314,7 +324,7 @@
     <!-- MINIMAP PLACEHOLDER -->
     <div id="minimap">
         <img id="minimap-image" src="assets/mapskeleton.png" alt="Map">
-        <div id="player-dot"></div>
+        <div id="self-dot"></div>
     </div>
 
     <!-- BOTTOM LEFT: Health & Tooltip -->
@@ -532,18 +542,13 @@
                     }
                 }
 
-                // Handle Portals variable format: "name"pos:{"name"="(x,y,z)"}
-                var posMatch = trimmed.match(/"([^"]+)"pos:\{(.+)\}/);
-                if (posMatch) {
-                    var posPlayerName = posMatch[1];
-                    var posDataStr = posMatch[2];
-                    var posValueRegex = new RegExp('"' + posPlayerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"\\s*=\\s*"\\(([^)]+)\\)"');
-                    var posValueMatch = posDataStr.match(posValueRegex);
-                    if (posValueMatch) {
-                        var coords = posValueMatch[1].split(',');
-                        var wx = parseFloat(coords[0]) || 0;
-                        var wz = parseFloat(coords[2]) || 0;
-                        updateMinimap(wx, wz);
+                // Handle position and rotation messages
+                if (parsePositionMessage(trimmed) || parseRotationMessage(trimmed)) {
+                    if (!hasData) {
+                        hasData = true;
+                        displayX = latestWorldX;
+                        displayZ = latestWorldZ;
+                        displayRot = selfRotation;
                     }
                     return;
                 }
@@ -637,23 +642,135 @@
 
         // ===== MINIMAP =====
         var minimapImage = document.getElementById('minimap-image');
+        var minimapEl = document.getElementById('minimap');
+        var selfDot = document.getElementById('self-dot');
 
         // Map bounds: Z -61.72 (left) to 59.675 (right), X -34.518 (top) to 55.363 (bottom)
         var MAP_Z_MIN = -61.72, MAP_Z_MAX = 59.675;
         var MAP_X_MIN = -34.518, MAP_X_MAX = 55.363;
         var IMG_W = 1013, IMG_H = 669;
-        var MINIMAP_R = 126; // radius = center offset
+        var MINIMAP_R = 126;
 
-        function updateMinimap(worldX, worldZ) {
-            // Convert world coords to pixel position on image
-            var imgX = (worldZ - MAP_Z_MIN) / (MAP_Z_MAX - MAP_Z_MIN) * IMG_W;
-            var imgY = (worldX - MAP_X_MIN) / (MAP_X_MAX - MAP_X_MIN) * IMG_H;
+        // Tracking state (updated by heartbeat)
+        var myName = null;
+        var latestWorldX = 0, latestWorldZ = 0, selfRotation = 0;
+        var allPositions = {}, allRotations = {};
 
-            // Offset image so that point is at center of minimap circle
-            var tx = MINIMAP_R - imgX;
-            var ty = MINIMAP_R - imgY;
-            minimapImage.style.transform = 'translate(' + tx + 'px, ' + ty + 'px)';
+        // Display state (lerped at 60fps)
+        var displayX = 0, displayZ = 0, displayRot = 0;
+        var displayOtherPos = {}, displayOtherRot = {};
+        var otherDots = {};
+        var hasData = false, lastFrameTime = 0;
+        var SMOOTHING = 0.15;
+
+        function parsePositionMessage(message) {
+            var posMatch = message.match(/"([^"]+)"pos:\{(.+)\}/);
+            if (!posMatch) return false;
+            myName = posMatch[1];
+            var dataStr = posMatch[2];
+            var playerRegex = /"([^"]+)"\s*=\s*"\(([^)]+)\)"/g;
+            var match;
+            while ((match = playerRegex.exec(dataStr)) !== null) {
+                var name = match[1];
+                var coords = match[2].split(',');
+                var wx = parseFloat(coords[0]) || 0;
+                var wz = parseFloat(coords[2]) || 0;
+                allPositions[name] = { x: wx, z: wz };
+                if (name === myName) {
+                    latestWorldX = wx;
+                    latestWorldZ = wz;
+                }
+            }
+            return true;
         }
+
+        function parseRotationMessage(message) {
+            var rotMatch = message.match(/"([^"]+)"rot:\{(.+)\}/);
+            if (!rotMatch) return false;
+            var dataStr = rotMatch[2];
+            var playerRegex = /"([^"]+)"\s*=\s*"([^"]+)"/g;
+            var match;
+            while ((match = playerRegex.exec(dataStr)) !== null) {
+                var name = match[1];
+                var deg = parseFloat(match[2]) || 0;
+                allRotations[name] = deg;
+                if (name === myName) {
+                    selfRotation = deg;
+                }
+            }
+            return true;
+        }
+
+        function lerp(a, b, t) { return a + (b - a) * t; }
+
+        function lerpAngle(a, b, t) {
+            var diff = b - a;
+            while (diff > 180) diff -= 360;
+            while (diff < -180) diff += 360;
+            return a + diff * t;
+        }
+
+        function worldToImg(wx, wz) {
+            return {
+                x: (wz - MAP_Z_MIN) / (MAP_Z_MAX - MAP_Z_MIN) * IMG_W,
+                y: (wx - MAP_X_MIN) / (MAP_X_MAX - MAP_X_MIN) * IMG_H
+            };
+        }
+
+        function renderFrame(now) {
+            requestAnimationFrame(renderFrame);
+            if (!hasData) return;
+
+            var dt = lastFrameTime ? (now - lastFrameTime) / 1000 : 0.016;
+            lastFrameTime = now;
+            var t = 1 - Math.pow(1 - SMOOTHING, dt * 60);
+
+            displayX = lerp(displayX, latestWorldX, t);
+            displayZ = lerp(displayZ, latestWorldZ, t);
+            displayRot = lerpAngle(displayRot, selfRotation, t);
+            displayRot = ((displayRot % 360) + 360) % 360;
+
+            // Pan and rotate map image around the player's world position
+            var selfImg = worldToImg(displayX, displayZ);
+            var tx = MINIMAP_R - selfImg.x;
+            var ty = MINIMAP_R - selfImg.y;
+            minimapImage.style.transform = 'translate(' + tx + 'px, ' + ty + 'px) rotate(' + displayRot + 'deg)';
+            minimapImage.style.transformOrigin = selfImg.x + 'px ' + selfImg.y + 'px';
+
+            // Other player arrows (rotated relative to camera)
+            var rad = displayRot * Math.PI / 180;
+            var cosA = Math.cos(rad);
+            var sinA = Math.sin(rad);
+
+            for (var name in allPositions) {
+                if (name === myName) continue;
+                var target = allPositions[name];
+                if (!displayOtherPos[name]) {
+                    displayOtherPos[name] = { x: target.x, z: target.z };
+                    displayOtherRot[name] = allRotations[name] || 0;
+                } else {
+                    displayOtherPos[name].x = lerp(displayOtherPos[name].x, target.x, t);
+                    displayOtherPos[name].z = lerp(displayOtherPos[name].z, target.z, t);
+                    displayOtherRot[name] = lerpAngle(displayOtherRot[name], allRotations[name] || 0, t);
+                }
+                var otherImg = worldToImg(displayOtherPos[name].x, displayOtherPos[name].z);
+                var dx = otherImg.x - selfImg.x;
+                var dy = otherImg.y - selfImg.y;
+                var ox = cosA * dx + sinA * dy;
+                var oy = -sinA * dx + cosA * dy;
+                var rot = ((displayOtherRot[name] - displayRot) % 360 + 360) % 360;
+
+                if (!otherDots[name]) {
+                    var dot = document.createElement('div');
+                    dot.className = 'other-dot';
+                    minimapEl.appendChild(dot);
+                    otherDots[name] = dot;
+                }
+                otherDots[name].style.transform = 'translate(' + ox + 'px, ' + oy + 'px) rotate(' + rot + 'deg)';
+            }
+        }
+
+        requestAnimationFrame(renderFrame);
 
         // ===== INIT =====
         function init() {
