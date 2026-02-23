@@ -393,6 +393,26 @@
             ]
         };
 
+        // ===== PLAYER COLORS =====
+        const playerColors = {
+            1:  '#FF0000',  // Red
+            2:  '#FF8C00',  // Orange
+            3:  '#FFD700',  // Gold
+            4:  '#006400',  // Dark Green
+            5:  '#0000FF',  // Blue
+            6:  '#800080',  // Purple
+            7:  '#000000',  // Black
+            8:  '#87CEEB',  // Light Blue
+            9:  '#FF69B4',  // Pink
+            10: '#8B4513',  // Brown
+            11: '#8B0000',  // Dark Red
+            12: '#FFFFFF',  // White
+            13: '#40E0D0',  // Turquoise
+            14: '#90EE90',  // Light Green
+            15: '#F5F5DC',  // Beige
+            16: '#808080',  // Grey
+        };
+
         // ===== DOM REFERENCES =====
         const roleBadge = document.getElementById('role-badge');
         const ammoCount = document.getElementById('ammo-count');
@@ -542,6 +562,9 @@
                     }
                 }
 
+                // Handle player number message
+                if (parsePlayerNumberMessage(trimmed)) return;
+
                 // Handle position and rotation messages
                 if (parsePositionMessage(trimmed) || parseRotationMessage(trimmed)) {
                     if (!hasData) {
@@ -660,6 +683,8 @@
         var displayX = 0, displayZ = 0, displayRot = 0;
         var displayOtherPos = {}, displayOtherRot = {};
         var otherDots = {};
+        var missCounts = {};
+        var MISS_THRESHOLD = 3;
         var hasData = false, lastFrameTime = 0;
         var SMOOTHING = 0.15;
 
@@ -670,15 +695,54 @@
             var dataStr = posMatch[2];
             var playerRegex = /"([^"]+)"\s*=\s*"\(([^)]+)\)"/g;
             var match;
+            var presentPlayers = {};
             while ((match = playerRegex.exec(dataStr)) !== null) {
                 var name = match[1];
                 var coords = match[2].split(',');
                 var wx = parseFloat(coords[0]) || 0;
                 var wz = parseFloat(coords[2]) || 0;
                 allPositions[name] = { x: wx, z: wz };
+                presentPlayers[name] = true;
                 if (name === myName) {
                     latestWorldX = wx;
                     latestWorldZ = wz;
+                }
+            }
+            // Track misses for players not in this message
+            for (var tracked in allPositions) {
+                if (tracked === myName) continue;
+                if (!presentPlayers[tracked]) {
+                    missCounts[tracked] = (missCounts[tracked] || 0) + 1;
+                    if (missCounts[tracked] >= MISS_THRESHOLD) {
+                        delete allPositions[tracked];
+                        delete allRotations[tracked];
+                        delete displayOtherPos[tracked];
+                        delete displayOtherRot[tracked];
+                        if (otherDots[tracked]) {
+                            otherDots[tracked].remove();
+                            delete otherDots[tracked];
+                        }
+                        delete missCounts[tracked];
+                    }
+                } else {
+                    missCounts[tracked] = 0;
+                }
+            }
+            return true;
+        }
+
+        function parsePlayerNumberMessage(message) {
+            var numMatch = message.match(/(?:"([^"]+)")?playernumber:\{(.+)\}/);
+            if (!numMatch) return false;
+            if (numMatch[1]) myName = numMatch[1];
+            var dataStr = numMatch[2];
+            var playerRegex = /"([^"]+)"\s*=\s*"([^"]+)"/g;
+            var match;
+            while ((match = playerRegex.exec(dataStr)) !== null) {
+                var name = match[1];
+                var num = parseInt(match[2]);
+                if (name === myName && playerColors[num]) {
+                    selfDot.style.background = playerColors[num];
                 }
             }
             return true;
