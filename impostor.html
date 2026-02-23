@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impostor Reveal</title>
+    <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=38472920"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'PP Supply Mono';
+            src: url('https://busportals.github.io/portals-games/fonts/PPSupplyMono-Regular.woff2') format('woff2');
+            font-weight: 300;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'PP Supply Mono';
+            src: url('https://busportals.github.io/portals-games/fonts/PPSupplyMono-Regular.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0D1012 0%, #091112 100%);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        /* ════════════════════════════════════════
+           PLAYERS ROW
+           ════════════════════════════════════════ */
+        #players-container {
+            position: absolute;
+            top: 128px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 1;
+        }
+
+        .player {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 76px;
+            width: 393px;
+            flex-shrink: 0;
+            opacity: 0;
+            animation: playerReveal 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        .player-name {
+            font-family: 'PP Supply Mono', 'Courier New', monospace;
+            font-weight: 300;
+            font-size: 18px;
+            line-height: 18px;
+            color: #9FB4CB;
+            text-align: center;
+            text-shadow: 0px 3.542px 20.511px #080F15;
+            letter-spacing: 4.14px;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .player-character {
+            width: 393px;
+            height: 678px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .character-img {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 393px;
+            height: 678px;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        /* ════════════════════════════════════════
+           CENTER TEXT
+           ════════════════════════════════════════ */
+        #center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 10;
+            width: 552px;
+            line-height: 0.911;
+            text-align: center;
+        }
+
+        .you-are-an {
+            font-family: 'PP Supply Mono', 'Courier New', monospace;
+            font-weight: 300;
+            font-size: 22.341px;
+            line-height: 0.911;
+            color: #EFF4FA;
+            text-shadow: 0px 4.062px 23.519px #080F15;
+            letter-spacing: 5.1384px;
+            text-transform: uppercase;
+            width: 100%;
+            animation: textFadeIn 0.8s ease 0.3s both;
+        }
+
+        .impostor-title {
+            font-family: 'Bungee', cursive;
+            font-size: 76px;
+            line-height: 0.911;
+            background: linear-gradient(180deg, #FFFFFF 0%, #799CB1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0px 11px 79.2px rgba(0, 0, 0, 0.67));
+            animation: titleReveal 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+        }
+
+        /* ════════════════════════════════════════
+           COUNTDOWN
+           ════════════════════════════════════════ */
+        #countdown {
+            position: absolute;
+            bottom: 69px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 23px;
+            z-index: 10;
+            width: 273px;
+        }
+
+        .countdown-label {
+            font-family: 'PP Supply Mono', 'Courier New', monospace;
+            font-weight: 300;
+            font-size: 19px;
+            line-height: 0.911;
+            color: #EFF4FA;
+            text-shadow: 0px 4.062px 23.519px #080F15;
+            letter-spacing: 4.37px;
+            text-align: center;
+            text-transform: uppercase;
+            animation: textFadeIn 0.8s ease 1.2s both;
+        }
+
+        .countdown-number {
+            font-family: 'PP Supply Mono', 'Courier New', monospace;
+            font-weight: 300;
+            font-size: 50px;
+            line-height: 50px;
+            color: #EFF4FA;
+            text-shadow: 0px 4.062px 23.519px #080F15;
+            letter-spacing: 11.5px;
+            text-align: center;
+            animation: textFadeIn 0.8s ease 1.5s both;
+        }
+
+        /* ════════════════════════════════════════
+           ANIMATIONS
+           ════════════════════════════════════════ */
+        @keyframes playerReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes titleReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes countdownPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .countdown-tick {
+            animation: countdownPulse 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="players-container"></div>
+
+    <div id="center-text">
+        <div class="you-are-an">YOU ARE AN</div>
+        <div class="impostor-title">IMPOSTOR</div>
+    </div>
+
+    <div id="countdown">
+        <div class="countdown-label">GET READY TO START</div>
+        <div class="countdown-number" id="timer">10</div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════
+        // 16 PLAYER RENDERS (playerNumber → image file)
+        // ═══════════════════════════════════════════════
+        var PLAYER_IMAGES = {
+            1:  'assets/characters/red.png',
+            2:  'assets/characters/orange.png',
+            3:  'assets/characters/gold.png',
+            4:  'assets/characters/dark-green.png',
+            5:  'assets/characters/blue.png',
+            6:  'assets/characters/purple.png',
+            7:  'assets/characters/black.png',
+            8:  'assets/characters/light-blue.png',
+            9:  'assets/characters/pink.png',
+            10: 'assets/characters/brown.png',
+            11: 'assets/characters/dark-red.png',
+            12: 'assets/characters/white.png',
+            13: 'assets/characters/turquoise.png',
+            14: 'assets/characters/light-green.png',
+            15: 'assets/characters/beige.png',
+            16: 'assets/characters/grey.png'
+        };
+
+        // ═══════════════════════════════════════════════
+        // RENDER IMPOSTERS
+        // ═══════════════════════════════════════════════
+        function renderImposters(players) {
+            var container = document.getElementById('players-container');
+            container.innerHTML = '';
+
+            var imposters = players.filter(function(p) { return p.isImposter; });
+            var count = imposters.length;
+            var centerIndex = Math.floor(count / 2);
+
+            imposters.forEach(function(player, index) {
+                var imgSrc = PLAYER_IMAGES[player.playerNumber] || PLAYER_IMAGES[1];
+
+                // Z-index: center character highest, decreases outward
+                var distFromCenter = Math.abs(index - centerIndex);
+                var zIndex = count - distFromCenter;
+
+                var el = document.createElement('div');
+                el.className = 'player';
+                el.style.animationDelay = (0.2 + index * 0.15) + 's';
+                el.style.zIndex = zIndex;
+
+                // Overlap: negative margin between characters, none on the last
+                if (count > 1 && index < count - 1) {
+                    el.style.marginRight = '-143px';
+                }
+
+                el.innerHTML =
+                    '<div class="player-name">' + escapeHtml(player.name) + '</div>' +
+                    '<div class="player-character">' +
+                        '<img class="character-img" src="' + imgSrc + '" alt="' + escapeHtml(player.name) + '">' +
+                    '</div>';
+
+                container.appendChild(el);
+            });
+        }
+
+        function escapeHtml(str) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
+        }
+
+        // ═══════════════════════════════════════════════
+        // COUNTDOWN TIMER
+        // Starts immediately when iframe opens
+        // ═══════════════════════════════════════════════
+        var countdownValue = 10;
+        var timerEl = document.getElementById('timer');
+
+        function startCountdown() {
+            var interval = setInterval(function() {
+                countdownValue--;
+                if (countdownValue <= 0) {
+                    clearInterval(interval);
+                    timerEl.textContent = '0';
+                    setTimeout(function() {
+                        if (typeof PortalsSdk !== 'undefined') {
+                            PortalsSdk.closeIframe();
+                        }
+                    }, 500);
+                    return;
+                }
+                timerEl.textContent = countdownValue;
+                timerEl.classList.remove('countdown-tick');
+                void timerEl.offsetWidth;
+                timerEl.classList.add('countdown-tick');
+            }, 1000);
+        }
+
+        startCountdown();
+
+        // ═══════════════════════════════════════════════
+        // PORTALS VARIABLE PARSER
+        //
+        // Message format (Portals Variables):
+        //   playerName:"currentPlayer"imposter:{"player1"="false", "player2"="true"}playernumber:{"player1"="1", "player2"="2"}
+        //
+        // - playerName is a plain string (the current viewer)
+        // - imposter/playernumber are maps keyed by player name
+        // - Only players with imposter="true" are displayed
+        // ═══════════════════════════════════════════════
+
+        // Parse a Portals map like {"key"="val", "key2"="val2"}
+        function parsePortalsMap(str) {
+            var map = {};
+            var pairRegex = /"([^"]*)"="([^"]*)"/g;
+            var match;
+            while ((match = pairRegex.exec(str)) !== null) {
+                map[match[1]] = match[2];
+            }
+            return map;
+        }
+
+        function parseMessage(message) {
+            var result = { playerName: '', imposters: {}, playerNumbers: {} };
+
+            // Extract playerName (plain string value: playerName:"value")
+            var nameMatch = message.match(/playerName:"([^"]*)"/);
+            if (nameMatch) {
+                result.playerName = nameMatch[1];
+            }
+
+            // Extract imposter map
+            var imposterMatch = message.match(/imposter:\{([^}]*)\}/);
+            if (imposterMatch) {
+                result.imposters = parsePortalsMap(imposterMatch[1]);
+            }
+
+            // Extract playernumber map
+            var numberMatch = message.match(/playernumber:\{([^}]*)\}/);
+            if (numberMatch) {
+                result.playerNumbers = parsePortalsMap(numberMatch[1]);
+            }
+
+            return result;
+        }
+
+        // ═══════════════════════════════════════════════
+        // PORTALS SDK MESSAGE LISTENER
+        // ═══════════════════════════════════════════════
+        if (typeof PortalsSdk !== 'undefined') {
+            PortalsSdk.setMessageListener(function(message) {
+                console.log('Impostor reveal received:', message);
+
+                var data = parseMessage(message);
+
+                // Build player list from keys in the imposter map
+                // The keys themselves are the player display names
+                var players = [];
+                var keys = Object.keys(data.imposters);
+
+                keys.forEach(function(key) {
+                    players.push({
+                        playerNumber: parseInt(data.playerNumbers[key], 10) || 1,
+                        isImposter: data.imposters[key] === 'true' || data.imposters[key] === '1',
+                        name: key
+                    });
+                });
+
+                if (players.length > 0) {
+                    renderImposters(players);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
