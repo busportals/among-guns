@@ -30,7 +30,7 @@ export function PlayerMarker({ position }: PlayerMarkerProps) {
     >
       <div
         className="absolute inset-[-72.04%_-95.94%_-87.87%_-95.94%]"
-        style={{ transform: `rotate(${position.rotation}deg)` }}
+        style={{ transform: `rotate(${position.rotation - 90}deg)` }}
       >
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 59.8064 63.9042">
           <g id="PLAYER MARKER">
