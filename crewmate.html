@@ -31,33 +31,6 @@
         }
 
         /* ════════════════════════════════════════
-           CHARACTER GLOW (green light behind player)
-           ════════════════════════════════════════ */
-        #character-glow {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 715px;
-            height: 855px;
-            opacity: 0.7;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        #character-glow::before {
-            content: '';
-            position: absolute;
-            bottom: -860px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1863px;
-            height: 1863px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(40, 80, 50, 0.6) 0%, rgba(20, 50, 35, 0.3) 40%, transparent 70%);
-        }
-
-        /* ════════════════════════════════════════
            STATIC CHARACTER
            ════════════════════════════════════════ */
         #character {
@@ -171,7 +144,7 @@
             text-align: center;
             text-transform: uppercase;
             opacity: 0;
-            animation: textFadeIn 0.8s ease 1.2s both;
+            animation: textFadeIn 0.8s ease 0.5s both;
         }
 
         .countdown-number {
@@ -184,7 +157,7 @@
             letter-spacing: 11.5px;
             text-align: center;
             opacity: 0;
-            animation: textFadeIn 0.8s ease 1.5s both;
+            animation: textFadeIn 0.8s ease 0.7s both;
         }
 
         /* ════════════════════════════════════════
@@ -236,10 +209,8 @@
 </head>
 <body>
 
-    <div id="character-glow"></div>
-
     <div id="character">
-        <img src="assets/characters/dark-green.png" alt="Crewmate">
+        <img src="assets/characters/crewmate.png" alt="Crewmate">
     </div>
 
     <div id="center-text">
@@ -270,11 +241,6 @@
                 if (countdownValue <= 0) {
                     clearInterval(interval);
                     timerEl.textContent = '0';
-                    setTimeout(function() {
-                        if (typeof PortalsSdk !== 'undefined') {
-                            PortalsSdk.closeIframe();
-                        }
-                    }, 500);
                     return;
                 }
                 timerEl.textContent = countdownValue;
