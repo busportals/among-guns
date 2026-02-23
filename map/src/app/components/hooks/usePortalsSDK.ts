@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { TaskProgress, PlayerPosition } from '../shared/types';
 
-// ===== Map bounds (must match HUD minimap) =====
-const MAP_Z_MIN = -61.72;
-const MAP_Z_MAX = 59.675;
-const MAP_X_MIN = -34.518;
-const MAP_X_MAX = 55.363;
+// ===== Map bounds (calibrated to full-screen SVG map) =====
+const MAP_Z_MIN = -69.64;
+const MAP_Z_MAX = 34.76;
+const MAP_X_MIN = -54.89;
+const MAP_X_MAX = 73.81;
 const SVG_W = 1012.1;
 const SVG_H = 668.529;
 const SMOOTHING = 0.15;
