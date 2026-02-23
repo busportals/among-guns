@@ -1,6 +1,10 @@
 import svgPaths from "../../../imports/svg-pea7b3wqhj";
 import type { PlayerPosition } from "../shared/types";
 
+// SVG viewBox center
+const SVG_CENTER_X = 1012.1 / 2;  // 506.05
+const SVG_CENTER_Y = 668.529 / 2; // 334.265
+
 interface PlayerMarkerProps {
   position: PlayerPosition | null;
 }
@@ -8,19 +12,26 @@ interface PlayerMarkerProps {
 export function PlayerMarker({ position }: PlayerMarkerProps) {
   if (!position) return null;
 
+  // Convert SVG pixel coords to offset-from-center (matches how all map elements are positioned)
+  const offsetX = position.x - SVG_CENTER_X;
+  const offsetY = position.y - SVG_CENTER_Y;
+
   return (
     <div
-      className="absolute"
+      className="absolute -translate-x-1/2 -translate-y-1/2"
       data-name="PLAYER MARKER"
       style={{
-        left: position.x,
-        top: position.y,
-        transform: `translate(-50%, -50%) rotate(${position.rotation}deg)`,
+        left: `calc(50% + ${offsetX}px)`,
+        top: `calc(50% + ${offsetY}px)`,
         width: 20.489,
         height: 24.587,
+        zIndex: 10,
       }}
     >
-      <div className="absolute inset-[-72.04%_-95.94%_-87.87%_-95.94%]">
+      <div
+        className="absolute inset-[-72.04%_-95.94%_-87.87%_-95.94%]"
+        style={{ transform: `rotate(${position.rotation}deg)` }}
+      >
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 59.8064 63.9042">
           <g id="PLAYER MARKER">
             <g filter="url(#filter0_d_1_17)" id="Vector 59">

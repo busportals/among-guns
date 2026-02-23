@@ -152,6 +152,11 @@ export function usePortalsSDK() {
       state.displayRot = ((state.displayRot % 360) + 360) % 360;
 
       const svg = worldToSvg(state.displayX, state.displayZ);
+      // Debug: log world coords and SVG position every ~2 seconds
+      if (Math.floor(now / 2000) !== Math.floor((now - dt * 1000) / 2000)) {
+        console.log('[Map] World:', { x: state.displayX.toFixed(1), z: state.displayZ.toFixed(1), rot: state.displayRot.toFixed(0) },
+          '→ SVG:', { x: svg.x.toFixed(0), y: svg.y.toFixed(0) });
+      }
       updatePosition({ x: svg.x, y: svg.y, rotation: state.displayRot });
     }
 
