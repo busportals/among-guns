@@ -1,8 +1,25 @@
 import svgPaths from "../../../imports/svg-pea7b3wqhj";
+import type { PlayerPosition } from "../shared/types";
 
-export function PlayerMarker() {
+interface PlayerMarkerProps {
+  position: PlayerPosition | null;
+}
+
+export function PlayerMarker({ position }: PlayerMarkerProps) {
+  if (!position) return null;
+
   return (
-    <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[24.587px] left-[calc(50%+161.24px)] top-[calc(50%+152.29px)] w-[20.489px]" data-name="PLAYER MARKER">
+    <div
+      className="absolute"
+      data-name="PLAYER MARKER"
+      style={{
+        left: position.x,
+        top: position.y,
+        transform: `translate(-50%, -50%) rotate(${position.rotation}deg)`,
+        width: 20.489,
+        height: 24.587,
+      }}
+    >
       <div className="absolute inset-[-72.04%_-95.94%_-87.87%_-95.94%]">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 59.8064 63.9042">
           <g id="PLAYER MARKER">

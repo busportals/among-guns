@@ -1,114 +1,211 @@
-import { useState, useEffect } from 'react';
-import type { TaskProgress } from '../shared/types';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import type { TaskProgress, PlayerPosition } from '../shared/types';
 
-/**
- * Parse task progress from Portals SDK message
- * Expected format: "taskscompleted: 5, tasksrequired: 10"
- */
+// ===== Map bounds (must match HUD minimap) =====
+const MAP_Z_MIN = -61.72;
+const MAP_Z_MAX = 59.675;
+const MAP_X_MIN = -34.518;
+const MAP_X_MAX = 55.363;
+const SVG_W = 1012.1;
+const SVG_H = 668.529;
+const SMOOTHING = 0.15;
+
+// ===== Parsing =====
+
 function parseTaskProgress(message: string): TaskProgress | null {
-  try {
-    // Case-insensitive regex matching
-    const completedMatch = message.match(/taskscompleted\s*:\s*(\d+)/i);
-    const requiredMatch = message.match(/tasksrequired\s*:\s*(\d+)/i);
+  const completedMatch = message.match(/taskscompleted\s*:\s*(\d+)/i);
+  const requiredMatch = message.match(/tasksrequired\s*:\s*(\d+)/i);
+  if (!completedMatch || !requiredMatch) return null;
 
-    if (!completedMatch || !requiredMatch) {
-      console.warn('[Portals Map] Invalid message format:', message);
-      return null;
+  const completed = parseInt(completedMatch[1], 10);
+  const required = parseInt(requiredMatch[1], 10);
+  if (isNaN(completed) || isNaN(required) || required < 0 || completed < 0) return null;
+
+  return { completed, required };
+}
+
+function parsePositionMessage(
+  message: string,
+  state: TrackingState
+): boolean {
+  const posMatch = message.match(/"([^"]+)"pos:\{(.+)\}/);
+  if (!posMatch) return false;
+
+  state.myName = posMatch[1];
+  const dataStr = posMatch[2];
+  const playerRegex = /"([^"]+)"\s*=\s*"\(([^)]+)\)"/g;
+  let match;
+  while ((match = playerRegex.exec(dataStr)) !== null) {
+    const name = match[1];
+    const coords = match[2].split(',');
+    const wx = parseFloat(coords[0]) || 0;
+    const wz = parseFloat(coords[2]) || 0;
+    if (name === state.myName) {
+      state.targetX = wx;
+      state.targetZ = wz;
     }
-
-    const completed = parseInt(completedMatch[1], 10);
-    const required = parseInt(requiredMatch[1], 10);
-
-    // Validate parsed values
-    if (isNaN(completed) || isNaN(required) || required < 0 || completed < 0) {
-      console.warn('[Portals Map] Invalid task values:', { completed, required });
-      return null;
-    }
-
-    return { completed, required };
-  } catch (error) {
-    console.error('[Portals Map] Error parsing task progress:', error);
-    return null;
   }
+  return true;
+}
+
+function parseRotationMessage(
+  message: string,
+  state: TrackingState
+): boolean {
+  const rotMatch = message.match(/"([^"]+)"rot:\{(.+)\}/);
+  if (!rotMatch) return false;
+
+  const dataStr = rotMatch[2];
+  const playerRegex = /"([^"]+)"\s*=\s*"([^"]+)"/g;
+  let match;
+  while ((match = playerRegex.exec(dataStr)) !== null) {
+    const name = match[1];
+    const deg = parseFloat(match[2]) || 0;
+    if (name === state.myName) {
+      state.targetRot = deg;
+    }
+  }
+  return true;
+}
+
+// ===== Conversion =====
+
+function worldToSvg(worldX: number, worldZ: number): { x: number; y: number } {
+  return {
+    x: (worldZ - MAP_Z_MIN) / (MAP_Z_MAX - MAP_Z_MIN) * SVG_W,
+    y: (worldX - MAP_X_MIN) / (MAP_X_MAX - MAP_X_MIN) * SVG_H,
+  };
+}
+
+// ===== Lerp helpers =====
+
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
+function lerpAngle(a: number, b: number, t: number): number {
+  let diff = b - a;
+  while (diff > 180) diff -= 360;
+  while (diff < -180) diff += 360;
+  return a + diff * t;
+}
+
+// ===== Tracking state (mutable ref, not React state — avoids re-renders per frame) =====
+
+interface TrackingState {
+  myName: string | null;
+  targetX: number;
+  targetZ: number;
+  targetRot: number;
+  displayX: number;
+  displayZ: number;
+  displayRot: number;
+  hasData: boolean;
+  lastFrameTime: number;
+  rafId: number;
 }
 
 /**
- * Hook for Portals SDK integration
- * Manages task progress updates and iframe control
+ * Hook for Portals SDK integration.
+ * Manages task progress AND player position tracking.
  */
 export function usePortalsSDK() {
   const [taskProgress, setTaskProgress] = useState<TaskProgress>({
     completed: 0,
-    required: 1
+    required: 1,
+  });
+  const [playerPosition, setPlayerPosition] = useState<PlayerPosition | null>(null);
+
+  const trackingRef = useRef<TrackingState>({
+    myName: null,
+    targetX: 0,
+    targetZ: 0,
+    targetRot: 0,
+    displayX: 0,
+    displayZ: 0,
+    displayRot: 0,
+    hasData: false,
+    lastFrameTime: 0,
+    rafId: 0,
   });
 
-  useEffect(() => {
-    // First try PortalsSdk API if available
-    if (typeof PortalsSdk !== 'undefined' && PortalsSdk.setMessageListener) {
-      PortalsSdk.setMessageListener((message: string) => {
-        console.log('[Portals Map] Received message via SDK:', message);
+  // Stable callback so the render loop can always read the latest setter
+  const updatePosition = useCallback((pos: PlayerPosition) => {
+    setPlayerPosition(pos);
+  }, []);
 
-        const progress = parseTaskProgress(message);
-        if (progress) {
-          console.log('[Portals Map] Updating task progress:', progress);
-          setTaskProgress(progress);
-        }
-      });
-      console.log('[Portals Map] Task progress listener initialized via SDK');
-      return;
+  useEffect(() => {
+    const state = trackingRef.current;
+
+    // --- Render loop: lerp toward targets and emit position ---
+    function renderFrame(now: number) {
+      state.rafId = requestAnimationFrame(renderFrame);
+      if (!state.hasData) return;
+
+      const dt = state.lastFrameTime ? (now - state.lastFrameTime) / 1000 : 0.016;
+      state.lastFrameTime = now;
+      const t = 1 - Math.pow(1 - SMOOTHING, dt * 60);
+
+      state.displayX = lerp(state.displayX, state.targetX, t);
+      state.displayZ = lerp(state.displayZ, state.targetZ, t);
+      state.displayRot = lerpAngle(state.displayRot, state.targetRot, t);
+      state.displayRot = ((state.displayRot % 360) + 360) % 360;
+
+      const svg = worldToSvg(state.displayX, state.displayZ);
+      updatePosition({ x: svg.x, y: svg.y, rotation: state.displayRot });
     }
 
-    // Fallback to postMessage API
-    console.log('[Portals Map] Using postMessage for communication');
+    state.rafId = requestAnimationFrame(renderFrame);
 
-    const handleMessage = (event: MessageEvent) => {
-      // Parse the message - it could be an object or a string
-      let messageData: string;
+    // --- Message listener (single callback for all message types) ---
+    function handleMessage(message: string) {
+      const trimmed = message.trim();
 
-      if (typeof event.data === 'string') {
-        messageData = event.data;
-      } else if (typeof event.data === 'object' && event.data !== null) {
-        // Convert object to string format: {key:value, key2:value2}
-        messageData = JSON.stringify(event.data)
-          .replace(/[{}"]/g, '')
-          .replace(/,/g, ', ');
-      } else {
+      // Task progress
+      const progress = parseTaskProgress(trimmed);
+      if (progress) {
+        setTaskProgress(progress);
         return;
       }
 
-      console.log('[Portals Map] Received postMessage:', messageData);
+      // Position / rotation
+      const posUpdated = parsePositionMessage(trimmed, state);
+      const rotUpdated = parseRotationMessage(trimmed, state);
 
-      const progress = parseTaskProgress(messageData);
-      if (progress) {
-        console.log('[Portals Map] Updating task progress:', progress);
-        setTaskProgress(progress);
+      if ((posUpdated || rotUpdated) && !state.hasData) {
+        state.hasData = true;
+        state.displayX = state.targetX;
+        state.displayZ = state.targetZ;
+        state.displayRot = state.targetRot;
       }
-    };
+    }
 
-    window.addEventListener('message', handleMessage);
-    console.log('[Portals Map] Task progress listener initialized via postMessage');
+    if (typeof PortalsSdk !== 'undefined' && PortalsSdk.setMessageListener) {
+      PortalsSdk.setMessageListener(handleMessage);
+    } else {
+      // Fallback: postMessage
+      const onMessage = (event: MessageEvent) => {
+        let messageData: string;
+        if (typeof event.data === 'string') {
+          messageData = event.data;
+        } else if (typeof event.data === 'object' && event.data !== null) {
+          messageData = JSON.stringify(event.data).replace(/[{}"]/g, '').replace(/,/g, ', ');
+        } else {
+          return;
+        }
+        handleMessage(messageData);
+      };
+      window.addEventListener('message', onMessage);
+      return () => {
+        cancelAnimationFrame(state.rafId);
+        window.removeEventListener('message', onMessage);
+      };
+    }
 
     return () => {
-      window.removeEventListener('message', handleMessage);
+      cancelAnimationFrame(state.rafId);
     };
-  }, []);
+  }, [updatePosition]);
 
-  const closeIframe = () => {
-    try {
-      if (typeof PortalsSdk !== 'undefined' && PortalsSdk?.closeIframe) {
-        PortalsSdk.closeIframe();
-        console.log('[Portals Map] Iframe closed via Portals SDK');
-      } else {
-        // Fallback: send message to parent window
-        if (window.parent && window.parent !== window) {
-          window.parent.postMessage({ type: 'CLOSE_IFRAME' }, '*');
-          console.log('[Portals Map] Close message sent to parent (SDK unavailable)');
-        }
-      }
-    } catch (error) {
-      console.error('[Portals Map] Failed to close iframe:', error);
-    }
-  };
-
-  return { taskProgress, closeIframe };
+  return { taskProgress, playerPosition };
 }

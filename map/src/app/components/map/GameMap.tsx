@@ -1,4 +1,4 @@
-import type { HoverState } from '../shared/types';
+import type { HoverState, PlayerPosition } from '../shared/types';
 import { useMapScale } from '../hooks/useMapScale';
 import { Component8, Group1 } from './MapCanvas';
 import { StorageRooms, Vents } from './MapHighlights';
@@ -8,9 +8,10 @@ import { MedbayBlips, BotanicsBlips, OfficesBlips, StorageBlips } from './TaskBl
 
 interface GameMapProps {
   hoverState: HoverState;
+  playerPosition: PlayerPosition | null;
 }
 
-export function GameMap({ hoverState }: GameMapProps) {
+export function GameMap({ hoverState, playerPosition }: GameMapProps) {
   const scale = useMapScale();
 
   return (
@@ -26,7 +27,7 @@ export function GameMap({ hoverState }: GameMapProps) {
       <Group1 />
       <StorageRooms isHighlighted={hoverState === 'storage'} />
       <Vents isHighlighted={hoverState === 'vents'} />
-      <PlayerMarker />
+      <PlayerMarker position={playerPosition} />
       <MapLocations hoverState={hoverState} />
       <MedbayBlips isVisible={hoverState === 'medbay'} />
       <BotanicsBlips isVisible={hoverState === 'botanics'} />

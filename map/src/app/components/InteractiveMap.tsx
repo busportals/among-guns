@@ -85,7 +85,7 @@ function CloseButton() {
 export default function InteractiveMap() {
   const [hoverState, setHoverState] = useState<HoverState>(null);
   const [expandedCategory, setExpandedCategory] = useState<HoverState>(null);
-  const { taskProgress } = usePortalsSDK();
+  const { taskProgress, playerPosition } = usePortalsSDK();
 
   const handleCategoryClick = (category: HoverState) => {
     // Toggle: if clicking the same category, collapse it
@@ -104,7 +104,7 @@ export default function InteractiveMap() {
         onCategoryClick={handleCategoryClick}
       />
       <CloseButton />
-      <GameMap hoverState={hoverState} />
+      <GameMap hoverState={hoverState} playerPosition={playerPosition} />
     </div>
   );
 }
