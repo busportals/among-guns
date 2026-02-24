@@ -12,12 +12,20 @@ const SMOOTHING = 0.15;
 
 // ===== Parsing =====
 
-function parseTaskActivation(message: string): { taskNum: number; active: boolean } | null {
-  const match = message.match(/^Task\s+(\d+)\s+(Active|Complete|Inactive)$/i);
-  if (!match) return null;
-  const taskNum = parseInt(match[1], 10);
-  const active = match[2].toLowerCase() === 'active';
-  return { taskNum, active };
+// Parses bulk task state string: "Task 1:0,Task 2:1,Task 3:2,..."
+// States: 0=inactive, 1=active, 2=completed
+function parseTaskStates(message: string): Map<number, number> | null {
+  if (!message.startsWith('Task ')) return null;
+  const entries = message.split(',');
+  if (entries.length < 2) return null; // single entry isn't the bulk format
+
+  const states = new Map<number, number>();
+  for (const entry of entries) {
+    const match = entry.trim().match(/^Task\s+(\d+):(\d)$/i);
+    if (!match) return null; // if any entry is malformed, it's not this format
+    states.set(parseInt(match[1], 10), parseInt(match[2], 10));
+  }
+  return states;
 }
 
 function parseTaskProgress(message: string): TaskProgress | null {
@@ -124,6 +132,7 @@ export function usePortalsSDK() {
   });
   const [playerPosition, setPlayerPosition] = useState<PlayerPosition | null>(null);
   const [activeTasks, setActiveTasks] = useState<Set<number>>(new Set());
+  const [completedTasks, setCompletedTasks] = useState<Set<number>>(new Set());
 
   const trackingRef = useRef<TrackingState>({
     myName: null,
@@ -175,18 +184,17 @@ export function usePortalsSDK() {
     function handleMessage(message: string) {
       const trimmed = message.trim();
 
-      // Task activation (e.g. "Task 1 Active", "Task 1 Complete")
-      const taskActivation = parseTaskActivation(trimmed);
-      if (taskActivation) {
-        setActiveTasks(prev => {
-          const next = new Set(prev);
-          if (taskActivation.active) {
-            next.add(taskActivation.taskNum);
-          } else {
-            next.delete(taskActivation.taskNum);
-          }
-          return next;
-        });
+      // Bulk task states (e.g. "Task 1:0,Task 2:1,Task 3:2,...")
+      const taskStates = parseTaskStates(trimmed);
+      if (taskStates) {
+        const active = new Set<number>();
+        const completed = new Set<number>();
+        for (const [taskNum, state] of taskStates) {
+          if (state === 1) active.add(taskNum);
+          else if (state === 2) completed.add(taskNum);
+        }
+        setActiveTasks(active);
+        setCompletedTasks(completed);
         return;
       }
 
@@ -236,5 +244,5 @@ export function usePortalsSDK() {
     };
   }, [updatePosition]);
 
-  return { taskProgress, playerPosition, activeTasks };
+  return { taskProgress, playerPosition, activeTasks, completedTasks };
 }

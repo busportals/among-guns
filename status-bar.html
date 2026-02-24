@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Task Status</title>
     <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=38472916"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'PP Supply Mono';
+            src: url('https://busportals.github.io/portals-games/fonts/PPSupplyMono-Regular.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,9 +23,9 @@
         }
 
         body {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'PP Supply Mono', 'Courier New', Courier, monospace;
             background-color: transparent;
-            color: #F0E6D8;
+            color: #C7E0EA;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -31,22 +41,20 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(6.5px);
+            -webkit-backdrop-filter: blur(6.5px);
             padding: 12px 24px 16px 24px;
-            border-radius: 12px;
-            border: 1px solid rgba(77, 64, 56, 0.8);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-radius: 22px;
         }
 
         .status-label {
+            font-family: 'Bungee', cursive;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: normal;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #E8924A;
-            text-shadow:
-                0 0 10px rgba(212, 118, 58, 0.8),
-                0 1px 2px rgba(0, 0, 0, 0.8);
+            letter-spacing: 0.62px;
+            color: #C7E0EA;
         }
 
         .progress-wrapper {
@@ -58,26 +66,19 @@
         .progress-bar-bg {
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, #1D1510, #252019);
-            border: 2px solid #6D5548;
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 12px;
-            box-shadow:
-                inset 0 2px 4px rgba(0, 0, 0, 0.5),
-                0 0 10px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(212, 118, 58, 0.2);
             overflow: hidden;
         }
 
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(180deg, #D4763A, #B45A2A);
+            background: linear-gradient(180deg, #7ad4ff, #69d2ff);
             border-radius: 10px;
             position: relative;
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                0 0 15px rgba(212, 118, 58, 0.5);
+            box-shadow: 0 0 12px rgba(105, 210, 255, 0.4);
         }
 
         .progress-bar-fill::after {
@@ -96,9 +97,9 @@
         }
 
         @keyframes progressPulse {
-            0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 15px rgba(212, 118, 58, 0.5); }
-            50% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 30px rgba(212, 118, 58, 0.9), 0 0 50px rgba(212, 118, 58, 0.5); }
-            100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 15px rgba(212, 118, 58, 0.5); }
+            0% { box-shadow: 0 0 12px rgba(105, 210, 255, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(105, 210, 255, 0.8), 0 0 40px rgba(105, 210, 255, 0.4); }
+            100% { box-shadow: 0 0 12px rgba(105, 210, 255, 0.4); }
         }
 
         .progress-text {
@@ -106,11 +107,11 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            font-family: 'PP Supply Mono', 'Courier New', monospace;
             font-size: 11px;
-            font-weight: bold;
-            color: #F0E6D8;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-            letter-spacing: 1px;
+            font-weight: 600;
+            color: #C7E0EA;
+            letter-spacing: 0.62px;
             z-index: 2;
         }
 
@@ -126,10 +127,8 @@
 
         /* Complete state */
         .progress-bar-fill.complete {
-            background: linear-gradient(180deg, #4CAF8C, #3A9A7C);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                0 0 20px rgba(74, 175, 140, 0.6);
+            background: linear-gradient(180deg, #1eff43, #17e63c);
+            box-shadow: 0 0 15px rgba(30, 255, 67, 0.5);
         }
 
         .progress-bar-fill.complete.animate-pulse {
@@ -137,14 +136,13 @@
         }
 
         @keyframes completePulse {
-            0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 20px rgba(74, 175, 140, 0.6); }
-            50% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 40px rgba(74, 175, 140, 1), 0 0 60px rgba(74, 175, 140, 0.6); }
-            100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 20px rgba(74, 175, 140, 0.6); }
+            0% { box-shadow: 0 0 15px rgba(30, 255, 67, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(30, 255, 67, 0.9), 0 0 50px rgba(30, 255, 67, 0.4); }
+            100% { box-shadow: 0 0 15px rgba(30, 255, 67, 0.5); }
         }
 
         .status-label.complete {
-            color: #4CAF8C;
-            text-shadow: 0 0 10px rgba(74, 175, 140, 0.5);
+            color: #1eff43;
         }
 
         /* Particle effects container */
@@ -163,7 +161,7 @@
             width: 4px;
             height: 4px;
             border-radius: 50%;
-            background: #D4763A;
+            background: #69d2ff;
             opacity: 0;
         }
 
@@ -259,7 +257,7 @@
                 particle.style.top = '12px';
                 particle.style.setProperty('--tx', tx + 'px');
                 particle.style.setProperty('--ty', ty + 'px');
-                particle.style.background = progressFill.classList.contains('complete') ? '#4CAF8C' : '#D4763A';
+                particle.style.background = progressFill.classList.contains('complete') ? '#1eff43' : '#69d2ff';
                 particle.style.animation = 'particleBurst 0.5s ease-out forwards';
 
                 particlesContainer.appendChild(particle);

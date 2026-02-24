@@ -1,11 +1,11 @@
-import skeletonMap from "../../../assets/skeleton-map.svg";
+import baseMap from "../../../assets/base-map.svg";
 
 // Background marker component
 export function Component8() {
   return <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[rgba(255,255,255,0)] left-[calc(50%+413.27px)] size-[36.008px] top-[calc(50%+73.35px)]" data-name="Component 9" />;
 }
 
-// Main SVG background — full map from skeleton-map.svg (1017×749)
+// Main SVG background — clean room outlines only (Union from Figma, centered in 1017×749 space)
 export function Group() {
   return (
     <div
@@ -13,7 +13,7 @@ export function Group() {
       style={{ width: 1017, height: 749, left: '50%', top: '50%' }}
     >
       <img
-        src={skeletonMap}
+        src={baseMap}
         alt=""
         className="block size-full"
         draggable={false}

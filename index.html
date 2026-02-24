@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Ship Tasks</title>
     <script src="https://portals-labs.github.io/portals-sdk/portals-sdk.js?v=38472916"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'PP Supply Mono';
+            src: url('https://busportals.github.io/portals-games/fonts/PPSupplyMono-Regular.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+        }
+
         /* ============================================
            BASE STYLES & RESET
            ============================================ */
@@ -17,9 +27,9 @@
         }
 
         body {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'PP Supply Mono', 'Courier New', Courier, monospace;
             background-color: transparent;
-            color: #F0E6D8;
+            color: #C7E0EA;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -33,42 +43,41 @@
            PANEL STYLES
            ============================================ */
         .panel {
-            background: linear-gradient(145deg, #2D2520, #252019);
-            border: 3px solid #4D4038;
-            border-radius: 12px;
-            box-shadow:
-                0 0 20px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
             padding: 20px;
         }
 
         .panel-header {
-            background: linear-gradient(90deg, #4D4038, #3D3028);
+            background: rgba(255, 255, 255, 0.04);
             margin: -20px -20px 20px -20px;
             padding: 12px 20px;
-            border-radius: 9px 9px 0 0;
-            border-bottom: 2px solid #5D5048;
+            border-radius: 22px 22px 0 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .panel-title {
+            font-family: 'Bungee', cursive;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: normal;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #D4763A;
-            text-shadow: 0 0 10px rgba(212, 118, 58, 0.3);
+            letter-spacing: 0.62px;
+            color: #C7E0EA;
         }
 
         .close-btn {
             width: 28px;
             height: 28px;
-            background: linear-gradient(180deg, #5D5048, #4D4038);
-            border: 2px solid #6D6058;
-            border-radius: 6px;
-            color: #A09080;
+            background: rgba(255, 255, 255, 0.06);
+            border: none;
+            border-radius: 6.7px;
+            color: #849399;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
@@ -80,9 +89,8 @@
         }
 
         .close-btn:hover {
-            background: linear-gradient(180deg, #6D6058, #5D5048);
-            color: #F0E6D8;
-            border-color: #7D7068;
+            background: rgba(255, 255, 255, 0.12);
+            color: #C7E0EA;
         }
 
         .close-btn:active {
@@ -101,10 +109,10 @@
         .task-instruction {
             text-align: center;
             font-size: 13px;
-            color: #A09080;
+            color: #849399;
             margin-bottom: 20px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.62px;
         }
 
         /* ============================================
