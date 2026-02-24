@@ -592,6 +592,20 @@
                     return;
                 }
 
+                // Handle Portals variable format: "name"imposter:{"name"="false"}
+                var imposterMatch = trimmed.match(/"([^"]+)"imposter:\{(.+)\}/);
+                if (imposterMatch) {
+                    var playerName = imposterMatch[1];
+                    var dataStr = imposterMatch[2];
+                    var valueRegex = new RegExp('"' + playerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"\\s*=\\s*"([^"]*)"');
+                    var valueMatch = dataStr.match(valueRegex);
+                    if (valueMatch) {
+                        gameState.role = valueMatch[1] === 'true' ? 'imposter' : 'crewmate';
+                        renderRole();
+                    }
+                    return;
+                }
+
                 // Split on whitespace or colon (handles variable spacing from Portals substitution)
                 var parts = trimmed.split(/[\s:]+/).filter(Boolean);
                 var type = parts[0];

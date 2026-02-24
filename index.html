@@ -100,32 +100,6 @@
         /* ============================================
            TASK CONTAINER
            ============================================ */
-        #role-tag {
-            display: none;
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        #role-tag.imposter {
-            display: block;
-            background: rgba(255, 60, 60, 0.25);
-            border: 1px solid rgba(255, 60, 60, 0.5);
-            color: #ff6b6b;
-        }
-
-        #role-tag.crewmate {
-            display: block;
-            background: rgba(105, 210, 255, 0.25);
-            border: 1px solid rgba(105, 210, 255, 0.5);
-            color: #69d2ff;
-        }
-
         #task-container {
             width: 420px;
             min-height: 320px;
@@ -2631,7 +2605,6 @@
     </style>
 </head>
 <body>
-    <div id="role-tag"></div>
     <div id="task-container" class="panel">
         <div class="loading">
             <div class="loading-spinner"></div>
@@ -2722,28 +2695,6 @@
                 } else {
                     console.log('PortalsSdk not available - running in dev mode');
                 }
-            },
-
-            listenForRole() {
-                window.addEventListener('message', (event) => {
-                    const data = typeof event.data === 'string' ? event.data : '';
-                    if (!data.includes('imposter:')) return;
-
-                    // Format: "playerName"imposter:{"playerName"="false"}
-                    const playerMatch = data.match(/^"([^"]+)"/);
-                    if (!playerMatch) return;
-
-                    const activePlayer = playerMatch[1];
-                    const isImposter = data.includes('"' + activePlayer + '"="true"');
-
-                    const roleTag = document.getElementById('role-tag');
-                    if (roleTag) {
-                        roleTag.className = isImposter ? 'imposter' : 'crewmate';
-                        roleTag.textContent = isImposter ? 'IMPOSTER' : 'CREWMATE';
-                    }
-
-                    console.log('Role received:', activePlayer, isImposter ? 'IMPOSTER' : 'CREWMATE');
-                });
             }
         };
 
@@ -5902,8 +5853,6 @@
         // INITIALIZE ON LOAD
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
-            Portals.listenForRole();
-
             // Small delay to ensure everything is loaded
             setTimeout(() => {
                 TaskFramework.init();
