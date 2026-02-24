@@ -4,14 +4,15 @@ import { Component8, Group1 } from './MapCanvas';
 import { StorageRooms, Vents } from './MapHighlights';
 import { PlayerMarker } from './PlayerMarker';
 import { MapLocations } from './MapLocations';
-import { MedbayBlips, BotanicsBlips, OfficesBlips, StorageBlips } from './TaskBlips';
+import { TaskBlips } from './TaskBlips';
 
 interface GameMapProps {
   hoverState: HoverState;
   playerPosition: PlayerPosition | null;
+  activeTasks: Set<number>;
 }
 
-export function GameMap({ hoverState, playerPosition }: GameMapProps) {
+export function GameMap({ hoverState, playerPosition, activeTasks }: GameMapProps) {
   const scale = useMapScale();
 
   return (
@@ -29,10 +30,7 @@ export function GameMap({ hoverState, playerPosition }: GameMapProps) {
       <Vents isHighlighted={hoverState === 'vents'} />
       <PlayerMarker position={playerPosition} />
       <MapLocations hoverState={hoverState} />
-      <MedbayBlips isVisible={hoverState === 'medbay'} />
-      <BotanicsBlips isVisible={hoverState === 'botanics'} />
-      <OfficesBlips isVisible={hoverState === 'offices'} />
-      <StorageBlips isVisible={hoverState === 'storage'} />
+      <TaskBlips activeTasks={activeTasks} />
     </div>
   );
 }

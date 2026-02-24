@@ -12,6 +12,14 @@ const SMOOTHING = 0.15;
 
 // ===== Parsing =====
 
+function parseTaskActivation(message: string): { taskNum: number; active: boolean } | null {
+  const match = message.match(/^Task\s+(\d+)\s+(Active|Complete|Inactive)$/i);
+  if (!match) return null;
+  const taskNum = parseInt(match[1], 10);
+  const active = match[2].toLowerCase() === 'active';
+  return { taskNum, active };
+}
+
 function parseTaskProgress(message: string): TaskProgress | null {
   const completedMatch = message.match(/taskscompleted\s*:\s*(\d+)/i);
   const requiredMatch = message.match(/tasksrequired\s*:\s*(\d+)/i);
@@ -115,6 +123,7 @@ export function usePortalsSDK() {
     required: 1,
   });
   const [playerPosition, setPlayerPosition] = useState<PlayerPosition | null>(null);
+  const [activeTasks, setActiveTasks] = useState<Set<number>>(new Set());
 
   const trackingRef = useRef<TrackingState>({
     myName: null,
@@ -166,6 +175,21 @@ export function usePortalsSDK() {
     function handleMessage(message: string) {
       const trimmed = message.trim();
 
+      // Task activation (e.g. "Task 1 Active", "Task 1 Complete")
+      const taskActivation = parseTaskActivation(trimmed);
+      if (taskActivation) {
+        setActiveTasks(prev => {
+          const next = new Set(prev);
+          if (taskActivation.active) {
+            next.add(taskActivation.taskNum);
+          } else {
+            next.delete(taskActivation.taskNum);
+          }
+          return next;
+        });
+        return;
+      }
+
       // Task progress
       const progress = parseTaskProgress(trimmed);
       if (progress) {
@@ -212,5 +236,5 @@ export function usePortalsSDK() {
     };
   }, [updatePosition]);
 
-  return { taskProgress, playerPosition };
+  return { taskProgress, playerPosition, activeTasks };
 }
