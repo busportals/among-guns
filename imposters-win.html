@@ -193,7 +193,8 @@
         document.getElementById('lobby-btn').addEventListener('click', function() {
             PortalsSdk.sendMessageToUnity(JSON.stringify({
                 TaskName: 'uiopen',
-                TaskTargetState: 'SetAnyToActive'
+                TaskTargetState: 'SetAnyToActive',
+                Delay: 0.5
             }));
             PortalsSdk.closeIframe();
         });
