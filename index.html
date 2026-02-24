@@ -344,7 +344,7 @@
         .pipe-cell.start-cell,
         .pipe-cell.end-cell {
             cursor: default;
-            background: linear-gradient(145deg, #3D3520, #2D2510);
+            background: linear-gradient(145deg, #1a2a32, #0d1820);
         }
 
         .pipe-cell.start-cell::before {
@@ -425,7 +425,7 @@
             position: relative;
             width: 340px;
             height: 260px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 3px solid #2a3a42;
             border-radius: 8px;
             padding: 20px;
@@ -444,7 +444,7 @@
             position: absolute;
             width: 44px;
             height: 44px;
-            background: linear-gradient(145deg, #3D3520, #2D2510);
+            background: linear-gradient(145deg, #1a2a32, #0d1820);
             border: 3px solid #3a4a52;
             border-radius: 50%;
             display: flex;
@@ -459,14 +459,14 @@
         }
 
         .circuit-node:hover {
-            background: linear-gradient(145deg, #4D4530, #3D3520);
+            background: linear-gradient(145deg, #2a3a42, #1a2a32);
             border-color: #5a6a72;
             transform: translate(-50%, -50%) scale(1.1);
         }
 
         .circuit-node.next {
             border-color: #69d2ff;
-            box-shadow: 0 0 15px rgba(212, 118, 58, 0.5);
+            box-shadow: 0 0 15px rgba(105, 210, 255, 0.5);
             animation: pulse-node 1s infinite;
         }
 
@@ -482,8 +482,8 @@
         }
 
         @keyframes pulse-node {
-            0%, 100% { box-shadow: 0 0 15px rgba(212, 118, 58, 0.5); }
-            50% { box-shadow: 0 0 25px rgba(212, 118, 58, 0.8); }
+            0%, 100% { box-shadow: 0 0 15px rgba(105, 210, 255, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(105, 210, 255, 0.8); }
         }
 
         .circuit-line {
@@ -526,7 +526,7 @@
         .datalink-packet {
             width: 60px;
             height: 60px;
-            background: linear-gradient(145deg, #3D3520, #2D2510);
+            background: linear-gradient(145deg, #1a2a32, #0d1820);
             border: 3px solid #3a4a52;
             border-radius: 8px;
             display: flex;
@@ -541,7 +541,7 @@
         .datalink-packet:hover {
             transform: scale(1.05);
             border-color: #69d2ff;
-            box-shadow: 0 0 15px rgba(212, 118, 58, 0.4);
+            box-shadow: 0 0 15px rgba(105, 210, 255, 0.4);
         }
 
         .datalink-packet.dragging {
@@ -560,7 +560,7 @@
         .datalink-port {
             width: 70px;
             height: 70px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 3px dashed #2a3a42;
             border-radius: 8px;
             display: flex;
@@ -572,8 +572,8 @@
 
         .datalink-port.highlight {
             border-color: #69d2ff;
-            background: linear-gradient(145deg, #2A2018, #0d1418);
-            box-shadow: inset 0 0 20px rgba(212, 118, 58, 0.2);
+            background: linear-gradient(145deg, #152228, #0d1418);
+            box-shadow: inset 0 0 20px rgba(105, 210, 255, 0.2);
         }
 
         .datalink-port.filled {
@@ -637,7 +637,7 @@
         .freq-display {
             width: 340px;
             height: 80px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 3px solid #2a3a42;
             border-radius: 8px;
             position: relative;
@@ -672,7 +672,7 @@
             background: #69d2ff;
             border-radius: 3px;
             transform: translateX(-50%);
-            box-shadow: 0 0 10px rgba(212, 118, 58, 0.8);
+            box-shadow: 0 0 10px rgba(105, 210, 255, 0.8);
         }
 
         .freq-indicator.success {
@@ -770,7 +770,7 @@
         .gauge-display {
             width: 80px;
             height: 80px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 3px solid #2a3a42;
             border-radius: 50%;
             position: relative;
@@ -818,7 +818,7 @@
             left: 50%;
             transform-origin: center 34px;
             border-radius: 2px;
-            box-shadow: 0 0 5px rgba(212, 118, 58, 0.8);
+            box-shadow: 0 0 5px rgba(105, 210, 255, 0.8);
         }
 
         .gauge-value {
@@ -900,7 +900,7 @@
             justify-content: space-between;
             width: 100%;
             padding: 8px 15px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 2px solid #2a3a42;
             border-radius: 6px;
             font-size: 12px;
@@ -979,7 +979,7 @@
             bottom: 0;
             width: 3px;
             background: #69d2ff;
-            box-shadow: 0 0 8px rgba(212, 118, 58, 0.8);
+            box-shadow: 0 0 8px rgba(105, 210, 255, 0.8);
         }
 
         .power-controls {
@@ -1046,7 +1046,7 @@
         .align-grid {
             display: grid;
             gap: 8px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             padding: 15px;
             border-radius: 10px;
             border: 3px solid #2a3a42;
@@ -1140,7 +1140,7 @@
             align-items: center;
             gap: 10px;
             padding: 15px 25px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 3px solid #2a3a42;
             border-radius: 10px;
         }
@@ -1157,7 +1157,7 @@
             font-weight: bold;
             color: #69d2ff;
             letter-spacing: 8px;
-            text-shadow: 0 0 10px rgba(212, 118, 58, 0.5);
+            text-shadow: 0 0 10px rgba(105, 210, 255, 0.5);
         }
 
         .keypad-input-display {
@@ -1204,7 +1204,7 @@
         .keypad-key {
             width: 55px;
             height: 50px;
-            background: linear-gradient(180deg, #3D3520, #2D2510);
+            background: linear-gradient(180deg, #1a2a32, #0d1820);
             border: 3px solid #3a4a52;
             border-radius: 8px;
             color: #C7E0EA;
@@ -1217,7 +1217,7 @@
         }
 
         .keypad-key:hover {
-            background: linear-gradient(180deg, #4D4530, #3D3520);
+            background: linear-gradient(180deg, #2a3a42, #1a2a32);
         }
 
         .keypad-key:active {
@@ -1259,7 +1259,7 @@
 
         .sequence-display {
             padding: 10px 20px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 2px solid #2a3a42;
             border-radius: 8px;
             font-size: 14px;
@@ -1385,7 +1385,7 @@
             display: flex;
             gap: 8px;
             padding: 12px 20px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 2px solid #2a3a42;
             border-radius: 8px;
         }
@@ -1519,7 +1519,7 @@
             display: flex;
             gap: 12px;
             padding: 10px 15px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 2px solid #2a3a42;
             border-radius: 8px;
         }
@@ -1566,7 +1566,7 @@
         .switch-indicator.on {
             background: #69d2ff;
             border-color: #7ad4ff;
-            box-shadow: 0 0 10px rgba(212, 118, 58, 0.6);
+            box-shadow: 0 0 10px rgba(105, 210, 255, 0.6);
         }
 
         .switch-indicator.matched {
@@ -1697,7 +1697,7 @@
         .sample-bin {
             width: 70px;
             height: 70px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 3px dashed #2a3a42;
             border-radius: 8px;
             display: flex;
@@ -1710,7 +1710,7 @@
 
         .sample-bin.highlight {
             border-style: solid;
-            box-shadow: inset 0 0 20px rgba(212, 118, 58, 0.3);
+            box-shadow: inset 0 0 20px rgba(105, 210, 255, 0.3);
         }
 
         .sample-bin.filled {
@@ -1779,7 +1779,7 @@
         .file-item {
             width: 50px;
             height: 60px;
-            background: linear-gradient(145deg, #3D3520, #2D2510);
+            background: linear-gradient(145deg, #1a2a32, #0d1820);
             border: 2px solid #3a4a52;
             border-radius: 4px;
             cursor: grab;
@@ -1858,7 +1858,7 @@
 
         .file-folder.highlight {
             border-color: #69d2ff;
-            box-shadow: inset 0 0 20px rgba(212, 118, 58, 0.3);
+            box-shadow: inset 0 0 20px rgba(105, 210, 255, 0.3);
         }
 
         .file-folder.filled {
@@ -1963,7 +1963,7 @@
         .cargo-slot {
             width: 60px;
             height: 60px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 3px dashed #2a3a42;
             border-radius: 8px;
             display: flex;
@@ -1974,7 +1974,7 @@
 
         .cargo-slot.highlight {
             border-color: #69d2ff;
-            background: linear-gradient(145deg, #2A2018, #0d1418);
+            background: linear-gradient(145deg, #152228, #0d1418);
         }
 
         .cargo-slot.filled {
@@ -2036,7 +2036,7 @@
         .priority-item {
             width: 55px;
             height: 55px;
-            background: linear-gradient(145deg, #3D3520, #2D2510);
+            background: linear-gradient(145deg, #1a2a32, #0d1820);
             border: 3px solid #3a4a52;
             border-radius: 50%;
             cursor: pointer;
@@ -2057,13 +2057,13 @@
 
         .priority-item.next {
             border-color: #69d2ff;
-            box-shadow: 0 0 15px rgba(212, 118, 58, 0.4);
+            box-shadow: 0 0 15px rgba(105, 210, 255, 0.4);
             animation: pulse-priority 1s infinite;
         }
 
         @keyframes pulse-priority {
-            0%, 100% { box-shadow: 0 0 15px rgba(212, 118, 58, 0.4); }
-            50% { box-shadow: 0 0 25px rgba(212, 118, 58, 0.7); }
+            0%, 100% { box-shadow: 0 0 15px rgba(105, 210, 255, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(105, 210, 255, 0.7); }
         }
 
         .priority-item.done {
@@ -2119,7 +2119,7 @@
         .scan-display {
             width: 200px;
             height: 200px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 4px solid #2a3a42;
             border-radius: 50%;
             position: relative;
@@ -2237,7 +2237,7 @@
         .target-field {
             width: 320px;
             height: 200px;
-            background: linear-gradient(145deg, #0d1418, #151210);
+            background: linear-gradient(145deg, #0d1418, #0a1014);
             border: 3px solid #2a3a42;
             border-radius: 10px;
             position: relative;
@@ -2347,7 +2347,7 @@
         .leak-hull {
             width: 320px;
             height: 200px;
-            background: linear-gradient(145deg, #3D3520, #2D2510);
+            background: linear-gradient(145deg, #1a2a32, #0d1820);
             border: 4px solid #3a4a52;
             border-radius: 15px;
             position: relative;
@@ -2499,7 +2499,7 @@
 
         .reboot-btn.lit::before {
             background: linear-gradient(145deg, #69d2ff, #4fb8e6);
-            box-shadow: 0 0 20px rgba(212, 118, 58, 0.6);
+            box-shadow: 0 0 20px rgba(105, 210, 255, 0.6);
         }
 
         @keyframes pulse-reboot {
