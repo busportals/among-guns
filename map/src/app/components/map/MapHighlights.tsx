@@ -5,7 +5,7 @@ export function StorageRooms({ isHighlighted }: { isHighlighted: boolean }) {
 
   return (
     <div
-      className="-translate-x-1/2 -translate-y-1/2 absolute h-[383.794px] left-[calc(50%-11.2px)] top-[calc(50%-101.9px)] w-[870.835px] transition-all duration-300"
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[383.794px] left-[calc(50%-10.8px)] top-[calc(50%-105px)] w-[870.835px] transition-all duration-300"
       data-name="STORAGE ROOMS"
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 870.835 383.794">
@@ -39,12 +39,12 @@ function VentComponent({ isHighlighted, position }: { isHighlighted: boolean; po
 export function Vents({ isHighlighted }: { isHighlighted: boolean }) {
   return (
     <div className="-translate-x-1/2 -translate-y-1/2 absolute contents" data-name="VENTS">
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%-202px)] top-[calc(50%-333.6px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+285.7px)] top-[calc(50%+167.9px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+491.9px)] top-[calc(50%+25.3px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%-424.8px)] top-[calc(50%+137.9px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+216.6px)] top-[calc(50%-363.6px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+493px)] top-[calc(50%-135.7px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%-195.9px)] top-[calc(50%-343.9px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+277.1px)] top-[calc(50%+173.1px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+477.1px)] top-[calc(50%+26.1px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%-411.9px)] top-[calc(50%+142.1px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+210.1px)] top-[calc(50%-374.9px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+478.1px)] top-[calc(50%-139.9px)]" />
     </div>
   );
 }

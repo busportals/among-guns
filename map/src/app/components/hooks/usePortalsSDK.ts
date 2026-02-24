@@ -6,8 +6,8 @@ const MAP_Z_MIN = -61.72;
 const MAP_Z_MAX = 59.675;
 const MAP_X_MIN = -34.518;
 const MAP_X_MAX = 55.363;
-const SVG_W = 1017;
-const SVG_H = 749;
+const SVG_W = 986;
+const SVG_H = 772;
 const SMOOTHING = 0.15;
 
 // ===== Parsing =====

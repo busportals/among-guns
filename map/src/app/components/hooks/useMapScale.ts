@@ -21,8 +21,8 @@ export function useMapScale(options: MapScaleOptions = {}) {
       // Design constants (sync with CSS design tokens)
       const SIDEBAR_WIDTH = 368;
       const MAP_PADDING = 80;
-      const MAP_NATURAL_WIDTH = 1200;
-      const MAP_NATURAL_HEIGHT = 700;
+      const MAP_NATURAL_WIDTH = 986;
+      const MAP_NATURAL_HEIGHT = 772;
 
       // Calculate available space
       const availableWidth = viewportWidth - SIDEBAR_WIDTH - MAP_PADDING;

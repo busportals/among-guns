@@ -20,10 +20,10 @@ function MapPowerIcon({ isHighlighted, position }: { isHighlighted: boolean; pos
 function Power({ isHighlighted }: { isHighlighted: boolean }) {
   return (
     <div className="-translate-x-1/2 -translate-y-1/2 absolute contents" data-name="POWER">
-      <MapPowerIcon isHighlighted={isHighlighted} position="left-[calc(50%-472.8px)] top-[calc(50%-16px)]" />
-      <MapPowerIcon isHighlighted={isHighlighted} position="left-[calc(50%+492.4px)] top-[calc(50%-48px)]" />
-      <MapPowerIcon isHighlighted={isHighlighted} position="left-[calc(50%+138.7px)] top-[calc(50%+101.4px)]" />
-      <MapPowerIcon isHighlighted={isHighlighted} position="left-[calc(50%+425.3px)] top-[calc(50%-242px)]" />
+      <MapPowerIcon isHighlighted={isHighlighted} position="left-[calc(50%-458.5px)] top-[calc(50%-16.5px)]" />
+      <MapPowerIcon isHighlighted={isHighlighted} position="left-[calc(50%+477.5px)] top-[calc(50%-49.5px)]" />
+      <MapPowerIcon isHighlighted={isHighlighted} position="left-[calc(50%+134.5px)] top-[calc(50%+104.5px)]" />
+      <MapPowerIcon isHighlighted={isHighlighted} position="left-[calc(50%+412.5px)] top-[calc(50%-249.5px)]" />
     </div>
   );
 }

@@ -8,7 +8,7 @@ function MapLocations1({ isHighlighted }: { isHighlighted: boolean }) {
 
   return (
     <div
-      className="-translate-x-1/2 -translate-y-1/2 absolute h-[29.829px] left-[calc(50%+127.7px)] top-[calc(50%-279.5px)] w-[127.732px] transition-all duration-300"
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[29.829px] left-[calc(50%+123.9px)] top-[calc(50%-288.1px)] w-[127.732px] transition-all duration-300"
       data-name="map locations"
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 127.732 29.8294">
@@ -38,7 +38,7 @@ function MapLocations2({ isHighlighted }: { isHighlighted: boolean }) {
 
   return (
     <div
-      className="-translate-x-1/2 -translate-y-1/2 absolute h-[53.854px] left-[calc(50%+256.1px)] top-[calc(50%-160.1px)] w-[76.65px] transition-all duration-300"
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[53.854px] left-[calc(50%+248.3px)] top-[calc(50%-165.1px)] w-[76.65px] transition-all duration-300"
       data-name="map locations"
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 76.6502 53.8538">
@@ -68,7 +68,7 @@ function MapLocations3({ isHighlighted }: { isHighlighted: boolean }) {
 
   return (
     <div
-      className="-translate-x-1/2 -translate-y-1/2 absolute h-[49.211px] left-[calc(50%-255.3px)] top-[calc(50%-240.9px)] w-[89px] transition-all duration-300"
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[49.211px] left-[calc(50%-247.5px)] top-[calc(50%-248.4px)] w-[89px] transition-all duration-300"
       data-name="map locations"
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 89 49.2106">
@@ -96,7 +96,7 @@ function MapLocations4({ isHighlighted }: { isHighlighted: boolean }) {
 
   return (
     <div
-      className="-translate-x-1/2 -translate-y-1/2 absolute h-[60.287px] left-[calc(50%-235.2px)] top-[calc(50%-81.3px)] w-[72px] transition-all duration-300"
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[60.287px] left-[calc(50%-228px)] top-[calc(50%-83.9px)] w-[72px] transition-all duration-300"
       data-name="map locations"
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 72 60.287">
@@ -122,7 +122,7 @@ function MapLocations5({ isHighlighted }: { isHighlighted: boolean }) {
 
   return (
     <div
-      className="-translate-x-1/2 -translate-y-1/2 absolute h-[56.812px] left-[calc(50%+249.6px)] top-[calc(50%+42.1px)] w-[128px] transition-all duration-300"
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[56.812px] left-[calc(50%+242px)] top-[calc(50%+43.4px)] w-[128px] transition-all duration-300"
       data-name="map locations"
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 128 56.812">
