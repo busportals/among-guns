@@ -399,16 +399,21 @@
         // ═══════════════════════════════════════════════
         // PORTALS SDK MESSAGE LISTENER
         // ═══════════════════════════════════════════════
+        var REVEAL_PREFIX = 'imposterreveal:';
+
         if (typeof PortalsSdk !== 'undefined') {
             PortalsSdk.setMessageListener(function(message) {
-                console.log('Impostor reveal received:', message);
+                // Only process messages flagged for the reveal screen
+                if (message.indexOf(REVEAL_PREFIX) !== 0) return;
 
-                var data = parseMessage(message);
+                var payload = message.substring(REVEAL_PREFIX.length);
+                console.log('Impostor reveal payload:', payload);
+
+                var data = parseMessage(payload);
                 console.log('Parsed imposters:', JSON.stringify(data.imposters));
                 console.log('Parsed playerNumbers:', JSON.stringify(data.playerNumbers));
 
                 // Build player list from keys in the imposter map
-                // The keys themselves are the player display names
                 var players = [];
                 var keys = Object.keys(data.imposters);
 
