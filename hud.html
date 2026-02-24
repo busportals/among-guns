@@ -582,27 +582,9 @@
                 console.log('HUD received:', JSON.stringify(message));
                 var trimmed = message.trim();
 
-                // Handle role message
-                if (trimmed.indexOf('role:') === 0 || trimmed.indexOf('role ') === 0) {
-                    var roleVal = parseInt(trimmed.replace(/^role[\s:]+/, ''));
-                    gameState.role = roleVal === 1 ? 'imposter' : 'crewmate';
-                    renderRole();
-                    return;
-                }
-
-                // Handle JSON messages (role reveal)
+                // JSON messages (non-role) — skip invalid JSON silently
                 if (trimmed.charAt(0) === '{') {
-                    try {
-                        var data = JSON.parse(trimmed);
-                        if (data.action === 'reveal_role') {
-                            var roleNum = parseInt(data.role);
-                            gameState.role = roleNum === 2 ? 'imposter' : 'crewmate';
-                            renderRole();
-                        }
-                        return;
-                    } catch (e) {
-                        // Not valid JSON, fall through
-                    }
+                    return;
                 }
 
                 // Handle bulk task states: "Task 1:0,Task 2:1,Task 3:2,..."
@@ -692,10 +674,7 @@
                         break;
 
                     case 'role':
-                        console.log('ROLE CASE HIT - parts[1]:', parts[1], 'parsed:', parseInt(parts[1]));
-                        gameState.role = parseInt(parts[1]) === 1 ? 'imposter' : 'crewmate';
-                        console.log('Role set to:', gameState.role);
-                        renderRole();
+                        // Role is now set exclusively via hudrole: tagged messages
                         break;
 
                     case 'select':
