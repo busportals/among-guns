@@ -1,26 +1,26 @@
 // Task blip positions computed from world coordinates via worldToSvg formula
-// Offsets are relative to SVG center (506.05, 334.265)
+// Bounds: Z(-61.72..59.675) X(-34.518..55.363), SVG 1017×749, center (508.5, 374.5)
 const TASK_POSITIONS: { taskNum: number; offsetX: number; offsetY: number }[] = [
-  { taskNum: 1,  offsetX: 380.8,  offsetY: -218.5 },
-  { taskNum: 2,  offsetX: 697.7,  offsetY: 95.0   }, // off-map until recalibration
-  { taskNum: 3,  offsetX: 51.0,   offsetY: -135.4 },
-  { taskNum: 4,  offsetX: 338.2,  offsetY: 49.8   },
-  { taskNum: 5,  offsetX: 687.1,  offsetY: -55.4  }, // off-map until recalibration
-  { taskNum: 6,  offsetX: -9.2,   offsetY: -196.2 },
-  { taskNum: 7,  offsetX: 164.5,  offsetY: 33.7   },
-  { taskNum: 8,  offsetX: 174.2,  offsetY: 89.9   },
-  { taskNum: 9,  offsetX: 630.9,  offsetY: 21.3   }, // off-map until recalibration
-  { taskNum: 10, offsetX: 36.4,   offsetY: 21.8   },
+  { taskNum: 1,  offsetX: 191.2,  offsetY: -358.5 },
+  { taskNum: 2,  offsetX: 465.1,  offsetY: 144.8  }, // off-map until recalibration
+  { taskNum: 3,  offsetX: -93.6,  offsetY: -225.2 },
+  { taskNum: 4,  offsetX: 154.3,  offsetY: 72.3   },
+  { taskNum: 5,  offsetX: 455.9,  offsetY: -96.9  }, // off-map until recalibration
+  { taskNum: 6,  offsetX: -145.6, offsetY: -322.7 },
+  { taskNum: 7,  offsetX: 4.4,    offsetY: 46.5   },
+  { taskNum: 8,  offsetX: 12.8,   offsetY: 136.5  },
+  { taskNum: 9,  offsetX: 407.3,  offsetY: 26.5   }, // off-map until recalibration
+  { taskNum: 10, offsetX: -106.2, offsetY: 27.3   },
   // Task 11: MISSING - no world position
-  { taskNum: 12, offsetX: 625.1,  offsetY: -91.8  }, // off-map until recalibration
-  { taskNum: 13, offsetX: 164.5,  offsetY: -53.9  },
-  { taskNum: 14, offsetX: 572.7,  offsetY: -142.1 }, // off-map until recalibration
-  { taskNum: 15, offsetX: 202.3,  offsetY: -204.5 },
-  { taskNum: 16, offsetX: 164.5,  offsetY: 58.1   },
-  { taskNum: 17, offsetX: -366.0, offsetY: 22.8   },
-  { taskNum: 18, offsetX: 164.5,  offsetY: -100.1 },
-  { taskNum: 19, offsetX: 352.7,  offsetY: -86.6  },
-  { taskNum: 20, offsetX: 569.8,  offsetY: -153.0 }, // off-map until recalibration
+  { taskNum: 12, offsetX: 402.3,  offsetY: -155.2 }, // off-map until recalibration
+  { taskNum: 13, offsetX: 4.4,    offsetY: -94.4  },
+  { taskNum: 14, offsetX: 357.1,  offsetY: -236.0 }, // off-map until recalibration
+  { taskNum: 15, offsetX: 37.0,   offsetY: -336.0 },
+  { taskNum: 16, offsetX: 4.4,    offsetY: 85.6   },
+  { taskNum: 17, offsetX: -453.9, offsetY: 29.0   },
+  { taskNum: 18, offsetX: 4.4,    offsetY: -168.5 },
+  { taskNum: 19, offsetX: 166.9,  offsetY: -146.9 },
+  { taskNum: 20, offsetX: 354.6,  offsetY: -258.5 }, // off-map until recalibration
 ];
 
 const BLIP_COLOR = '#3DD1DC';

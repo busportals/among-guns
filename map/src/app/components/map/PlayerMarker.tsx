@@ -1,9 +1,9 @@
 import svgPaths from "../../../imports/svg-pea7b3wqhj";
 import type { PlayerPosition } from "../shared/types";
 
-// SVG viewBox center
-const SVG_CENTER_X = 1012.1 / 2;  // 506.05
-const SVG_CENTER_Y = 668.529 / 2; // 334.265
+// SVG viewBox center (1017×749)
+const SVG_CENTER_X = 1017 / 2;  // 508.5
+const SVG_CENTER_Y = 749 / 2;   // 374.5
 
 interface PlayerMarkerProps {
   position: PlayerPosition | null;
