@@ -211,6 +211,10 @@
     <script>
         // Lobby button handler
         document.getElementById('lobby-btn').addEventListener('click', function() {
+            PortalsSdk.sendMessageToUnity(JSON.stringify({
+                TaskName: 'uiopen',
+                TaskTargetState: 'SetAnyToActive'
+            }));
             PortalsSdk.closeIframe();
         });
     </script>
