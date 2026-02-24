@@ -7,7 +7,11 @@ function MapLocations1({ isHighlighted }: { isHighlighted: boolean }) {
   const textFill = isHighlighted ? "#D9F2FF" : "#90A8B3";
 
   return (
-    <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[29.829px] left-[calc(50%+295.87px)] top-[calc(50%-240.09px)] w-[127.732px] transition-all duration-300" data-name="map locations">
+    <div
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[29.829px] left-[calc(50%+127.7px)] top-[calc(50%-279.5px)] w-[127.732px] transition-all duration-300"
+      style={{ opacity: isHighlighted ? 1 : 0 }}
+      data-name="map locations"
+    >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 127.732 29.8294">
         <g id="map locations">
           <g id="Vector">
@@ -34,7 +38,11 @@ function MapLocations2({ isHighlighted }: { isHighlighted: boolean }) {
   const textFill = isHighlighted ? "#D9F2FF" : "#90A8B3";
 
   return (
-    <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[53.854px] left-[calc(50%+420.33px)] top-[calc(50%-117.07px)] w-[76.65px] transition-all duration-300" data-name="map locations">
+    <div
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[53.854px] left-[calc(50%+256.1px)] top-[calc(50%-160.1px)] w-[76.65px] transition-all duration-300"
+      style={{ opacity: isHighlighted ? 1 : 0 }}
+      data-name="map locations"
+    >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 76.6502 53.8538">
         <g id="map locations">
           <g id="Vector">
@@ -61,7 +69,11 @@ function MapLocations3({ isHighlighted }: { isHighlighted: boolean }) {
   const textFill = isHighlighted ? "#D9F2FF" : "#90A8B3";
 
   return (
-    <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[49.211px] left-[calc(50%-75.5px)] top-[calc(50%-200.39px)] w-[89px] transition-all duration-300" data-name="map locations">
+    <div
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[49.211px] left-[calc(50%-255.3px)] top-[calc(50%-240.9px)] w-[89px] transition-all duration-300"
+      style={{ opacity: isHighlighted ? 1 : 0 }}
+      data-name="map locations"
+    >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 89 49.2106">
         <g id="map locations">
           <path d={svgPaths.p12f9a980} fill={iconFill} id="Vector" />
@@ -86,7 +98,11 @@ function MapLocations4({ isHighlighted }: { isHighlighted: boolean }) {
   const textFill = isHighlighted ? "#D9F2FF" : "#90A8B3";
 
   return (
-    <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[60.287px] left-[calc(50%-98px)] top-[calc(50%+25.14px)] w-[72px] transition-all duration-300" data-name="map locations">
+    <div
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[60.287px] left-[calc(50%-235.2px)] top-[calc(50%-81.3px)] w-[72px] transition-all duration-300"
+      style={{ opacity: isHighlighted ? 1 : 0 }}
+      data-name="map locations"
+    >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 72 60.287">
         <g id="map locations">
           <path d={svgPaths.p17f67f00} fill={iconFill} id="Vector" />
@@ -109,7 +125,11 @@ function MapLocations5({ isHighlighted }: { isHighlighted: boolean }) {
   const textFill = isHighlighted ? "#D9F2FF" : "#90A8B3";
 
   return (
-    <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[56.812px] left-[calc(50%+414px)] top-[calc(50%+91.41px)] w-[128px] transition-all duration-300" data-name="map locations">
+    <div
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[56.812px] left-[calc(50%+249.6px)] top-[calc(50%+42.1px)] w-[128px] transition-all duration-300"
+      style={{ opacity: isHighlighted ? 1 : 0 }}
+      data-name="map locations"
+    >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 128 56.812">
         <g id="map locations">
           <g id="Vector">
@@ -139,44 +159,13 @@ function MapLocations5({ isHighlighted }: { isHighlighted: boolean }) {
 
 function MapLocations({ hoverState }: { hoverState: HoverState }) {
   return (
-    <div className="-translate-x-1/2 -translate-y-1/2 absolute contents left-[calc(50%+212.5px)] top-[calc(50%-48.24px)]" data-name="MAP LOCATIONS">
+    <div className="-translate-x-1/2 -translate-y-1/2 absolute contents" data-name="MAP LOCATIONS">
       <MapLocations1 isHighlighted={hoverState === 'offices'} />
       <MapLocations2 isHighlighted={hoverState === 'offices'} />
       <MapLocations3 isHighlighted={hoverState === 'botanics'} />
       <MapLocations4 isHighlighted={hoverState === 'medbay'} />
       <MapLocations5 isHighlighted={hoverState === 'storage'} />
       <Power isHighlighted={hoverState === 'power'} />
-      <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[26.543px] left-[calc(50%+160.47px)] top-[calc(50%+203.24px)] w-[97.619px]" data-name="START AREA">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 97.6192 26.5434">
-          <g id="START AREA">
-            <path d={svgPaths.p15290500} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p2c8e5000} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p31f2c0} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p3f6e6e80} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p187a8100} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p20b70f80} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p35bdc200} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p37e5b500} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p2c980300} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p3f6f5e00} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p9d66f80} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p38853800} fill="var(--fill-0, #90A8B3)" />
-          </g>
-        </svg>
-      </div>
-      <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[18.831px] left-[calc(50%+165.22px)] top-[calc(50%-50.7px)] w-[129.551px]" data-name="COMMONS">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 129.551 18.8306">
-          <g id="COMMONS">
-            <path d={svgPaths.p3ca4800} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p2d027080} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p35852400} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p13464700} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p23a1cb00} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p15ea7500} fill="var(--fill-0, #90A8B3)" />
-            <path d={svgPaths.p1e39dd00} fill="var(--fill-0, #90A8B3)" />
-          </g>
-        </svg>
-      </div>
     </div>
   );
 }

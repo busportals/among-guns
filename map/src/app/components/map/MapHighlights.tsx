@@ -4,7 +4,11 @@ export function StorageRooms({ isHighlighted }: { isHighlighted: boolean }) {
   const fillColor = isHighlighted ? "var(--color-storage)" : "#36464E";
 
   return (
-    <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[383.794px] left-[calc(50%+161.15px)] top-[calc(50%-57.03px)] w-[870.835px] transition-all duration-300" data-name="STORAGE ROOMS">
+    <div
+      className="-translate-x-1/2 -translate-y-1/2 absolute h-[383.794px] left-[calc(50%-11.2px)] top-[calc(50%-101.9px)] w-[870.835px] transition-all duration-300"
+      style={{ opacity: isHighlighted ? 1 : 0 }}
+      data-name="STORAGE ROOMS"
+    >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 870.835 383.794">
         <g id="STORAGE ROOMS">
           <path d={svgPaths.p289f5800} fill={fillColor} id="Vector" />
@@ -21,7 +25,10 @@ function VentComponent({ isHighlighted, position }: { isHighlighted: boolean; po
   const fillColor = isHighlighted ? "var(--color-vents)" : "#36464E";
 
   return (
-    <div className={`-translate-x-1/2 -translate-y-1/2 absolute ${position} size-[22.248px] transition-all duration-300`}>
+    <div
+      className={`-translate-x-1/2 -translate-y-1/2 absolute ${position} size-[22.248px] transition-all duration-300`}
+      style={{ opacity: isHighlighted ? 1 : 0 }}
+    >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 22.2484 22.2484">
         <g id="Component 1">
           <path d={svgPaths.p1d547c80} fill={fillColor} id="Union" />
@@ -33,14 +40,13 @@ function VentComponent({ isHighlighted, position }: { isHighlighted: boolean; po
 
 export function Vents({ isHighlighted }: { isHighlighted: boolean }) {
   return (
-    <div className="-translate-x-1/2 -translate-y-1/2 absolute contents left-[calc(50%+210.62px)] top-[calc(50%-54.88px)]" data-name="VENTS">
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%-23.88px)] top-[calc(50%-295.88px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+393.12px)] top-[calc(50%-330.88px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+393.12px)] top-[calc(50%+221.12px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+488.12px)] top-[calc(50%+221.12px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%-74.88px)] top-[calc(50%+190.12px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+651.12px)] top-[calc(50%-15.85px)]" />
-      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%-229.88px)] top-[calc(50%+6.12px)]" />
+    <div className="-translate-x-1/2 -translate-y-1/2 absolute contents" data-name="VENTS">
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%-202px)] top-[calc(50%-333.6px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+285.7px)] top-[calc(50%+167.9px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+491.9px)] top-[calc(50%+25.3px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%-424.8px)] top-[calc(50%+137.9px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+216.6px)] top-[calc(50%-363.6px)]" />
+      <VentComponent isHighlighted={isHighlighted} position="left-[calc(50%+493px)] top-[calc(50%-135.7px)]" />
     </div>
   );
 }

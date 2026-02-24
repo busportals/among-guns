@@ -24,7 +24,7 @@ export interface TaskProgress {
  * Player position in SVG pixel space (within the map viewBox)
  */
 export interface PlayerPosition {
-  x: number;       // SVG pixel X (0..1012.1)
-  y: number;       // SVG pixel Y (0..668.529)
+  x: number;       // SVG pixel X (0..1017)
+  y: number;       // SVG pixel Y (0..749)
   rotation: number; // degrees
 }
