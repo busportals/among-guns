@@ -128,6 +128,45 @@
             z-index: 1;
         }
 
+        .task-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            margin: -4px 0 0 -4px;
+            background: #3DD1DC;
+            border-radius: 50%;
+            box-shadow: 0 0 4px #3DD1DC, 0 0 8px rgba(61, 209, 220, 0.25);
+            z-index: 1;
+            display: none;
+            animation: task-pulse 2s ease-in-out infinite;
+        }
+
+        .task-edge-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            margin: -4px 0 0 -4px;
+            background: #3DD1DC;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            z-index: 1;
+            display: none;
+            animation: edge-blink 1s ease-in-out infinite;
+        }
+
+        @keyframes task-pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 4px #3DD1DC, 0 0 8px rgba(61, 209, 220, 0.25); }
+            50% { opacity: 0.6; box-shadow: 0 0 6px #3DD1DC, 0 0 12px rgba(61, 209, 220, 0.4); }
+        }
+
+        @keyframes edge-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
         /* ========== BOTTOM LEFT: Health + Tooltip ========== */
         #health-section {
             position: fixed;
@@ -562,6 +601,23 @@
                     }
                 }
 
+                // Handle bulk task states: "Task 1:0,Task 2:1,Task 3:2,..."
+                if (trimmed.indexOf('Task ') === 0 && trimmed.indexOf(',') !== -1) {
+                    var entries = trimmed.split(',');
+                    var newActive = {};
+                    var valid = true;
+                    for (var i = 0; i < entries.length; i++) {
+                        var m = entries[i].trim().match(/^Task\s+(\d+):(\d)$/i);
+                        if (!m) { valid = false; break; }
+                        if (parseInt(m[2]) === 1) newActive[m[1]] = true;
+                    }
+                    if (valid) {
+                        activeTasks = newActive;
+                        renderTaskDots();
+                        return;
+                    }
+                }
+
                 // Handle player number message
                 if (parsePlayerNumberMessage(trimmed)) return;
 
@@ -701,6 +757,33 @@
         var missCounts = {};
         var MISS_THRESHOLD = 3;
         var hasData = false, lastFrameTime = 0;
+
+        // Task positions (world coords from TaskBlips.tsx)
+        var TASK_POSITIONS = [
+            { num: 1,  x: -32.5, z: 21.8 },
+            { num: 2,  x: 27.8,  z: 54.5 },
+            { num: 3,  x: -16.6, z: -12.2 },
+            { num: 4,  x: 19.1,  z: 17.4 },
+            { num: 5,  x: -1.2,  z: 53.4 },
+            { num: 6,  x: -28.3, z: -18.4 },
+            { num: 7,  x: 14.8,  z: -44.4 },
+            { num: 8,  x: 25.6,  z: -42.6 },
+            { num: 9,  x: 13.6,  z: 47.6 },
+            { num: 10, x: 13.7,  z: -13.7 },
+            // Task 11: no world position
+            { num: 12, x: -8.1,  z: 47.0 },
+            { num: 13, x: -2.1,  z: -37.2 },
+            { num: 14, x: -17.9, z: 41.6 },
+            { num: 15, x: -29.9, z: 3.4 },
+            { num: 16, x: 19.5,  z: -23.8 },
+            { num: 17, x: 13.9,  z: -55.2 },
+            { num: 18, x: -11.0, z: -43.0 },
+            { num: 19, x: -7.2,  z: 18.8 },
+            { num: 20, x: -20.6, z: 41.2 }
+        ];
+        var activeTasks = {};
+        var taskDots = {};
+        var taskEdgeIndicators = {};
         var SMOOTHING = 0.15;
 
         function parsePositionMessage(message) {
@@ -801,6 +884,30 @@
             };
         }
 
+        // Create task dot + edge indicator elements
+        var EDGE_R = 118; // just inside the 126px circle rim
+        for (var i = 0; i < TASK_POSITIONS.length; i++) {
+            var task = TASK_POSITIONS[i];
+            var dot = document.createElement('div');
+            dot.className = 'task-dot';
+            minimapEl.appendChild(dot);
+            taskDots[task.num] = dot;
+
+            var edge = document.createElement('div');
+            edge.className = 'task-edge-indicator';
+            minimapEl.appendChild(edge);
+            taskEdgeIndicators[task.num] = edge;
+        }
+
+        function renderTaskDots() {
+            for (var i = 0; i < TASK_POSITIONS.length; i++) {
+                var num = TASK_POSITIONS[i].num;
+                var isActive = !!activeTasks[num];
+                if (taskDots[num]) taskDots[num].style.display = isActive ? 'block' : 'none';
+                if (taskEdgeIndicators[num]) taskEdgeIndicators[num].style.display = 'none';
+            }
+        }
+
         function renderFrame(now) {
             requestAnimationFrame(renderFrame);
             if (!hasData) return;
@@ -856,6 +963,40 @@
                     otherDots[name] = dot;
                 }
                 otherDots[name].style.transform = 'translate(' + ox + 'px, ' + oy + 'px) rotate(' + rot + 'deg)';
+            }
+
+            // Task dots + edge indicators
+            for (var ti = 0; ti < TASK_POSITIONS.length; ti++) {
+                var task = TASK_POSITIONS[ti];
+                var dot = taskDots[task.num];
+                var edge = taskEdgeIndicators[task.num];
+                if (!dot || !activeTasks[task.num]) continue;
+
+                var taskImg = worldToImg(task.x, task.z);
+                var tdx = taskImg.x - selfImg.x;
+                var tdy = taskImg.y - selfImg.y;
+                var tox = -sinA * tdx + cosA * tdy;
+                var toy = -cosA * tdx - sinA * tdy;
+                var dist = Math.sqrt(tox * tox + toy * toy);
+
+                if (dist < MINIMAP_R - 10) {
+                    // Inside visible circle — show dot, hide edge
+                    dot.style.display = 'block';
+                    dot.style.transform = 'translate(' + tox + 'px, ' + toy + 'px)';
+                    if (edge) edge.style.display = 'none';
+                } else {
+                    // Outside visible circle — hide dot, show edge indicator on rim
+                    dot.style.display = 'none';
+                    if (edge) {
+                        var angle = Math.atan2(toy, tox);
+                        var ex = Math.cos(angle) * EDGE_R;
+                        var ey = Math.sin(angle) * EDGE_R;
+                        // Rotate triangle to point inward (toward center)
+                        var edgeRot = (angle * 180 / Math.PI) + 90;
+                        edge.style.display = 'block';
+                        edge.style.transform = 'translate(' + ex + 'px, ' + ey + 'px) rotate(' + edgeRot + 'deg)';
+                    }
+                }
             }
         }
 
