@@ -648,16 +648,20 @@
                     return;
                 }
 
-                // Handle Portals variable format: "name"imposter:{"name"="false"}
-                var imposterMatch = trimmed.match(/"([^"]+)"imposter:\{(.+)\}/);
-                if (imposterMatch) {
-                    var playerName = imposterMatch[1];
-                    var dataStr = imposterMatch[2];
-                    var valueRegex = new RegExp('"' + playerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"\\s*=\\s*"([^"]*)"');
-                    var valueMatch = dataStr.match(valueRegex);
-                    if (valueMatch) {
-                        gameState.role = valueMatch[1] === 'true' ? 'imposter' : 'crewmate';
-                        renderRole();
+                // Handle tagged role message: hudrole:"name"imposter:{"name"="false"}
+                if (trimmed.indexOf('hudrole:') === 0) {
+                    var rolePayload = trimmed.substring(8);
+                    var imposterMatch = rolePayload.match(/"([^"]+)"imposter:\{(.+)\}/);
+                    if (imposterMatch) {
+                        var playerName = imposterMatch[1];
+                        var dataStr = imposterMatch[2];
+                        var valueRegex = new RegExp('"' + playerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"\\s*=\\s*"([^"]*)"');
+                        var valueMatch = dataStr.match(valueRegex);
+                        if (valueMatch) {
+                            gameState.role = valueMatch[1].toLowerCase().trim() === 'true' ? 'imposter' : 'crewmate';
+                            console.log('HUD role set from hudrole tag:', gameState.role);
+                            renderRole();
+                        }
                     }
                     return;
                 }
