@@ -6,7 +6,6 @@ export function StorageRooms({ isHighlighted }: { isHighlighted: boolean }) {
   return (
     <div
       className="-translate-x-1/2 -translate-y-1/2 absolute h-[383.794px] left-[calc(50%-11.2px)] top-[calc(50%-101.9px)] w-[870.835px] transition-all duration-300"
-      style={{ opacity: isHighlighted ? 1 : 0 }}
       data-name="STORAGE ROOMS"
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 870.835 383.794">
@@ -27,7 +26,6 @@ function VentComponent({ isHighlighted, position }: { isHighlighted: boolean; po
   return (
     <div
       className={`-translate-x-1/2 -translate-y-1/2 absolute ${position} size-[22.248px] transition-all duration-300`}
-      style={{ opacity: isHighlighted ? 1 : 0 }}
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 22.2484 22.2484">
         <g id="Component 1">

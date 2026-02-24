@@ -6,7 +6,6 @@ function MapPowerIcon({ isHighlighted, position }: { isHighlighted: boolean; pos
   return (
     <div
       className={`-translate-x-1/2 -translate-y-1/2 absolute ${position} h-[33px] w-[31px] transition-all duration-300`}
-      style={{ opacity: isHighlighted ? 1 : 0 }}
       data-name="map locations"
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 31 33">

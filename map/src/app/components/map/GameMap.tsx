@@ -17,9 +17,10 @@ export function GameMap({ hoverState, playerPosition, activeTasks }: GameMapProp
 
   return (
     <div
-      className="absolute left-1/2 top-1/2"
+      className="absolute top-1/2"
       data-name="GAME MAP"
       style={{
+        left: 'calc(50% + var(--sidebar-width) / 2)',
         transform: `translate(-50%, -50%) scale(${scale})`,
         transition: 'transform var(--transition-scale)'
       }}
