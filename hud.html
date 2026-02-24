@@ -697,6 +697,7 @@
         var displayX = 0, displayZ = 0, displayRot = 0;
         var displayOtherPos = {}, displayOtherRot = {};
         var otherDots = {};
+        var playerNumberMap = {};
         var missCounts = {};
         var MISS_THRESHOLD = 3;
         var hasData = false, lastFrameTime = 0;
@@ -755,8 +756,13 @@
             while ((match = playerRegex.exec(dataStr)) !== null) {
                 var name = match[1];
                 var num = parseInt(match[2]);
+                playerNumberMap[name] = num;
                 if (name === myName && playerColors[num]) {
                     selfDot.style.background = playerColors[num];
+                }
+                // Update existing dot color
+                if (name !== myName && otherDots[name] && playerColors[num]) {
+                    otherDots[name].style.background = playerColors[num];
                 }
             }
             return true;
@@ -843,6 +849,9 @@
                 if (!otherDots[name]) {
                     var dot = document.createElement('div');
                     dot.className = 'other-dot';
+                    if (playerNumberMap[name] && playerColors[playerNumberMap[name]]) {
+                        dot.style.background = playerColors[playerNumberMap[name]];
+                    }
                     minimapEl.appendChild(dot);
                     otherDots[name] = dot;
                 }

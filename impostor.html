@@ -347,9 +347,10 @@
         // ═══════════════════════════════════════════════
 
         // Parse a Portals map like {"key"="val", "key2"="val2"}
+        // Tolerates optional whitespace around = and between entries
         function parsePortalsMap(str) {
             var map = {};
-            var pairRegex = /"([^"]*)"="([^"]*)"/g;
+            var pairRegex = /"([^"]*)"\s*=\s*"([^"]*)"/g;
             var match;
             while ((match = pairRegex.exec(str)) !== null) {
                 map[match[1]] = match[2];
@@ -357,25 +358,39 @@
             return map;
         }
 
+        // Extract content between braces for a given key, handling
+        // possible whitespace and both imposter/impostor spellings
+        function extractMap(message, key) {
+            var pattern = new RegExp(key + '\\s*:\\s*\\{([^}]*)\\}');
+            var match = message.match(pattern);
+            if (match) return match[1];
+            return null;
+        }
+
         function parseMessage(message) {
             var result = { playerName: '', imposters: {}, playerNumbers: {} };
 
-            // Extract playerName (plain string value: playerName:"value")
-            var nameMatch = message.match(/playerName:"([^"]*)"/);
+            // Extract playerName — handle both playerName:"val" and leading "val"
+            var nameMatch = message.match(/playerName\s*:\s*"([^"]*)"/);
             if (nameMatch) {
                 result.playerName = nameMatch[1];
+            } else {
+                var leadingName = message.match(/^"([^"]+)"/);
+                if (leadingName) {
+                    result.playerName = leadingName[1];
+                }
             }
 
-            // Extract imposter map
-            var imposterMatch = message.match(/imposter:\{([^}]*)\}/);
-            if (imposterMatch) {
-                result.imposters = parsePortalsMap(imposterMatch[1]);
+            // Extract imposter map (handle both spellings: imposter / impostor)
+            var imposterRaw = extractMap(message, 'impost[eo]r');
+            if (imposterRaw) {
+                result.imposters = parsePortalsMap(imposterRaw);
             }
 
             // Extract playernumber map
-            var numberMatch = message.match(/playernumber:\{([^}]*)\}/);
-            if (numberMatch) {
-                result.playerNumbers = parsePortalsMap(numberMatch[1]);
+            var numberRaw = extractMap(message, 'playernumber');
+            if (numberRaw) {
+                result.playerNumbers = parsePortalsMap(numberRaw);
             }
 
             return result;
@@ -389,6 +404,8 @@
                 console.log('Impostor reveal received:', message);
 
                 var data = parseMessage(message);
+                console.log('Parsed imposters:', JSON.stringify(data.imposters));
+                console.log('Parsed playerNumbers:', JSON.stringify(data.playerNumbers));
 
                 // Build player list from keys in the imposter map
                 // The keys themselves are the player display names
@@ -396,12 +413,15 @@
                 var keys = Object.keys(data.imposters);
 
                 keys.forEach(function(key) {
+                    var val = (data.imposters[key] || '').toLowerCase().trim();
                     players.push({
                         playerNumber: parseInt(data.playerNumbers[key], 10) || 1,
-                        isImposter: data.imposters[key] === 'true' || data.imposters[key] === '1',
+                        isImposter: val === 'true' || val === '1',
                         name: key
                     });
                 });
+
+                console.log('Players built:', players.length, 'Imposters:', players.filter(function(p) { return p.isImposter; }).length);
 
                 if (players.length > 0) {
                     renderImposters(players);
